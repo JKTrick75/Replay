@@ -2,7 +2,7 @@
 // $data = 'hola crtl course';
 // die('<script>console.log('.json_encode( $data ) .');</script>');
 
-$path = $_SERVER['DOCUMENT_ROOT'] . '/REPLAY/9_REPLAY V1 (INICIAL)/';
+$path = $_SERVER['DOCUMENT_ROOT'] . '/REPLAY/9_REPLAY V2 (CARROUSEL)/';
 include($path . "module/home/model/DAOHomepage.php");
 
 // die('<script>console.log('.json_encode( $path . "module/course/model/DAOCourse.php" ) .');</script>');

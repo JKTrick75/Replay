@@ -839,7 +839,7 @@ section,
 
 .hero .carousel-item:before {
   content: "";
-  background: color-mix(in srgb, var(--background-color), transparent 20%);
+  background: color-mix(in srgb, var(--background-color), transparent 60%);
   position: absolute;
   inset: 0;
   z-index: 2;
@@ -847,7 +847,7 @@ section,
 
 .hero .carousel-item::before {
   content: "";
-  background-color: color-mix(in srgb, var(--background-color), transparent 20%);
+  background-color: color-mix(in srgb, var(--background-color), transparent 60%);
   position: absolute;
   inset: 0;
 }
@@ -868,9 +868,20 @@ section,
   font-weight: 700;
   animation: fadeInDown 1s both;
 }
+.carousel-container h2 {
+  color: #2c2a2a; /* Cambia este valor por el color que desees */
+}
+.carousel-container p {
+  color: #2c2a2a; /* Cambia este valor por el color que desees */
+}
 
 .hero .carousel-item h2 span {
   color: var(--accent-color);
+}
+
+.featured-item .icon img {
+  max-width: 100px; /* Ajusta el tamaño máximo de las imágenes */
+  margin-bottom: 20px; /* Espacio debajo de la imagen */
 }
 
 @media (max-width: 768px) {

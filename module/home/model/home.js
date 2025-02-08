@@ -157,7 +157,7 @@ function carrousel_Ciudades() {
             }
             new Glider(document.querySelector('.carousel__list'), {
                 slidesToShow: 3,
-                slidesToScroll: 1,
+                slidesToScroll: 3,
                 draggable: true,
                 rewind: true,
                 dots: '.carousel__dots',

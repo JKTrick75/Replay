@@ -1,0 +1,111 @@
+/* Cards Categories */
+.categoria-inner {
+  box-shadow: 0 0 10px rgba(0,0,0,.2);
+  padding: 10px;
+  height: 280px;
+  transition: transform 0.3s ease; /* Añadir transición suave */
+}
+.categoria img.img_categoria {
+  margin-bottom: 10px;
+  width: 100%; /* Ocupa el 100% del ancho del contenedor */
+  height: 200px; /* Establece una altura fija */
+  object-fit: cover; /* Ajusta la imagen para cubrir el espacio sin distorsionarla */
+}
+.categoria-inner:hover {
+  box-shadow: 0 0 10px rgba(0,0,0,.4);
+  transform: scale(1.05); /* Escalar un 5% más grande */
+}
+/* Cards Marques */
+.marca-inner {
+  box-shadow: 0 0 10px rgba(0,0,0,.2);
+  padding: 10px;
+  height: 280px;
+  transition: transform 0.3s ease; /* Añadir transición suave */
+}
+.marca img.img_marca {
+  margin-bottom: 10px;
+  width: 100%; /* Ocupa el 100% del ancho del contenedor */
+  height: 200px; /* Establece una altura fija */
+  object-fit: cover; /* Ajusta la imagen para cubrir el espacio sin distorsionarla */
+}
+.marca-inner:hover {
+  box-shadow: 0 0 10px rgba(0,0,0,.4);
+  transform: scale(1.05); /* Escalar un 5% más grande */
+}
+/* Cards Tipo_consola */
+.tipo_consola-inner {
+  box-shadow: 0 0 10px rgba(0,0,0,.2);
+  padding: 10px;
+  height: 280px;
+  transition: transform 0.3s ease; /* Añadir transición suave */
+}
+.tipo_consola img.img_tipo_consola {
+  margin-bottom: 10px;
+  width: 100%; /* Ocupa el 100% del ancho del contenedor */
+  height: 200px; /* Establece una altura fija */
+  object-fit: contain; /* Ajusta la imagen para cubrir el espacio sin distorsionarla */
+}
+.tipo_consola-inner:hover {
+  box-shadow: 0 0 10px rgba(0,0,0,.4);
+  transform: scale(1.05); /* Escalar un 5% más grande */
+}
+/* Cards Ciudad */
+.ciudad-inner {
+  box-shadow: 0 0 10px rgba(0,0,0,.2);
+  padding: 10px;
+  height: 280px;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease; /* Añadir transición suave */
+}
+.ciudad img.img_ciudad {
+  margin-bottom: 10px;
+  width: 100%; /* Ocupa el 100% del ancho del contenedor */
+  height: 200px; /* Establece una altura fija */
+  object-fit: cover; /* Ajusta la imagen para cubrir el espacio sin distorsionarla */
+}
+.ciudad-inner:hover {
+  box-shadow: 0 0 10px rgba(0,0,0,.4);
+  transform: scale(1.05); /* Escalar un 5% más grande */
+}
+/* Cards Estado */
+.estado-inner {
+  box-shadow: 0 0 10px rgba(0,0,0,.2);
+  padding: 10px;
+  height: 280px;
+  transition: transform 0.3s ease; /* Añadir transición suave */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.estado img.img_estado {
+  width: 100%; /* Ocupa el 100% del ancho del contenedor */
+  height: 200px; /* Establece una altura fija */
+  object-fit: contain; /* Ajusta la imagen para cubrir el espacio sin distorsionarla */
+  margin-bottom: 10px;
+}
+.estado-inner:hover {
+  box-shadow: 0 0 10px rgba(0,0,0,.4);
+  transform: scale(1.05); /* Escalar un 5% más grande */
+}
+/* Cards tipo_venta */
+.tipo_venta-inner {
+  box-shadow: 0 0 10px rgba(0,0,0,.2);
+  padding: 10px;
+  height: 280px;
+  transition: transform 0.3s ease; /* Añadir transición suave */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.tipo_venta img.img_tipo_venta {
+  width: 100%; /* Ocupa el 100% del ancho del contenedor */
+  height: 200px; /* Establece una altura fija */
+  object-fit: contain; /* Ajusta la imagen para cubrir el espacio sin distorsionarla */
+  margin-bottom: 10px;
+}
+.tipo_venta-inner:hover {
+  box-shadow: 0 0 10px rgba(0,0,0,.4);
+  transform: scale(1.05); /* Escalar un 5% más grande */
+}

@@ -6,14 +6,14 @@ function loadCategories() {
             for (var i = 0; i < data.length; i++) {
                 var nombre = data[i].nom_categoria,
                     imagen = data[i].img_categoria;
-                
+
                 // Crear tarjetas de categoría
                 categories += "<div class='col-sm-4 categoria'>" +
-                                    "<div class='categoria-inner text-center'>" +
-                                        "<img src='" + imagen + "' class='img_categoria'>" +
-                                        "<br/>Categoria: " + nombre +
-                                    "</div>" +
-                              "</div>";
+                    "<div class='categoria-inner text-center'>" +
+                    "<img src='" + imagen + "' class='img_categoria'>" +
+                    "<br/>Categoria: " + nombre +
+                    "</div>" +
+                    "</div>";
             }
             // Añadir las tarjetas al contenedor
             $("#categories").html(categories);
@@ -30,14 +30,14 @@ function loadMarcas() {
             for (var i = 0; i < data.length; i++) {
                 var nombre = data[i].nom_marca,
                     imagen = data[i].img_marca;
-                
+
                 // Crear tarjetas de marca
                 marcas += "<div class='col-sm-4 marca'>" +
-                                    "<div class='marca-inner text-center'>" +
-                                        "<img src='" + imagen + "' class='img_marca'>" +
-                                        "<br/>Marca: " + nombre +
-                                    "</div>" +
-                              "</div>";
+                    "<div class='marca-inner text-center'>" +
+                    "<img src='" + imagen + "' class='img_marca'>" +
+                    "<br/>Marca: " + nombre +
+                    "</div>" +
+                    "</div>";
             }
             // Añadir las tarjetas al contenedor
             $("#marcas").html(marcas);
@@ -54,14 +54,14 @@ function loadTipoConsola() {
             for (var i = 0; i < data.length; i++) {
                 var nombre = data[i].nom_tipo_consola,
                     imagen = data[i].img_tipo_consola;
-                
+
                 // Crear tarjetas de tipo_consola
                 tipo_consola += "<div class='col-sm-4 tipo_consola'>" +
-                                    "<div class='tipo_consola-inner text-center'>" +
-                                        "<img src='" + imagen + "' class='img_tipo_consola'>" +
-                                        "<br/>Tipo consola: " + nombre +
-                                    "</div>" +
-                              "</div>";
+                    "<div class='tipo_consola-inner text-center'>" +
+                    "<img src='" + imagen + "' class='img_tipo_consola'>" +
+                    "<br/>Tipo consola: " + nombre +
+                    "</div>" +
+                    "</div>";
             }
             // Añadir las tarjetas al contenedor
             $("#tipo_consola").html(tipo_consola);
@@ -78,14 +78,14 @@ function loadCiudad() {
             for (var i = 0; i < data.length; i++) {
                 var nombre = data[i].nom_ciudad,
                     imagen = data[i].img_ciudad;
-                
+
                 // Crear tarjetas de ciudad
                 ciudad += "<div class='col-sm-4 ciudad'>" +
-                                    "<div class='ciudad-inner text-center'>" +
-                                        "<img src='" + imagen + "' class='img_ciudad'>" +
-                                        "<br/>Ciudad: " + nombre +
-                                    "</div>" +
-                              "</div>";
+                    "<div class='ciudad-inner text-center'>" +
+                    "<img src='" + imagen + "' class='img_ciudad'>" +
+                    "<br/>Ciudad: " + nombre +
+                    "</div>" +
+                    "</div>";
             }
             // Añadir las tarjetas al contenedor
             $("#ciudad").html(ciudad);
@@ -102,14 +102,14 @@ function loadEstado() {
             for (var i = 0; i < data.length; i++) {
                 var nombre = data[i].nom_estado,
                     imagen = data[i].img_estado;
-                
+
                 // Crear tarjetas de estado
                 estado += "<div class='col-sm-4 estado'>" +
-                                    "<div class='estado-inner text-center'>" +
-                                        "<img src='" + imagen + "' class='img_estado'>" +
-                                        "<br/>Estado: " + nombre +
-                                    "</div>" +
-                              "</div>";
+                    "<div class='estado-inner text-center'>" +
+                    "<img src='" + imagen + "' class='img_estado'>" +
+                    "<br/>Estado: " + nombre +
+                    "</div>" +
+                    "</div>";
             }
             // Añadir las tarjetas al contenedor
             $("#estado").html(estado);
@@ -126,14 +126,14 @@ function loadTipoVenta() {
             for (var i = 0; i < data.length; i++) {
                 var nombre = data[i].nom_tipo_venta,
                     imagen = data[i].img_tipo_venta;
-                
+
                 // Crear tarjetas de tipo_venta
                 tipo_venta += "<div class='col-sm-4 tipo_venta'>" +
-                                    "<div class='tipo_venta-inner text-center'>" +
-                                        "<img src='" + imagen + "' class='img_tipo_venta'>" +
-                                        "<br/>Tipo venta: " + nombre +
-                                    "</div>" +
-                              "</div>";
+                    "<div class='tipo_venta-inner text-center'>" +
+                    "<img src='" + imagen + "' class='img_tipo_venta'>" +
+                    "<br/>Tipo venta: " + nombre +
+                    "</div>" +
+                    "</div>";
             }
             // Añadir las tarjetas al contenedor
             $("#tipo_venta").html(tipo_venta);
@@ -142,13 +142,43 @@ function loadTipoVenta() {
         });
 }
 
+function carrousel_Ciudades() {
+    ajaxPromise('module/home/controller/controller_homepage.php?op=Carrousel_Ciudades', 'GET', 'JSON')
+        .then(function (data) {
+            for (row in data) {
+                $('<div></div>').attr('class', "carousel__elements").attr('id', data[row].nom_ciudad).appendTo(".carousel__list")
+                    .html(
+                        "<div class='col-sm-4 carousel__ciudad'>" +
+                            "<div class='carousel__ciudad-inner text-center'>" +
+                                "<img class='carousel__img' src='" + data[row].img_ciudad + "' alt=''><br>" + data[row].nom_ciudad +
+                            "</div>" +
+                        "</div>"
+                    )
+            }
+            new Glider(document.querySelector('.carousel__list'), {
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                draggable: true,
+                rewind: true,
+                dots: '.carousel__dots',
+                arrows: {
+                    prev: '.carousel__prev',
+                    next: '.carousel__next'
+                }
+            });
+        })
+        .catch(function () {
+            // window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Carrusel_Brands HOME";
+        });
+}
+
 $(document).ready(function () {
     loadCategories();
     loadMarcas();
     loadTipoConsola();
-    loadCiudad();
     loadEstado();
     loadTipoVenta();
+    carrousel_Ciudades();
     // console.log("Bienvenido al Inicio");
 });
 

@@ -109,6 +109,46 @@ switch ($_GET['op']) {
         }
         break;
 
+    case 'Carrousel_Ciudades';
+        try {
+            $daohome = new DAOHome();
+            $Ciudad = $daohome->select_ciudad();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+
+        if (!empty($Ciudad)) {
+            echo json_encode($Ciudad);
+        } else {
+            echo json_encode("error");
+        }
+        break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     case 'create';

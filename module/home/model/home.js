@@ -11,7 +11,7 @@ function loadCategories() {
                 categories += "<div class='col-sm-4 categoria'>" +
                     "<div class='categoria-inner text-center'>" +
                     "<img src='" + imagen + "' class='img_categoria'>" +
-                    "<br/>Categoria: " + nombre +
+                    "<br/>" + nombre +
                     "</div>" +
                     "</div>";
             }
@@ -35,7 +35,7 @@ function loadMarcas() {
                 marcas += "<div class='col-sm-4 marca'>" +
                     "<div class='marca-inner text-center'>" +
                     "<img src='" + imagen + "' class='img_marca'>" +
-                    "<br/>Marca: " + nombre +
+                    "<br/>" + nombre +
                     "</div>" +
                     "</div>";
             }
@@ -59,7 +59,7 @@ function loadTipoConsola() {
                 tipo_consola += "<div class='col-sm-4 tipo_consola'>" +
                     "<div class='tipo_consola-inner text-center'>" +
                     "<img src='" + imagen + "' class='img_tipo_consola'>" +
-                    "<br/>Tipo consola: " + nombre +
+                    "<br/>" + nombre +
                     "</div>" +
                     "</div>";
             }
@@ -83,7 +83,7 @@ function loadCiudad() {
                 ciudad += "<div class='col-sm-4 ciudad'>" +
                     "<div class='ciudad-inner text-center'>" +
                     "<img src='" + imagen + "' class='img_ciudad'>" +
-                    "<br/>Ciudad: " + nombre +
+                    "<br/>" + nombre +
                     "</div>" +
                     "</div>";
             }
@@ -107,7 +107,7 @@ function loadEstado() {
                 estado += "<div class='col-sm-4 estado'>" +
                     "<div class='estado-inner text-center'>" +
                     "<img src='" + imagen + "' class='img_estado'>" +
-                    "<br/>Estado: " + nombre +
+                    "<br/>" + nombre +
                     "</div>" +
                     "</div>";
             }
@@ -131,7 +131,7 @@ function loadTipoVenta() {
                 tipo_venta += "<div class='col-sm-4 tipo_venta'>" +
                     "<div class='tipo_venta-inner text-center'>" +
                     "<img src='" + imagen + "' class='img_tipo_venta'>" +
-                    "<br/>Tipo venta: " + nombre +
+                    "<br/>" + nombre +
                     "</div>" +
                     "</div>";
             }
@@ -181,114 +181,3 @@ $(document).ready(function () {
     carrousel_Ciudades();
     // console.log("Bienvenido al Inicio");
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// var categories = "",
-//     makes = "",
-//     models = "",
-//     types = "";
-
-// for (var i = 0; i < data.length; i++) {
-//     var make = data[i].make,
-//         model = data[i].model,
-//         type = data[i].type,
-//         price = data[i].price,
-//         rawPrice = price.replace("$", ""),
-//         rawPrice = parseInt(rawPrice.replace(",", "")),
-//         image = data[i].image;
-
-//     //create categoria cards
-//     categories += "<div class='col-sm-4 categoria' data-make='" + make + "' data-model='" + model + "' data-type='" + type + "' data-price='" + rawPrice + "'>" +
-//         "<div class='categoria-inner text-center'>" +
-//         "<img src='" + image + "'><br />Make: " + make +
-//         "<br />Model: " + model +
-//         "<br />Type: " + type +
-//         "<br />Price: " + price +
-//         "</div>" +
-//         "</div>";
-
-//     //create dropdown of makes
-//     if (makes.indexOf("<option value='" + make + "'>" + make + "</option>") == -1) {
-//         makes += "<option value='" + make + "'>" + make + "</option>";
-//     }
-
-//     //create dropdown of models
-//     if (models.indexOf("<option value='" + model + "'>" + model + "</option>") == -1) {
-//         models += "<option value='" + model + "'>" + model + "</option>";
-//     }
-
-//     //create dropdown of types
-//     if (types.indexOf("<option value='" + type + "'>" + type + "</option>") == -1) {
-//         types += "<option value='" + type + "'>" + type + "</option>";
-//     }
-// }
-
-// $("#categories").html(categories);
-// $(".filter-make").append(makes);
-// $(".filter-model").append(models);
-// $(".filter-type").append(types);
-
-// var filtersObject = {};
-
-// //on filter change
-// $(".filter").on("change", function () {
-//     var filterName = $(this).data("filter"),
-//         filterVal = $(this).val();
-
-//     if (filterVal == "") {
-//         delete filtersObject[filterName];
-//     } else {
-//         filtersObject[filterName] = filterVal;
-//     }
-
-//     var filters = "";
-
-//     for (var key in filtersObject) {
-//         if (filtersObject.hasOwnProperty(key)) {
-//             filters += "[data-" + key + "='" + filtersObject[key] + "']";
-//         }
-//     }
-
-//     if (filters == "") {
-//         $(".categoria").show();
-//     } else {
-//         $(".categoria").hide();
-//         $(".categoria").hide().filter(filters).show();
-//     }
-// });
-
-// //on search form submit
-// $("#search-form").submit(function (e) {
-//     e.preventDefault();
-//     var query = $("#search-form input").val().toLowerCase();
-
-//     $(".categoria").hide();
-//     $(".categoria").each(function () {
-//         var make = $(this).data("make").toLowerCase(),
-//             model = $(this).data("model").toLowerCase(),
-//             type = $(this).data("type").toLowerCase();
-
-//         if (make.indexOf(query) > -1 || model.indexOf(query) > -1 || type.indexOf(query) > -1) {
-//             $(this).show();
-//         }
-//     });
-// });

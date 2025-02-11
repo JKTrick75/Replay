@@ -11,7 +11,7 @@
     	    include("view/inc/header.html");
     	?>        
     </div>
-    <div id="">
+    <div id="pagescustom">
     	<?php 
 		    include("view/inc/pages.php"); 
 		?>        

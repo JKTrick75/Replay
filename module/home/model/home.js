@@ -146,7 +146,7 @@ function carrousel_Ciudades() {
     ajaxPromise('module/home/controller/controller_homepage.php?op=Carrousel_Ciudades', 'GET', 'JSON')
         .then(function (data) {
             for (row in data) {
-                $('<div></div>').attr('class', "carousel__elements").attr('id', data[row].nom_ciudad).appendTo(".carousel__list")
+                $('<div></div>').attr('class', "carousel__elements").attr('id', data[row].nom_ciudad).appendTo(".carousel__list__ciudades")
                     .html(
                         "<div class='col-sm-4 carousel__ciudad'>" +
                             "<div class='carousel__ciudad-inner text-center'>" +
@@ -155,15 +155,45 @@ function carrousel_Ciudades() {
                         "</div>"
                     )
             }
-            new Glider(document.querySelector('.carousel__list'), {
+            new Glider(document.querySelector('.carousel__list__ciudades'), {
                 slidesToShow: 3,
                 slidesToScroll: 3,
                 draggable: true,
                 rewind: true,
-                dots: '.carousel__dots',
+                dots: '.carousel__dots__ciudad',
                 arrows: {
-                    prev: '.carousel__prev',
-                    next: '.carousel__next'
+                    prev: '.prev_ciudades',
+                    next: '.next_ciudades'
+                }
+            });
+        })
+        .catch(function () {
+            // window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Carrusel_Brands HOME";
+        });
+}
+
+function carrousel_Productos() {
+    ajaxPromise('module/home/controller/controller_homepage.php?op=Carrousel_Productos', 'GET', 'JSON')
+        .then(function (data) {
+            for (row in data) {
+                $('<div></div>').attr('class', "carousel__elements").attr('id', data[row].nom_producto).appendTo(".carousel__list__productos")
+                    .html(
+                        "<div class='col-sm-4 carousel__productos'>" +
+                            "<div class='carousel__productos-inner text-center'>" +
+                                "<img class='carousel__img' src='" + data[row].img_producto + "' alt=''><br>" + data[row].nom_producto +
+                            "</div>" +
+                        "</div>"
+                    )
+            }
+            new Glider(document.querySelector('.carousel__list__productos'), {
+                slidesToShow: 2,
+                slidesToScroll: 2,
+                draggable: true,
+                rewind: true,
+                dots: '.carousel__dots__productos',
+                arrows: {
+                    prev: '.prev_productos',
+                    next: '.next_productos'
                 }
             });
         })
@@ -179,5 +209,6 @@ $(document).ready(function () {
     loadEstado();
     loadTipoVenta();
     carrousel_Ciudades();
+    carrousel_Productos();
     // console.log("Bienvenido al Inicio");
 });

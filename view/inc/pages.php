@@ -4,6 +4,9 @@ if (isset($_GET['page'])) {
 		case "controller_homepage";
 			include("module/home/controller/" . $_GET['page'] . ".php");
 			break;
+		case "controller_shop";
+			include("module/shop/controller/" . $_GET['page'] . ".php");
+			break;
 		case "services";
 			include("module/services/" . $_GET['page'] . ".html");
 			break;

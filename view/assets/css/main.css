@@ -2662,3 +2662,16 @@ display: none; /* Asegura que esté completamente oculto
   float: left;
   margin: 0 15px 15px 0;
 }
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: var(--background-color);
+  z-index: 1000; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
+}
+
+#pagescustom{
+  margin-top: 118px;
+}

@@ -1,5 +1,9 @@
 <?php
-	include("view/inc/top_page.html");
+	if ((isset($_GET['page'])) && ($_GET['page']==="controller_shop")){
+		include("view/inc/top_page_shop.html");
+	}else{
+		include("view/inc/top_page.html");
+	}
 ?>
 <div id="wrapper">		
     <div id="header">    	

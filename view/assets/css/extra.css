@@ -186,3 +186,23 @@
   box-shadow: 0 0 10px rgba(0,0,0,.4);
   transform: scale(1.03);
 }
+
+
+/* SHOP CARDS */
+.producto-inner {
+  box-shadow: 0 0 10px rgba(0,0,0,.2);
+  padding: 10px;
+  height: 280px;
+  transition: transform 0.3s ease; /* Añadir transición suave */
+  margin-bottom: 20px;
+}
+.producto img.img_producto {
+  margin-bottom: 10px;
+  width: 100%; /* Ocupa el 100% del ancho del contenedor */
+  height: 200px; /* Establece una altura fija */
+  object-fit: cover; /* Ajusta la imagen para cubrir el espacio sin distorsionarla */
+}
+.producto-inner:hover {
+  box-shadow: 0 0 10px rgba(0,0,0,.4);
+  transform: scale(1.05); /* Escalar un 5% más grande */
+}

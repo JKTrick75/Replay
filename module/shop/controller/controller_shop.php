@@ -21,8 +21,8 @@ switch ($_GET['op']) {
 
     case 'get_products';
         try {
-            $daohome = new DAOShop();
-            $Categories = $daohome->select_products();
+            $daoshop = new DAOShop();
+            $Categories = $daoshop->select_products();
         } catch (Exception $e) {
             echo json_encode("error");
         }

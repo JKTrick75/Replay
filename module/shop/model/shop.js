@@ -31,8 +31,8 @@ function ajaxForSearch(url, total_prod = 0, items_page) {
                                             "<li> <i id='col-ico' class='fa-solid fa-palette fa-xl'></i>&nbsp; Color: " + data[row].color + "</li>" +
                                         "</ul>" +
                                         "<div class='buttons'>" +
-                                            "<button id='" + data[row].id_producto + "' class='more_info_list button add' >More Info</button>" +
-                                            "<button class='button buy' >Buy</button>" +
+                                            "<button id='" + data[row].id_producto + "' class='more_info_list button add'>Detalles</button>" +
+                                            "<button class='button buy'>Comprar</button>" +
                                         "</div>" +
                                     "</div>" +
                                 "</div>" +

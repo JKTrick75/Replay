@@ -107,7 +107,9 @@
 				ON p.id_producto = i.id_producto
 				WHERE i.id_img = (SELECT MIN(i2.id_img) 
                   				  FROM img_producto i2 
-                  				  WHERE i2.id_producto = p.id_producto);";
+                  				  WHERE i2.id_producto = p.id_producto)
+				ORDER BY p.id_producto
+				LIMIT 8;";
 
 			$conexion = connect::con();
 			$res = mysqli_query($conexion, $sql);

@@ -13,7 +13,7 @@
     </div>
     <div id="pagescustom">
     	<?php 
-		    include("view/inc/pages.php"); 
+		    include("view/inc/pages.php");
 		?>        
 		<br style="clear:both;">
     </div>

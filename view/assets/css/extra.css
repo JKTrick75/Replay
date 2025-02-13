@@ -223,9 +223,8 @@
 
 /* =========================== SHOP CARDS =========================== */
 .content_shop_products {
-  display: grid; /* Contenedor que distribuye las tarjetas en 3 columnas */
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  width: 50%; /* Ocupar mitad de la pantalla */
+  margin-left: 0;
   padding: 20px;
 }
 .list_product { /* Estilos para cada tarjeta de producto */
@@ -235,20 +234,26 @@
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  display: flex; /* Conservamos el display flex interno para organizar imagen e info */
+  display: flex;  
+  max-width: 100%;
+  margin-bottom: 10px;
+  min-height: 200px; /* Altura mínima igual al contenedor de imagen */
 }
 .list_product:hover {
   transform: translateY(-5px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 .img-container {
-  flex: 0 0 120px;
+  flex: 0 0 300px; /* Ancho aumentado (antes 120px) */
+  height: 200px; /* Altura fija para mantener relación cuadrada */
   overflow: hidden;
+  position: relative; /* Para posicionar elementos absolutos luego */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 .img-container img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* Proporción de la foto */
   transition: transform 0.3s ease;
 }
 .img-container img:hover {
@@ -298,6 +303,8 @@
   color: #007BFF;
   margin-right: 8px;
 }
+
+/* Buttons */
 .buttons {
   margin-top: auto;
 }
@@ -325,3 +332,19 @@
 .buttons .buy:hover {
   background-color: #c65a48;
 }
+
+/* =========================== LAYOUT =========================== */
+.shop-container {
+  display: flex;
+  width: 100%;
+}
+#map-container {
+  width: 50%; /* La otra mitad de la pantalla */
+  background-color: #f0f0f0; /* Color temporal de obras */
+}
+
+.container__shop{
+  margin-left: 100px;
+  margin-right: 100px;
+}
+

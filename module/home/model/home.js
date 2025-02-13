@@ -221,7 +221,9 @@ function carrousel_Productos_New() {
                 centerMode: true,
                 centerPadding: '60px',
                 slidesToShow: 4,
-                dots:true
+                dots:true,
+                autoplay: true,
+                autoplaySpeed: 1500
               });
         })
         .catch(function () {

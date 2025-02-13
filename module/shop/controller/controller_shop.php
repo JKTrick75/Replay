@@ -34,6 +34,23 @@ switch ($_GET['op']) {
         }
         break;
 
+    // case 'get_products_images';
+    //     error_log('Esta es la id para pillar las fotos:');
+    //     error_log($_GET['id']);
+    //     try {
+    //         $daoshop = new DAOShop();
+    //         $Categories = $daoshop->select_products_images($_GET['id']);
+    //     } catch (Exception $e) {
+    //         echo json_encode("error");
+    //     }
+
+    //     if (!empty($Categories)) {
+    //         echo json_encode($Categories);
+    //     } else {
+    //         echo json_encode("error");
+    //     }
+    //     break;
+
     default;
         include("view/inc/error404.html");
         break;

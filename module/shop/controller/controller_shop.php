@@ -22,34 +22,63 @@ switch ($_GET['op']) {
     case 'get_products';
         try {
             $daoshop = new DAOShop();
-            $Categories = $daoshop->select_products();
+            $Products = $daoshop->select_products();
+
+        // foreach ($Products as $row) {
+        //     error_log(json_encode($row));
+        // }
+
         } catch (Exception $e) {
             echo json_encode("error");
         }
 
-        if (!empty($Categories)) {
-            echo json_encode($Categories);
+        if (!empty($Products)) {
+            echo json_encode($Products);
         } else {
             echo json_encode("error");
         }
         break;
 
-    // case 'get_products_images';
-    //     error_log('Esta es la id para pillar las fotos:');
-    //     error_log($_GET['id']);
-    //     try {
-    //         $daoshop = new DAOShop();
-    //         $Categories = $daoshop->select_products_images($_GET['id']);
-    //     } catch (Exception $e) {
-    //         echo json_encode("error");
-    //     }
+    case 'get_details':
+        try {
+            $daoshop = new DAOShop();
+            $Product_details = $daoshop->select_details($_GET['id']);
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+        try {
+            $daoshop_img = new DAOShop();
+            $Product_images = $daoshop_img->select_images($_GET['id']);
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
 
-    //     if (!empty($Categories)) {
-    //         echo json_encode($Categories);
-    //     } else {
-    //         echo json_encode("error");
-    //     }
-    //     break;
+        if (!empty($Product_details || $Product_images)) {
+            $rdo = array();
+            $rdo[0] = $Product_details;
+            $rdo[1][] = $Product_images;
+            echo json_encode($rdo);
+        } else {
+            echo json_encode("error");
+        }
+        break;
+
+        // case 'get_products_images';
+        //     error_log('Esta es la id para pillar las fotos:');
+        //     error_log($_GET['id']);
+        //     try {
+        //         $daoshop = new DAOShop();
+        //         $Products = $daoshop->select_products_images($_GET['id']);
+        //     } catch (Exception $e) {
+        //         echo json_encode("error");
+        //     }
+
+        //     if (!empty($Products)) {
+        //         echo json_encode($Products);
+        //     } else {
+        //         echo json_encode("error");
+        //     }
+        //     break;
 
     default;
         include("view/inc/error404.html");

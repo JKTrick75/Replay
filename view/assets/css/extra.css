@@ -303,6 +303,9 @@
   color: #007BFF;
   margin-right: 8px;
 }
+.list_product i {
+  color: #E96B56 !important;
+}
 
 /* Buttons */
 .buttons {
@@ -334,7 +337,7 @@
 }
 
 /* =========================== LAYOUT =========================== */
-.shop-container {
+.list_product_shop {
   display: flex;
   width: 100%;
 }
@@ -348,3 +351,184 @@
   margin-right: 100px;
 }
 
+/* =========================== DETAILS SHOP =========================== */
+#details_product_shop {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas: imágenes a la izquierda, detalles a la derecha */
+  gap: 30px;
+  padding: 30px;
+  max-width: 1200px;
+  margin: auto;
+  background: #f8f8f8;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos del carrusel de imágenes */
+.imagen_producto {
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.content-img-details img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* Estilos generales de la caja de detalles */
+.detalles_producto {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos del título */
+.product-content_details h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Línea divisoria */
+.hr-shop {
+  border: none;
+  height: 2px;
+  background: #E96B56;
+  margin: 15px 0;
+}
+
+/* Tabla de especificaciones */
+#table-shop {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+#table-shop td {
+  padding: 12px;
+  font-size: 1rem;
+  color: #555;
+  border-bottom: 1px solid #ddd;
+}
+
+#table-shop i {
+  color: #E96B56;
+}
+
+/* Botones de acciones */
+.buttons_details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.buttons_details .button {
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: 0.3s ease-in-out;
+  text-align: center;
+  display: inline-block;
+}
+
+.buttons_details .add {
+  background: #333;
+  color: white;
+}
+
+.buttons_details .add:hover {
+  background: black;
+}
+
+.buttons_details .buy {
+  background: #E96B56;
+  color: white;
+}
+
+.buttons_details .buy:hover {
+  background: #c65a48;
+}
+
+#precio_details {
+  background: #f8f8f8;
+  padding: 12px 20px;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Icono del corazón */
+.details__heart {
+  font-size: 1.5rem;
+  color: #E96B56;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.details__heart:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive: Ajustar a una sola columna en pantallas pequeñas */
+@media (max-width: 768px) {
+  #details_product_shop {
+    grid-template-columns: 1fr;
+  }
+
+  .imagen_producto {
+    max-width: 90%;
+    margin: auto;
+  }
+}
+
+
+/* =========================== DETAILS SLICK CAROUSEL =========================== */
+#container-date-img .slick-slide {
+  margin: 10px;
+}
+#container-date-img .slick-slide img {
+  width: 100%;
+  border: 2px solid black;
+}
+
+#container-date-img .slick-prev,
+#container-date-img .slick-next {
+  display: flex !important; /* Asegurar visibilidad */
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 1000; /* Que estén por encima de otros elementos */
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%; /* Bordes redondeados */
+  width: 50px !important; /* Tamaño adecuado */
+  height: 50px !important;
+}
+
+/* 🔄 POSICIONAR LAS FLECHAS DENTRO DEL CARRUSEL */
+#container-date-img .slick-prev {
+  left: 10px !important;
+}
+
+#container-date-img .slick-next {
+  right: 10px !important;
+}
+
+/* 🎨 COLOR Y TAMAÑO DEL ICONO DE LAS FLECHAS */
+#container-date-img .slick-prev:before,
+#container-date-img .slick-next:before {
+  color: white !important; /* Color de la flecha */
+  font-size: 25px !important; /* Tamaño visible */
+  opacity: 1 !important;
+}

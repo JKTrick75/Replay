@@ -327,12 +327,12 @@
   transition: background-color 0.3s ease;
   margin-right: 10px;
 }
-.buttons .more_info_list {
+.buttons .more_info_button {
   background-color: #333333;
   color: #fff;
 }
-.buttons .more_info_list:hover {
-  background-color: rgb(34, 33, 33);
+.buttons .more_info_button:hover {
+  background-color: rgb(36, 35, 35);
 }
 .buttons .buy {
   background-color: #E96B56;
@@ -533,12 +533,13 @@
 /* Icono del corazón */
 .details__heart {
   font-size: 1.5rem;
-  color: #E96B56;
+  color: #8d8c8c;
   cursor: pointer;
   transition: 0.3s;
 }
 .details__heart:hover {
   transform: scale(1.1);
+  color: #E96B56;
 }
 
 /* Responsive: Ajustar a una sola columna en pantallas pequeñas */

@@ -23,7 +23,7 @@ function ajaxForSearch(url, total_prod = 0, items_page) {
                                     "<div class='product-content'>" +
                                         "<h1><b>" + data[row].nom_producto + " (" + data[row].precio + '€)' +
                                             "<a class='list__heart' id='" + data[row].id_producto + "'>" +
-                                                "<i id= " + data[row].id_producto + " class='fa-solid fa-heart fa-lg'></i>"+
+                                            "<a class='details__heart' id='" + data[row].id_producto + "'><i id=" + data[row].id_producto + " class='fa-solid fa-heart fa-lg'></i></a>" +
                                             "</a>" +
                                         "</b></h1>" +
                                         "<ul>" +
@@ -166,7 +166,7 @@ function loadDetails(id_producto) {
                                 "<div class='buttons_details'>" +
                                     "<a class='button add' href='#'>Añadir a cesta</a>" +
                                     "<a class='button buy' href='#'>Comprar</a>" +
-                                    "<span class='button' id='precio_details'>" + data[0].precio + "<i class='fa-solid fa-euro-sign'></i> </span>" +
+                                    // "<span class='button' id='precio_details'>" + data[0].precio + "<i class='fa-solid fa-euro-sign'></i> </span>" +
                                     "<a class='details__heart' id='" + data[0].id_producto + "'><i id=" + data[0].id_producto + " class='fa-solid fa-heart fa-lg'></i></a>" +
                                 "</div>" +
                             "</div>" +

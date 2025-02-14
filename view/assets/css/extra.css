@@ -1,3 +1,6 @@
+/* -------------------------------------------------------------------- */
+/* ============================  CARDS  =============================== */
+/* -------------------------------------------------------------------- */
 /* Cards Categories */
 .categoria-inner {
   box-shadow: 0 0 10px rgba(0,0,0,.2);
@@ -92,7 +95,9 @@
   transform: scale(1.05); /* Escalar un 5% más grande */
 }
 
-/* CAROUSEL */
+/* -------------------------------------------------------------------- */
+/* ============================  CAROUSEL  ============================ */
+/* -------------------------------------------------------------------- */
 .container.section-title {
   position: relative;
 }
@@ -220,8 +225,9 @@
   color: rgb(56, 56, 56);
 }
 
-
+/* ------------------------------------------------------------------ */
 /* =========================== SHOP CARDS =========================== */
+/* ------------------------------------------------------------------ */
 .content_shop_products {
   width: 60%; /* COLUMNA LISTA PRODUCTOS */
   margin-left: 0;
@@ -351,34 +357,49 @@
   margin-right: 10px;
 }
 
+.hidden {
+  display: none !important; 
+}
+
+/* -------------------------------------------------------------------- */
 /* =========================== DETAILS SHOP =========================== */
+/* -------------------------------------------------------------------- */
+/* Contenedor general: dos filas (top-section y detalles_extra) */
 #details_product_shop {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Dos columnas: imágenes a la izquierda, detalles a la derecha */
+  grid-template-rows: auto auto; /* Primera fila y segunda fila */
   gap: 30px;
   padding: 30px;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin: 0 10px;
   background: #f8f8f8;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilos del carrusel de imágenes */
+/* ---------------------- */
+/* Primera fila: top-section */
+/* ---------------------- */
+.top-section {
+  display: grid;
+  grid-template-columns: 500px 1fr; /* 500px fijos para el carrusel, y el resto para los detalles */
+  gap: 30px;
+}
+/* Carrusel de imágenes con tamaño fijo */
 .imagen_producto {
-  max-width: 100%;
+  width: 500px;  /* Ancho fijo */
+  height: 700px; /* Alto fijo */
   overflow: hidden;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
-
+/* Las imágenes se adaptan al contenedor */
 .content-img-details img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain; /* Usa 'cover' o 'contain' según el efecto deseado */
   border-radius: 10px;
 }
-
-/* Estilos generales de la caja de detalles */
+/* Detalles generales (lado derecho) */
 .detalles_producto {
   background: #fff;
   padding: 20px;
@@ -386,7 +407,37 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilos del título */
+/* ---------------------- */
+/* Segunda fila: detalles_extra */
+/* ---------------------- */
+.detalles_extra {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ---------------------- */
+/* Tercera fila: valoraciones */
+/* ---------------------- */
+.valoraciones {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ---------------------- */
+/* Cuarta fila: productos_relacionados */
+/* ---------------------- */
+.productos_relacionados {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos de títulos */
 .product-content_details h1 {
   font-size: 1.8rem;
   font-weight: bold;
@@ -394,10 +445,9 @@
   text-align: center;
   margin-bottom: 10px;
 }
-.product-content_details h3{
+.product-content_details h3, .valoraciones h3, .productos_relacionados h3 {
   text-align: left;
 }
-
 /* Línea divisoria */
 .hr-shop {
   border: none;
@@ -412,6 +462,7 @@
   border-collapse: collapse;
   margin: 10px 0;
 }
+
 #table-shop td {
   padding: 12px;
   font-size: 1rem;
@@ -419,8 +470,21 @@
   border-bottom: 1px solid #ddd;
   text-align: left;
 }
+
 #table-shop i {
   color: #E96B56;
+}
+
+/* Responsive: en pantallas pequeñas */
+@media (max-width: 768px) {
+  .top-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .imagen_producto {
+    width: 100%;
+    height: auto; /* Puedes definir un alto fijo o dejar que se ajuste */
+  }
 }
 
 /* Botones de acciones */
@@ -489,8 +553,9 @@
   }
 }
 
-
+/* ------------------------------------------------------------------------------ */
 /* =========================== DETAILS SLICK CAROUSEL =========================== */
+/* ------------------------------------------------------------------------------ */
 #container-date-img .slick-slide {
   margin: 10px;
 }

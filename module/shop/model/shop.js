@@ -113,11 +113,13 @@ function loadProducts(total_prod = 0, items_page = 4) {
 function loadDetails(id_producto) {
     ajaxPromise('module/shop/controller/controller_shop.php?op=get_details&id=' + id_producto, 'GET', 'JSON')
         .then(function (data) {
-            // console.log(data);
+            console.log(data);
 
             $('.list_product_shop').empty();
             $('.imagen_producto_dentro').empty();
             $('.detalles_producto_dentro').empty();
+
+            $('#details_product_shop').removeClass('hidden'); //Mostramos los detalles_producto
 
             for (row in data[1][0]) {
                 // console.log(data[1][0][row].img_producto);
@@ -141,39 +143,26 @@ function loadDetails(id_producto) {
                                 "<h3>Especificaciones generales:</h3>" +
                                 "<table id='table-shop'>"+
                                     "<tr>" +
-                                        "<td> <i id='col-ico' class='fa-solid fa-person fa-2xl'></i> &nbsp; Precio: " + data[0].precio + "€</td>" +
-                                        "<td> <i id='col-ico' class='fa-solid fa-person fa-2xl'></i> &nbsp; Color: " + data[0].color + "</td>  </tr>" +
-                                        "<td> <i id='col-ico' class='fa-solid fa-car fa-2xl'></i> &nbsp; Capacidad: " + data[0].capacidad + "</td>" +
-                                        "<td> <i id='col-ico' class='fa-solid fa-door-open fa-2xl'></i> &nbsp; Marca: " + data[0].marca + "</td>  </tr>" +
-                                        "<td> <i id='col-ico' class='fa-solid fa-gas-pump fa-2xl'></i> &nbsp; Estado: " + data[0].nom_estado + "</td>" +
-                                        "<td> <i id='col-ico' class='fa-solid fa-calendar-days fa-2xl'></i> &nbsp; Ciudad: " + data[0].nom_ciudad + "</td>  </tr>" +
-                                        "<td> <i id='col-ico' class='fa-solid fa-palette fa-2xl'></i> &nbsp; Tipo consola: " + data[0].nom_tipo_consola + "</td>" +
-                                        "<td> <i id='col-ico' class='fa-solid fa-location-dot fa-2xl'></i> &nbsp;Tipo merchandising: " + data[0].nom_tipo_merchandising + "</td>  </tr>"+
-                                        "<td> <i id='col-ico' class='fa-solid fa-palette fa-2xl'></i> &nbsp; Tipo accesorio: " + data[0].nom_tipo_accesorio + "</td>" +
-                                        "<td> <i id='col-ico' class='fa-solid fa-location-dot fa-2xl'></i> &nbsp;Tipo merchandising: " + data[0].nom_tipo_merchandising + "</td>  </tr>"+
-                                        "<td> <i id='col-ico' class='fa-solid fa-person fa-2xl'></i> &nbsp; Fecha publicación: " + data[0].fecha_publicacion + "</td>  </tr>" +
-                                        "<td> <i id='col-ico' class='fa-solid fa-person fa-2xl'></i> &nbsp; Última modificación: " + data[0].fecha_ult_mod + "</td>  </tr>" +
+                                        "<td> <i id='col-ico' class='fa-solid fa-sack-dollar fa-2xl'></i> &nbsp; Precio: " + data[0].precio + "€</td>" +
+                                        "<td> <i id='col-ico' class='fa-solid fa-palette fa-2xl'></i> &nbsp; Color: " + data[0].color + "</td>  </tr>" +
+                                        "<td> <i id='col-ico' class='fa-solid fa-box fa-2xl'></i> &nbsp; Capacidad: " + data[0].capacidad + "</td>" +
+                                        "<td> <i id='col-ico' class='fa-brands fa-bandcamp fa-2xl'></i> &nbsp; Marca: " + data[0].nom_marca + "</td>  </tr>" +
+                                        "<td> <i id='col-ico' class='fa-solid fa-certificate fa-2xl'></i> &nbsp; Estado: " + data[0].nom_estado + "</td>" +
+                                        "<td> <i id='col-ico' class='fa-solid fa-map-location-dot fa-2xl'></i> &nbsp; Ciudad: " + data[0].nom_ciudad + "</td>  </tr>" +
+                                        "<td> <i id='col-ico' class='fa-solid fa-gamepad fa-2xl'></i> &nbsp; Tipo consola: " + data[0].nom_tipo_consola + "</td>" +
+                                        "<td></td></tr>" + //Para llenar el subrayado de la última línea al ser tabla con 2 columnas
                                     "</tr>" +
                                 "</table>" +
                                 "<hr class=hr-shop>" +
-                                "<h3><b>" + "Opciones:" + "</b></h3>" +
+                                "<h3>Fechas:</h3>" +
                                 "<table id='table-shop'>"+
-                                "<tr>" +
-                                    "<td> <i id='col-ico' class='fa-solid fa-person fa-2xl'></i> &nbsp; Precio: " + data[0].precio + "€</td>" +
-                                    "<td> <i id='col-ico' class='fa-solid fa-person fa-2xl'></i> &nbsp; Color: " + data[0].color + "</td>  </tr>" +
-                                    "<td> <i id='col-ico' class='fa-solid fa-car fa-2xl'></i> &nbsp; Capacidad: " + data[0].capacidad + "</td>" +
-                                    "<td> <i id='col-ico' class='fa-solid fa-door-open fa-2xl'></i> &nbsp; Marca: " + data[0].marca + "</td>  </tr>" +
-                                    "<td> <i id='col-ico' class='fa-solid fa-gas-pump fa-2xl'></i> &nbsp; Estado: " + data[0].nom_estado + "</td>" +
-                                    "<td> <i id='col-ico' class='fa-solid fa-calendar-days fa-2xl'></i> &nbsp; Ciudad: " + data[0].nom_ciudad + "</td>  </tr>" +
-                                    "<td> <i id='col-ico' class='fa-solid fa-palette fa-2xl'></i> &nbsp; Tipo consola: " + data[0].nom_tipo_consola + "</td>" +
-                                    "<td> <i id='col-ico' class='fa-solid fa-location-dot fa-2xl'></i> &nbsp;Tipo merchandising: " + data[0].nom_tipo_merchandising + "</td>  </tr>"+
-                                    "<td> <i id='col-ico' class='fa-solid fa-palette fa-2xl'></i> &nbsp; Tipo accesorio: " + data[0].nom_tipo_accesorio + "</td>" +
-                                    "<td> <i id='col-ico' class='fa-solid fa-location-dot fa-2xl'></i> &nbsp;Tipo merchandising: " + data[0].nom_tipo_merchandising + "</td>  </tr>"+
-                                    "<td> <i id='col-ico' class='fa-solid fa-person fa-2xl'></i> &nbsp; Fecha publicación: " + data[0].fecha_publicacion + "</td>  </tr>" +
-                                    "<td> <i id='col-ico' class='fa-solid fa-person fa-2xl'></i> &nbsp; Última modificación: " + data[0].fecha_ult_mod + "</td>  </tr>" +
-                                "</tr>" +
-                            "</table>" +
-                            "<hr class=hr-shop>" +
+                                    "<tr>" +
+                                        "<td> <i id='col-ico' class='fa-solid fa-calendar-days fa-2xl'></i> &nbsp; Fecha publicación: " + data[0].fecha_publicacion + "</td>  </tr>" +
+                                        "<td> <i id='col-ico' class='fa-solid fa-calendar-days fa-2xl'></i> &nbsp; Última modificación: " + data[0].fecha_ult_mod + "</td>  </tr>" +
+                                    "</tr>" +
+                                "</table>" +
+                                "<hr class=hr-shop>" +
+                                "<h3>" + "Opciones:" + "</h3>" +
                                 "<div class='buttons_details'>" +
                                     "<a class='button add' href='#'>Añadir a cesta</a>" +
                                     "<a class='button buy' href='#'>Comprar</a>" +
@@ -182,21 +171,48 @@ function loadDetails(id_producto) {
                                 "</div>" +
                             "</div>" +
                         "</div>" +
-                        
-                    "</div>"+
-                    "<div class='buttons'>" +
-                                    "<button class='back_list button add'>Volver</button>" +
-                                "</div>" 
+                    "</div>" 
                 )
+
+                $('<div></div>').attr({ 'id': data[0].id_producto, class: 'detalles_producto_dentro' }).appendTo('.detalles_extra')
+                .html(
+                    "<div class='list_product_details'>" +
+                        "<div class='product-info_details'>" +
+                            "<div class='product-content_details'>" +
+                                "<h3>Otros detalles:</h3>" +
+                                "<hr class=hr-shop>" +
+                                "<table id='table-shop'>"+
+                                    "<tr>" +
+                                        "<td> <i class='bi bi-controller' style='font-size: 2rem'></i> &nbsp; Incluye mando: " + (data[0].incluye_mando ? "Sí" : "No") + "</td>" +
+                                        "<td> <i class='bi bi-dpad' style='font-size: 2rem'></i> &nbsp; Tipo consola: " + (data[0].nom_tipo_consola ? data[0].nom_tipo_consola : "N/A") + "</td>" +
+                                    "</tr>" +
+                                    "<tr>" +
+                                        "<td> <i class='bi bi-plug' style='font-size: 2rem'></i> &nbsp; Incluye cargador: " + (data[0].incluye_cargador ? "Sí" : "No") + "</td>" +
+                                        "<td> <i class='bi bi-boxes' style='font-size: 2rem'></i> &nbsp; Tipo merchandising: " + (data[0].nom_tipo_merchandising ? data[0].nom_tipo_merchandising : "N/A") + "</td>" +
+                                    "</tr>" +
+                                    "<tr>" +
+                                        "<td> <i class='bi bi-joystick' style='font-size: 2rem'></i> &nbsp; Incluye juegos: " + (data[0].incluye_juegos ? "Sí" : "No") + "</td>" +
+                                        "<td> <i class='bi bi-plus-square' style='font-size: 2rem'></i></i> &nbsp; Tipo accesorio: " + (data[0].nom_tipo_accesorio ? data[0].nom_tipo_accesorio : "N/A") + "</td>" +
+                                    "</tr>" +
+                                "</table>" +
+                                "<hr class=hr-shop>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>" +
+                    "<div class='buttons'>" +
+                        "<button class='back_list button add'>Volver</button>" +
+                    "</div>" 
+                );
+                
 
             $('.imagen_producto').slick({
                 infinite: true,
                 speed: 300,
                 slidesToShow: 1,
                 adaptiveHeight: true,
-                arrows: true
-                // autoplay: true,
-                // autoplaySpeed: 1500
+                arrows: true,
+                autoplay: true,
+                autoplaySpeed: 3000
             });
 
 
@@ -228,6 +244,7 @@ function clicks() {
     });
     $(document).on("click", ".back_list", function () {
         // console.log("Volvemos al list");
+        $('#details_product_shop').addClass('hidden'); //Ocultamos los detalles_producto
         window.location.href = "index.php?page=controller_shop&op=list";
     });
 }
@@ -235,5 +252,6 @@ function clicks() {
 $(document).ready(function () {
     loadProducts();
     clicks();
+    $('#details_product_shop').addClass('hidden'); //Ocultamos los detalles_producto
     // console.log("Bienvenido al Catálogo");
 });

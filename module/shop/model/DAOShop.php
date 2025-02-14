@@ -6,14 +6,22 @@
 	class DAOShop{
 
 		function select_products() {
-			$sql= "SELECT * 
-					FROM producto p INNER JOIN img_producto i
-					ON p.id_producto = i.id_producto
+			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, i.img_producto
+					FROM producto p 
+					INNER JOIN img_producto i ON p.id_producto = i.id_producto
+					INNER JOIN estado e ON p.estado = e.id_estado
+					INNER JOIN ciudad c ON p.ciudad = c.id_ciudad
 					WHERE i.id_img = (SELECT MIN(i2.id_img) 
-                  					  FROM img_producto i2 
-                  					  WHERE i2.id_producto = p.id_producto);";
-			// $sql= "SELECT * 
-			// FROM producto p;";
+										FROM img_producto i2 
+										WHERE i2.id_producto = p.id_producto);";
+						// $sql= "SELECT *
+			// 		FROM producto p 
+			// 		INNER JOIN img_producto i ON p.id_producto = i.id_producto
+
+			// 		WHERE i.id_img = (SELECT MIN(i2.id_img) 
+            //       					  FROM img_producto i2 
+            //       					  WHERE i2.id_producto = p.id_producto);";
+
 
 			$conexion = connect::con();
 			$res = mysqli_query($conexion, $sql);

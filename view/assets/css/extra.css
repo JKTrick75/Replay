@@ -223,7 +223,7 @@
 
 /* =========================== SHOP CARDS =========================== */
 .content_shop_products {
-  width: 50%; /* Ocupar mitad de la pantalla */
+  width: 60%; /* COLUMNA LISTA PRODUCTOS */
   margin-left: 0;
   padding: 20px;
 }
@@ -342,13 +342,13 @@
   width: 100%;
 }
 #map-container {
-  width: 50%; /* La otra mitad de la pantalla */
+  width: 50%; /* COLUMNA MAPS */
   background-color: #f0f0f0; /* Color temporal de obras */
 }
 
-.container__shop{
-  margin-left: 100px;
-  margin-right: 100px;
+.container__shop { /* CONTENEDOR SHOP, ANCHO PAGINA */
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 /* =========================== DETAILS SHOP =========================== */
@@ -357,8 +357,8 @@
   grid-template-columns: 1fr 1fr; /* Dos columnas: imágenes a la izquierda, detalles a la derecha */
   gap: 30px;
   padding: 30px;
-  max-width: 1200px;
-  margin: auto;
+  margin-left: 10px;
+  margin-right: 10px;
   background: #f8f8f8;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -394,6 +394,9 @@
   text-align: center;
   margin-bottom: 10px;
 }
+.product-content_details h3{
+  text-align: left;
+}
 
 /* Línea divisoria */
 .hr-shop {
@@ -403,20 +406,19 @@
   margin: 15px 0;
 }
 
-/* Tabla de especificaciones */
+/* TABLA DETAILS */
 #table-shop {
   width: 100%;
   border-collapse: collapse;
   margin: 10px 0;
 }
-
 #table-shop td {
   padding: 12px;
   font-size: 1rem;
   color: #555;
   border-bottom: 1px solid #ddd;
+  text-align: left;
 }
-
 #table-shop i {
   color: #E96B56;
 }
@@ -429,7 +431,6 @@
   justify-content: center;
   margin-top: 20px;
 }
-
 .buttons_details .button {
   padding: 12px 20px;
   font-size: 1rem;
@@ -441,21 +442,17 @@
   text-align: center;
   display: inline-block;
 }
-
 .buttons_details .add {
   background: #333;
   color: white;
 }
-
 .buttons_details .add:hover {
   background: black;
 }
-
 .buttons_details .buy {
   background: #E96B56;
   color: white;
 }
-
 .buttons_details .buy:hover {
   background: #c65a48;
 }
@@ -476,7 +473,6 @@
   cursor: pointer;
   transition: 0.3s;
 }
-
 .details__heart:hover {
   transform: scale(1.1);
 }

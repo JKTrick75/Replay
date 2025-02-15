@@ -48,6 +48,7 @@
 						p.incluye_mando, 
 						p.incluye_cargador, 
 						p.incluye_juegos,
+						p.observaciones,
 						m.nom_marca, 
 						e.nom_estado, 
 						ci.nom_ciudad, 
@@ -86,6 +87,25 @@
 		function select_images($id){
 			$sql= "SELECT *
 				   FROM img_producto
+				   WHERE id_producto = '$id';";
+	
+			$conexion = connect::con();
+			$res = mysqli_query($conexion, $sql);
+			connect::close($conexion);
+	
+			$imgArray = array();
+			if (mysqli_num_rows($res) > 0) {
+				foreach ($res as $row) {
+					array_push($imgArray, $row);
+				}
+			}
+			return $imgArray;
+		}
+
+		function select_sales($id){
+			$sql= "SELECT tv.nom_tipo_venta, tv.img_tipo_venta
+				   FROM tipo_venta_producto tp INNER JOIN tipo_venta tv
+				   ON tp.id_tipo_venta = tv.id_tipo_venta
 				   WHERE id_producto = '$id';";
 	
 			$conexion = connect::con();

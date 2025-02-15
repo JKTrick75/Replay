@@ -52,11 +52,18 @@ switch ($_GET['op']) {
         } catch (Exception $e) {
             echo json_encode("error");
         }
+        try {
+            $daoshop_img = new DAOShop();
+            $Product_sales = $daoshop_img->select_sales($_GET['id']);
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
 
         if (!empty($Product_details || $Product_images)) {
             $rdo = array();
             $rdo[0] = $Product_details;
             $rdo[1][] = $Product_images;
+            $rdo[2][] = $Product_sales;
             echo json_encode($rdo);
         } else {
             echo json_encode("error");

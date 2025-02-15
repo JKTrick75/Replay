@@ -364,10 +364,10 @@
 /* -------------------------------------------------------------------- */
 /* =========================== DETAILS SHOP =========================== */
 /* -------------------------------------------------------------------- */
-/* Contenedor general: dos filas (top-section y detalles_extra) */
+/* Contenedor general: cuatro filas */
 #details_product_shop {
   display: grid;
-  grid-template-rows: auto auto; /* Primera fila y segunda fila */
+  grid-template-rows: auto auto auto auto; /* top-section, detalles_extra, valoraciones y productos_relacionados */
   gap: 30px;
   padding: 30px;
   margin: 0 10px;
@@ -377,13 +377,14 @@
 }
 
 /* ---------------------- */
-/* Primera fila: top-section */
+/* Primera fila: top-section con 3 columnas */
 /* ---------------------- */
 .top-section {
   display: grid;
-  grid-template-columns: 500px 1fr; /* 500px fijos para el carrusel, y el resto para los detalles */
+  grid-template-columns: 500px 1fr 300px; /* 500px para el carrusel, 1fr para detalles generales, 300px para compra */
   gap: 30px;
 }
+
 /* Carrusel de imágenes con tamaño fijo */
 .imagen_producto {
   width: 500px;  /* Ancho fijo */
@@ -392,20 +393,79 @@
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
 /* Las imágenes se adaptan al contenedor */
 .content-img-details img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Usa 'cover' o 'contain' según el efecto deseado */
+  object-fit: contain; /* O 'cover' según el efecto deseado */
   border-radius: 10px;
 }
-/* Detalles generales (lado derecho) */
+
+/* Detalles generales (columna central) */
 .detalles_producto {
   background: #fff;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
+/* Apartado de compra (columna derecha) */
+.compra_producto {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+/* Estilos para las opciones de compra */
+.purchase-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.purchase-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.purchase-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.purchase-item p {
+  flex: 1;
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.purchase-item button {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.purchase-item button:hover {
+  background: #218838;
+}
+
+
 
 /* ---------------------- */
 /* Segunda fila: detalles_extra */
@@ -481,9 +541,9 @@
     grid-template-columns: 1fr;
   }
   
-  .imagen_producto {
+  .imagen_producto, .detalles_producto, .compra_producto {
     width: 100%;
-    height: auto; /* Puedes definir un alto fijo o dejar que se ajuste */
+    height: auto; /* Ajusta según se requiera */
   }
 }
 
@@ -530,12 +590,25 @@
   color: #333;
 }
 
+/* HEADER DETALLES PRODUCTO */
+.header-details {
+  position: relative;
+  /* Puedes agregar padding o margin si lo necesitas para separar el título */
+}
+
+.header-details h1 {
+  margin: 0; /* Opcional: elimina márgenes para un mejor posicionamiento */
+}
 /* Icono del corazón */
 .details__heart {
   font-size: 1.5rem;
   color: #8d8c8c;
   cursor: pointer;
   transition: 0.3s;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 5px;
 }
 .details__heart:hover {
   transform: scale(1.1);

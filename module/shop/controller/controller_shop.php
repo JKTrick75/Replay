@@ -59,7 +59,7 @@ switch ($_GET['op']) {
             echo json_encode("error");
         }
 
-        if (!empty($Product_details || $Product_images)) {
+        if (!empty($Product_details || $Product_images || $Product_sales)) {
             $rdo = array();
             $rdo[0] = $Product_details;
             $rdo[1][] = $Product_images;

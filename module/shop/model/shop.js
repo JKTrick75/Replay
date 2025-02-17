@@ -65,17 +65,16 @@ function loadDetails(id_producto) {
             //Apartado imágenes producto
             for (row in data[1][0]) {
                 // console.log(data[1][0][row].img_producto);
-                $('<div></div>').attr({ 'id': data[1][0].id_img, class: 'imagen_producto_dentro' }).appendTo('.imagen_producto')
+                $('<div></div>').attr({ 'id': data[1][0][row].id_img, class: 'imagen_producto_dentro' }).appendTo('.imagen_producto')
                     .html(
                         "<div class='content-img-details'>" +
-                        "<img src= '" + data[1][0][row].img_producto + "'" + "</img>" +
+                        "<img src= '" + data[1][0][row].img_producto + "'>" + "</img>" +
                         "</div>"
                     )
             }
 
             // Apartado detalles producto
-            $('<div></div>').attr({ 'id': data[0].id_producto, class: 'detalles_producto_dentro' })
-            .appendTo('.detalles_producto')
+            $('<div></div>').attr({ 'id': data[0].id_producto, class: 'detalles_producto_dentro' }).appendTo('.detalles_producto')
             .html(
             "<div class='list_product_details'>" +
                 "<div class='product-info_details'>" +

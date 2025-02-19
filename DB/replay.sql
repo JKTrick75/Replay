@@ -252,7 +252,7 @@ INSERT INTO `modelo_consola` (`id_modelo_consola`, `nom_modelo_consola`, `id_tip
 DROP TABLE IF EXISTS `producto`;
 CREATE TABLE IF NOT EXISTS `producto` (
   `id_producto` int NOT NULL AUTO_INCREMENT,
-  `nom_producto` varchar(30) NOT NULL,
+  `nom_producto` varchar(50) NOT NULL,
   `precio` int NOT NULL,
   `color` varchar(20) DEFAULT NULL,
   `marca` int NOT NULL,

@@ -55,7 +55,7 @@ function loadProducts(total_prod = 0, items_page = 4) {
 function loadDetails(id_producto) {
     ajaxPromise('module/shop/controller/controller_shop.php?op=get_details&id=' + id_producto, 'GET', 'JSON')
         .then(function (data) {
-            // console.log(data);
+            console.log(data);
 
             $('.list_product_shop').empty();
             $('.imagen_producto_dentro').empty();
@@ -192,7 +192,6 @@ function loadDetails(id_producto) {
                 autoplaySpeed: 3000
             });
 
-
             // console.log(data[0].id_producto);
             // console.log(data[0].nom_marca);
             // console.log(data[0].nom_modelo_consola);
@@ -203,7 +202,6 @@ function loadDetails(id_producto) {
             // console.log(data[0].nom_ciudad);
             // console.log(data[0].precio);
             // console.log(data[0].nom_estado);
-
 
         }).catch(function (data) {
             console.log('Error en el ajaxPromise de detalles producto');

@@ -1,3 +1,4 @@
+-- Active: 1739809008759@@127.0.0.1@3306@replay
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
@@ -152,7 +153,34 @@ INSERT INTO `img_producto` (`id_img`, `id_producto`, `img_producto`) VALUES
 (23, 9, 'view/assets/img/productos/nintendo_wii_3.webp'),
 (24, 9, 'view/assets/img/productos/nintendo_wii_4.webp'),
 (25, 10, 'view/assets/img/productos/ps2_2.webp'),
-(26, 10, 'view/assets/img/productos/ps2_3.webp');
+(26, 10, 'view/assets/img/productos/ps2_3.webp'),
+(27, 11, 'view/assets/img/productos/camisa_mario_1.webp'),
+(28, 11, 'view/assets/img/productos/camisa_mario_2.webp'),
+(29, 11, 'view/assets/img/productos/camisa_mario_3.webp'),
+(30, 12, 'view/assets/img/productos/pendientes_trifuerza_1.webp'),
+(31, 12, 'view/assets/img/productos/pendientes_trifuerza_2.webp'),
+(32, 12, 'view/assets/img/productos/pendientes_trifuerza_3.webp'),
+(33, 12, 'view/assets/img/productos/pendientes_trifuerza_4.webp'),
+(34, 12, 'view/assets/img/productos/pendientes_trifuerza_5.webp'),
+(35, 13, 'view/assets/img/productos/mando_god_of_war_1.webp'),
+(36, 13, 'view/assets/img/productos/mando_god_of_war_2.webp'),
+(37, 13, 'view/assets/img/productos/mando_god_of_war_3.webp'),
+(38, 13, 'view/assets/img/productos/mando_god_of_war_4.webp'),
+(39, 13, 'view/assets/img/productos/mando_god_of_war_5.webp'),
+(40, 14, 'view/assets/img/productos/pack_psp_1.webp'),
+(41, 14, 'view/assets/img/productos/pack_psp_2.webp'),
+(42, 14, 'view/assets/img/productos/pack_psp_3.webp'),
+(43, 14, 'view/assets/img/productos/pack_psp_4.webp'),
+(44, 14, 'view/assets/img/productos/pack_psp_5.webp'),
+(45, 14, 'view/assets/img/productos/pack_psp_6.webp'),
+(46, 14, 'view/assets/img/productos/pack_psp_7.webp'),
+(47, 14, 'view/assets/img/productos/pack_psp_8.webp'),
+(48, 14, 'view/assets/img/productos/pack_psp_9.webp'),
+(49, 14, 'view/assets/img/productos/pack_psp_10.webp'),
+(50, 15, 'view/assets/img/productos/pulseras_minecraft_1.webp'),
+(51, 15, 'view/assets/img/productos/pulseras_minecraft_2.webp'),
+(52, 16, 'view/assets/img/productos/psvita_1.webp'),
+(53, 16, 'view/assets/img/productos/psvita_2.webp');
 
 -- --------------------------------------------------------
 
@@ -211,7 +239,9 @@ INSERT INTO `modelo_consola` (`id_modelo_consola`, `nom_modelo_consola`, `id_tip
 (7, 'PlayStation 3', 1, 'view/assets/img/modelos/ps3.jpg'),
 (8, 'Xbox 360', 2, 'view/assets/img/modelos/xbox_360.jpg'),
 (9, 'Nintendo Wii', 3, 'view/assets/img/modelos/nintendo_wii.jpg'),
-(10, 'PlayStation 2', 1, 'view/assets/img/modelos/ps2.jpg');
+(10, 'PlayStation 2', 1, 'view/assets/img/modelos/ps2.jpg'),
+(11, 'PSP', 1, 'view/assets/img/modelos/psp.jpg'),
+(12, 'PSVita', 1, 'view/assets/img/modelos/psvita.jpg');
 
 -- --------------------------------------------------------
 
@@ -255,17 +285,22 @@ CREATE TABLE IF NOT EXISTS `producto` (
 --
 
 INSERT INTO `producto` (`id_producto`, `nom_producto`, `precio`, `color`, `marca`, `tipo_consola`, `modelo_consola`, `tipo_accesorio`, `tipo_merchandising`, `estado`, `ciudad`, `fecha_publicacion`, `fecha_ult_mod`, `capacidad`, `incluye_mando`, `incluye_cargador`, `incluye_juegos`, `observaciones`) VALUES
-(1, 'PlayStation 5', 500, 'Blanco', 1, 1, 1, NULL, NULL, 1, 1, '2022/04/01', '2022/04/05', '825GB', 'true', 'true', 'true', 'En perfecto estado! Lo he usado un par de veces pero me cansé enseguida. Precio regociable.'),
-(2, 'Xbox Series X', 450, 'Negro', 2, 2, 2, NULL, NULL, 2, 2, '2022/03/25', '2022/04/05', '1TB', 'true', 'true', 'false', 'En perfecto estado! Lo conservo en su envoltorio original. Precio regociable.'),
-(3, 'Nintendo Switch', 300, 'Rojo/Azul', 3, 3, 3, NULL, NULL, 1, 3, '2022/04/02', '2022/04/05', '32GB', 'true', 'true', 'true', 'Como nuevo, cualquier cosa no dudes en contactar.'),
-(4, 'PlayStation 4', 200, 'Negro', 1, 1, 4, NULL, NULL, 2, 4, '2022/03/30', '2022/04/05', '500GB', 'true', 'true', 'false', 'En perfecto estado! Lo he usado un par de veces. Precio regociable.'),
-(5, 'Xbox One S', 250, 'Blanco', 2, 2, 5, NULL, NULL, 1, 5, '2022/04/03', '2022/04/05', '1TB', 'true', 'true', 'true', 'Un pequeño rasguño pero nada más, funciona perfectamente.'),
-(6, 'Nintendo 3DS', 100, 'Negro', 3, 3, 6, NULL, NULL, 2, 6, '2022/03/28', '2022/04/05', '4GB', 'true', 'true', 'false', 'Nunca lo he abierto.'),
-(7, 'PlayStation 3', 80, 'Negro', 1, 1, 7, NULL, NULL, 2, 7, '2022/03/27', '2022/04/05', '120GB', 'true', 'true', 'false', 'El precio se puede hablar'),
-(8, 'Xbox 360', 70, 'Blanco', 2, 2, 8, NULL, NULL, 2, 8, '2022/03/26', '2022/04/05', '250GB', 'true', 'true', 'false', 'Si quieres más fotos del producto avísame.'),
-(9, 'Nintendo Wii', 50, 'Blanco', 3, 3, 9, NULL, NULL, 2, 9, '2022/03/29', '2022/04/05', '512MB', 'true', 'true', 'false', 'El envío solo es dentro de la península.'),
-(10, 'PlayStation 2', 40, 'Negro', 1, 1, 10, NULL, NULL, 2, 10, '2022/03/24', '2022/04/05', NULL, 'true', 'true', 'false', 'Ni la he sacado de la caja Hulio.');
-
+(1, 'PlayStation 5', 500, 'Blanco', 1, 1, 1, 1, NULL, 1, 1, '2022/04/01', '2022/04/05', '825GB', 'true', 'true', 'true', 'En perfecto estado! Lo he usado un par de veces pero me cansé enseguida. Precio regociable.'),
+(2, 'Xbox Series X', 450, 'Negro', 2, 2, 2, 1, NULL, 2, 2, '2022/03/25', '2022/04/05', '1TB', 'true', 'true', 'false', 'En perfecto estado! Lo conservo en su envoltorio original. Precio regociable.'),
+(3, 'Nintendo Switch', 300, 'Rojo/Azul', 3, 3, 3, 1, NULL, 1, 3, '2022/04/02', '2022/04/05', '32GB', 'true', 'true', 'true', 'Como nuevo, cualquier cosa no dudes en contactar.'),
+(4, 'PlayStation 4', 200, 'Negro', 1, 1, 4, 1, NULL, 2, 4, '2022/03/30', '2022/04/05', '500GB', 'true', 'true', 'false', 'En perfecto estado! Lo he usado un par de veces. Precio regociable.'),
+(5, 'Xbox One S', 250, 'Blanco', 2, 2, 5, 1, NULL, 1, 5, '2022/04/03', '2022/04/05', '1TB', 'true', 'true', 'true', 'Un pequeño rasguño pero nada más, funciona perfectamente.'),
+(6, 'Nintendo 3DS', 100, 'Negro', 3, 3, 6, 1, NULL, 2, 6, '2022/03/28', '2022/04/05', '4GB', 'true', 'true', 'false', 'Nunca lo he abierto.'),
+(7, 'PlayStation 3', 80, 'Negro', 1, 1, 7, 1, NULL, 2, 7, '2022/03/27', '2022/04/05', '120GB', 'true', 'true', 'false', 'El precio se puede hablar'),
+(8, 'Xbox 360', 70, 'Blanco', 2, 2, 8, 1, NULL, 2, 8, '2022/03/26', '2022/04/05', '250GB', 'true', 'true', 'false', 'Si quieres más fotos del producto avísame.'),
+(9, 'Nintendo Wii', 50, 'Blanco', 3, 3, 9, 1, NULL, 2, 9, '2022/03/29', '2022/04/05', '512MB', 'true', 'true', 'false', 'El envío solo es dentro de la península.'),
+(10, 'PlayStation 2', 40, 'Negro', 1, 1, 10, 1, NULL, 2, 10, '2022/03/24', '2022/04/05', NULL, 'true', 'true', 'false', 'Ni la he sacado de la caja Hulio.'),
+(11, 'Camisa Super Mario', 20, 'Azul', 3, NULL, NULL NULL, 3, 2, 10, '2022/03/24', '2022/04/05', NULL, 'false', 'false', 'false', 'Me la he puesto un par de veces pero ya me viene pequeña.'),
+(12, 'Pendientes Trifuerza Zelda', 15, 'Dorado/Negro', 3, NULL, NULL, NULL, 4, 1, 1, '2022/03/24', '2022/04/05', NULL, 'false', 'false', 'false', 'Ya no me gustan.'),
+(13, 'Mando God of War', 75, 'Azul/Blanco', 1, NULL, NULL, 1, NULL, 2, 2, '2022/03/30', '2022/05/05', NULL, 'false', 'false', 'false', 'El mando funciona perfectamente, muy suave al tacto.'),
+(14, 'Pack PSP con juegos y accesorios', 150, 'Blanco', 1, 1, 11, NULL, NULL, 3, 2, '2023/03/24', '2023/04/05', '20GB', 'true', 'true', 'true', 'Usada durante muchos años, busca nuevo dueño.'),
+(15, 'Pulseras minecraft', 15, 'Variocolor', 2, NULL, NULL, NULL, 4, 1, 4, '2024/03/24', '2024/04/05', NULL, 'false', 'false', 'false', 'Tengo demasiadas, alguien quiere alguna?'),
+(16, 'PS Vita', 100, 'Negro', 1, 1, 12, NULL, NULL, 3, 3, '2022/07/24', '2022/08/05', '32GB', 'false', 'true', 'false', 'Poco usada, pero se ralentiza un poco al encender, lo demás perfecto. Cargador incluido');
 -- --------------------------------------------------------
 
 --
@@ -375,7 +410,8 @@ CREATE TABLE IF NOT EXISTS `tipo_merchandising` (
 INSERT INTO `tipo_merchandising` (`id_tipo_merchandising`, `nom_tipo_merchandising`, `id_marca`, `img_tipo_merchandising`) VALUES
 (1, 'Camisetas', 1, 'view/assets/img/tipo_merchandising/camisetas.jpg'),
 (2, 'Tazas', 2, 'view/assets/img/tipo_merchandising/tazas.jpg'),
-(3, 'Figuras', 3, 'view/assets/img/tipo_merchandising/figuras.jpg');
+(3, 'Figuras', 3, 'view/assets/img/tipo_merchandising/figuras.jpg'),
+(4, 'Accesorios', 3, 'view/assets/img/tipo_merchandising/accesorio.jpg');
 
 -- --------------------------------------------------------
 

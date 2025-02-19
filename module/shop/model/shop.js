@@ -1,7 +1,7 @@
 function ajaxForSearch(url, total_prod = 0, items_page) {
     ajaxPromise(url, 'POST', 'JSON', { 'total_prod': total_prod, 'items_page': items_page })
         .then(function (data) {
-            // console.log(data);
+            console.log(data);
             $('#content_shop_products').empty();
             $('.detalles_producto' && '.imagen_producto' && 'details_product_shop').empty();
 
@@ -136,18 +136,18 @@ function loadDetails(id_producto) {
                             "<table id='table-shop'>"+
                                 "<tr>" +
                                     "<td> <i class='bi bi-controller' style='font-size: 2rem'></i> &nbsp; Incluye mando: " + (data[0].incluye_mando === 'true' ? "Sí" : "No") + "</td>" +
-                                    "<td> <i class='bi bi-plug' style='font-size: 2rem'></i> &nbsp; Incluye cargador: " + (data[0].incluye_cargador === 'true' ? "Sí" : "No") + "</td>" +
-                                    "<td> <i class='bi bi-joystick' style='font-size: 2rem'></i> &nbsp; Incluye juegos: " + (data[0].incluye_juegos === 'true' ? "Sí" : "No") + "</td>" +            
-                                "</tr>" +
-                            "</table>" +
-                            "<table id='table-shop'>"+
-                                "<tr>" +
                                     "<td> <i class='bi bi-dpad' style='font-size: 2rem'></i> &nbsp; Tipo consola: " + (data[0].nom_tipo_consola ? data[0].nom_tipo_consola : "N/A") + "</td>" +
-                                    "<td> <i class='bi bi-dpad' style='font-size: 2rem'></i> &nbsp; Modelo consola: " + (data[0].nom_modelo_consola ? data[0].nom_modelo_consola : "N/A") + "</td>" +                                    
+                                    "<td> <i class='bi bi-dpad' style='font-size: 2rem'></i> &nbsp; Modelo consola: " + (data[0].nom_modelo_consola ? data[0].nom_modelo_consola : "N/A") + "</td>" +    
                                 "</tr>" +
                                 "<tr>" +
+                                    "<td> <i class='bi bi-plug' style='font-size: 2rem'></i> &nbsp; Incluye cargador: " + (data[0].incluye_cargador === 'true' ? "Sí" : "No") + "</td>" +
                                     "<td> <i class='bi bi-plus-square' style='font-size: 2rem'></i></i> &nbsp; Tipo accesorio: " + (data[0].nom_tipo_accesorio ? data[0].nom_tipo_accesorio : "N/A") + "</td>" +
+                                    "<td> </td>"+                                                
+                                "</tr>" +
+                                "<tr>" +
+                                    "<td> <i class='bi bi-joystick' style='font-size: 2rem'></i> &nbsp; Incluye juegos: " + (data[0].incluye_juegos === 'true' ? "Sí" : "No") + "</td>" + 
                                     "<td> <i class='bi bi-boxes' style='font-size: 2rem'></i> &nbsp; Tipo merchandising: " + (data[0].nom_tipo_merchandising ? data[0].nom_tipo_merchandising : "N/A") + "</td>" +
+                                    "<td> </td>"+
                                 "</tr>" +
                             "</table>" +
                             "<hr class=hr-shop>" +

@@ -22,7 +22,8 @@ switch ($_GET['op']) {
     case 'get_products';
         try {
             $daoshop = new DAOShop();
-            $Products = $daoshop->select_products();
+            // $Products = $daoshop->select_products();
+            $Products = $daoshop->select_products_carousel();
 
         // foreach ($Products as $row) {
         //     error_log(json_encode($row));

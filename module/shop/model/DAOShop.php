@@ -45,19 +45,9 @@
 					INNER JOIN ciudad c ON p.ciudad = c.id_ciudad
 					GROUP BY p.id_producto";
 
-
 			$conexion = connect::con();
 			$res = mysqli_query($conexion, $sql);
 			connect::close($conexion);
-
-
-
-			// $retrArray = array();
-			// if (mysqli_num_rows($res) > 0) {
-			// 	while ($row = mysqli_fetch_assoc($res)) {
-			// 		$retrArray[] = $row;
-			// 	}
-			// }
 
 			if (mysqli_num_rows($res) > 0) {
 				while ($row = mysqli_fetch_assoc($res)) {

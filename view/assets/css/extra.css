@@ -651,18 +651,53 @@
   height: 50px !important;
 }
 
-/* 🔄 POSICIONAR LAS FLECHAS DENTRO DEL CARRUSEL */
 #container-date-img .slick-prev {
   left: 10px !important;
 }
-
 #container-date-img .slick-next {
   right: 10px !important;
 }
 
-/* 🎨 COLOR Y TAMAÑO DEL ICONO DE LAS FLECHAS */
+
 #container-date-img .slick-prev:before,
 #container-date-img .slick-next:before {
+  color: white !important; /* Color de la flecha */
+  font-size: 25px !important; /* Tamaño visible */
+  opacity: 1 !important;
+}
+
+/* ------------------------------------------------------------------------------ */
+/* ============================= LIST SLICK CAROUSEL ============================ */
+/* ------------------------------------------------------------------------------ */
+.img-container .slick-slide {
+  margin: 0px !important;
+}
+.img-container .slick-slide img {
+  width: 100%;
+  border: none !important;
+}
+
+.img-container .slick-prev,
+.img-container .slick-next {
+  display: flex !important; 
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 1000; 
+  align-items: center;
+  justify-content: center;
+  width: 30px !important;
+  height: 30px !important;
+}
+
+.img-container .slick-prev {
+  left: 0px !important;
+}
+.img-container .slick-next {
+  right: 0px !important;
+}
+
+.img-container .slick-prev:before,
+.img-container .slick-next:before {
   color: white !important; /* Color de la flecha */
   font-size: 25px !important; /* Tamaño visible */
   opacity: 1 !important;

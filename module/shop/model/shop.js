@@ -1,7 +1,7 @@
 function ajaxForSearch(url, total_prod = 0, items_page) {
     ajaxPromise(url, 'POST', 'JSON', { 'total_prod': total_prod, 'items_page': items_page })
         .then(function (data) {
-            console.log(data);
+            // console.log(data);
             $('#content_shop_products').empty();
             $('.detalles_producto' && '.imagen_producto' && 'details_product_shop').empty();
 
@@ -13,12 +13,11 @@ function ajaxForSearch(url, total_prod = 0, items_page) {
                     )
             } else {
                 for (row in data) {
+                    // console.log(data[row]);
                     $('<div></div>').attr({ 'id': data[row].id_producto, 'class': 'list_content_shop' }).appendTo('.content_shop_products')
                         .html(
                             "<div class='list_product'>" +
-                                "<div class='img-container'>" +
-                                    "<img src= '" + data[row].img_producto + "'" + "</img>" +
-                                "</div>" +
+                                "<div id='carousel_list_product-"+data[row].id_producto+"' class='img-container'></div>" + //Aquí va el carousel de las fotos list
                                 "<div class='product-info'>" +
                                     "<div class='product-content'>" +
                                         "<h1><b>" + data[row].nom_producto + " (" + data[row].precio + '€)' +
@@ -39,7 +38,39 @@ function ajaxForSearch(url, total_prod = 0, items_page) {
                                 "</div>" +
                             "</div>"
                         )
+
+                        for (img in data[row].img_producto) {
+                            // console.log(data[row].img_producto);
+                            $('<div></div>').attr('id', data[row].img_producto[img]).appendTo(`#carousel_list_product-${data[row].id_producto}`)
+                                .html(
+                                    "<img src= '" + data[row].img_producto[img] + "'" + "</img>"
+                                );
+                        }
+        
+                        $(`#carousel_list_product-${data[row].id_producto}`).slick({
+                            infinite: true,
+                            speed: 300,
+                            slidesToShow: 1,
+                            adaptiveHeight: true,
+                            arrows: true
+                            // autoplay: true,
+                            // autoplaySpeed: 4000
+                        });
+
+                        // new Glider(document.querySelector(`#carousel_list_product-${data[row].id_producto}`), {
+                        //     slidesToShow: 1,
+                        //     slidesToScroll: 1,
+                        //     draggable: true,
+                        //     rewind: true,
+                        //     dots: '.carousel__dots__ciudad',
+                        //     arrows: {
+                        //         prev: '.prev_ciudades',
+                        //         next: '.next_ciudades'
+                        //     }
+                        // });
+        
                 }
+
             }
         }).catch(function () {
             console.log('Error en el ajaxPromise de listar productos');

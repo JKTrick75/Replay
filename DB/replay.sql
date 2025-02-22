@@ -295,7 +295,7 @@ INSERT INTO `producto` (`id_producto`, `nom_producto`, `precio`, `color`, `marca
 (8, 'Xbox 360', 70, 'Blanco', 2, 2, 8, 1, NULL, 2, 8, '2022/03/26', '2022/04/05', '250GB', 'true', 'true', 'false', 'Si quieres más fotos del producto avísame.'),
 (9, 'Nintendo Wii', 50, 'Blanco', 3, 3, 9, 1, NULL, 2, 9, '2022/03/29', '2022/04/05', '512MB', 'true', 'true', 'false', 'El envío solo es dentro de la península.'),
 (10, 'PlayStation 2', 40, 'Negro', 1, 1, 10, 1, NULL, 2, 10, '2022/03/24', '2022/04/05', NULL, 'true', 'true', 'false', 'Ni la he sacado de la caja Hulio.'),
-(11, 'Camisa Super Mario', 20, 'Azul', 3, NULL, NULL, NULL, 3, 2, 10, '2022/03/24', '2022/04/05', NULL, 'false', 'false', 'false', 'Me la he puesto un par de veces pero ya me viene pequeña.'),
+(11, 'Camisa Super Mario', 20, 'Azul', 3, NULL, NULL, NULL, 1, 2, 10, '2022/03/24', '2022/04/05', NULL, 'false', 'false', 'false', 'Me la he puesto un par de veces pero ya me viene pequeña.'),
 (12, 'Pendientes Trifuerza Zelda', 15, 'Dorado/Negro', 3, NULL, NULL, NULL, 4, 1, 1, '2022/03/24', '2022/04/05', NULL, 'false', 'false', 'false', 'Ya no me gustan.'),
 (13, 'Mando God of War', 75, 'Azul/Blanco', 1, NULL, NULL, 1, NULL, 2, 2, '2022/03/30', '2022/05/05', NULL, 'false', 'false', 'false', 'El mando funciona perfectamente, muy suave al tacto.'),
 (14, 'Pack PSP con juegos y accesorios', 150, 'Blanco', 1, 1, 11, NULL, NULL, 3, 2, '2023/03/24', '2023/04/05', '20GB', 'true', 'true', 'true', 'Usada durante muchos años, busca nuevo dueño.'),

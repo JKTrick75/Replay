@@ -675,6 +675,7 @@
 .img-container .slick-slide img {
   width: 100%;
   border: none !important;
+  /* object-fit: cover; */
 }
 
 .img-container .slick-prev,

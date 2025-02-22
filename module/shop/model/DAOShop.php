@@ -14,14 +14,6 @@
 					WHERE i.id_img = (SELECT MIN(i2.id_img) 
 										FROM img_producto i2 
 										WHERE i2.id_producto = p.id_producto);";
-						// $sql= "SELECT *
-			// 		FROM producto p 
-			// 		INNER JOIN img_producto i ON p.id_producto = i.id_producto
-
-			// 		WHERE i.id_img = (SELECT MIN(i2.id_img) 
-            //       					  FROM img_producto i2 
-            //       					  WHERE i2.id_producto = p.id_producto);";
-
 
 			$conexion = connect::con();
 			$res = mysqli_query($conexion, $sql);
@@ -44,6 +36,46 @@
 					INNER JOIN estado e ON p.estado = e.id_estado
 					INNER JOIN ciudad c ON p.ciudad = c.id_ciudad
 					GROUP BY p.id_producto";
+
+			$conexion = connect::con();
+			$res = mysqli_query($conexion, $sql);
+			connect::close($conexion);
+
+			if (mysqli_num_rows($res) > 0) {
+				while ($row = mysqli_fetch_assoc($res)) {
+					$retrArray[] = array(
+						"id_producto" => $row["id_producto"],
+						"nom_producto" => $row["nom_producto"],
+						"precio" => $row["precio"],
+						"color" => $row["color"],
+						"nom_estado" => $row["nom_estado"],
+						"nom_ciudad" => $row["nom_ciudad"],
+						"img_producto" => explode(":", $row['img_producto'])
+					);
+				}
+			}
+			return $retrArray;
+		}
+
+		function filters_product($filter) {
+			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, 
+						  GROUP_CONCAT(i.img_producto SEPARATOR ':') AS img_producto
+					FROM producto p 
+					INNER JOIN img_producto i ON p.id_producto = i.id_producto
+					INNER JOIN estado e ON p.estado = e.id_estado
+					INNER JOIN ciudad c ON p.ciudad = c.id_ciudad";
+
+			for ($i=0; $i < count($filter); $i++){
+				if ($i==0){
+					$sql.= " WHERE p." . $filter[$i][0] . "=" . $filter[$i][1];
+				}else {
+					$sql.= " AND p." . $filter[$i][0] . "=" . $filter[$i][1];
+				}        
+			}
+
+			$sql.= " GROUP BY p.id_producto";
+
+			error_log($sql);
 
 			$conexion = connect::con();
 			$res = mysqli_query($conexion, $sql);

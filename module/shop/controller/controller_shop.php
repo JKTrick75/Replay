@@ -25,10 +25,6 @@ switch ($_GET['op']) {
             // $Products = $daoshop->select_products();
             $Products = $daoshop->select_products_carousel();
 
-        // foreach ($Products as $row) {
-        //     error_log(json_encode($row));
-        // }
-
         } catch (Exception $e) {
             echo json_encode("error");
         }
@@ -37,6 +33,21 @@ switch ($_GET['op']) {
             echo json_encode($Products);
         } else {
             echo json_encode("error");
+        }
+        break;
+
+    case 'filter_products';
+        error_log('======================================================================================');
+        // error_log($_POST['filter']);
+        
+        $daoshop = new DAOShop();
+        $Products = $daoshop -> filters_product($_POST['filter']);
+        
+        if (!empty($Products)) {
+            echo json_encode($Products);
+        }
+        else {
+            echo "error";
         }
         break;
 
@@ -70,23 +81,6 @@ switch ($_GET['op']) {
             echo json_encode("error");
         }
         break;
-
-        // case 'get_products_images';
-        //     error_log('Esta es la id para pillar las fotos:');
-        //     error_log($_GET['id']);
-        //     try {
-        //         $daoshop = new DAOShop();
-        //         $Products = $daoshop->select_products_images($_GET['id']);
-        //     } catch (Exception $e) {
-        //         echo json_encode("error");
-        //     }
-
-        //     if (!empty($Products)) {
-        //         echo json_encode($Products);
-        //     } else {
-        //         echo json_encode("error");
-        //     }
-        //     break;
 
     default;
         include("view/inc/error404.html");

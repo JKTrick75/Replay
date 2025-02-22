@@ -1,15 +1,15 @@
-function ajaxForSearch(url, total_prod = 0, items_page) {
-    ajaxPromise(url, 'POST', 'JSON', { 'total_prod': total_prod, 'items_page': items_page })
+function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
+    ajaxPromise(url, 'POST', 'JSON', { 'total_prod': total_prod, 'items_page': items_page, 'filter': filter })
         .then(function (data) {
-            // console.log(data);
-            $('#content_shop_products').empty();
+            console.log(data);
+            $('.content_shop_products').empty();
             $('.detalles_producto' && '.imagen_producto' && 'details_product_shop').empty();
 
-            //Si no hay resultados con los filtros
+            //Si no hay resultados con los filters
             if (data == "error") {
-                $('<div></div>').appendTo('#content_shop_products')
+                $('<div></div>').appendTo('.content_shop_products')
                     .html(
-                        '<h3>¡No se encuentarn productos con los filtros aplicados!</h3>'
+                        '<h3>¡No se encuentarn productos con los filters aplicados!</h3>'
                     )
             } else {
                 for (row in data) {
@@ -53,35 +53,270 @@ function ajaxForSearch(url, total_prod = 0, items_page) {
                             slidesToShow: 1,
                             adaptiveHeight: true,
                             arrows: true
-                            // autoplay: true,
-                            // autoplaySpeed: 4000
                         });
-
-                        // new Glider(document.querySelector(`#carousel_list_product-${data[row].id_producto}`), {
-                        //     slidesToShow: 1,
-                        //     slidesToScroll: 1,
-                        //     draggable: true,
-                        //     rewind: true,
-                        //     dots: '.carousel__dots__ciudad',
-                        //     arrows: {
-                        //         prev: '.prev_ciudades',
-                        //         next: '.next_ciudades'
-                        //     }
-                        // });
         
                 }
 
             }
         }).catch(function () {
-            console.log('Error en el ajaxPromise de listar productos');
+            console.log('Error en el ajaxPromise de listar productos / No hay productos para estos filtros');
+            $(".content_shop_products").empty();
+            $('<div></div>').appendTo('.content_shop_products').html('<h1>No hay productos con estos filtros</h1>');
             // window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Function ajxForSearch SHOP";
         });
 }
 
 function loadProducts(total_prod = 0, items_page = 4) {
-    ajaxForSearch('module/shop/controller/controller_shop.php?op=get_products', total_prod, items_page);
+    // var filter = localStorage.getItem('filter');
+    // var storedFilter = localStorage.getItem('filter');
+    var filter = JSON.parse(localStorage.getItem('filter'));
+
+    // if (filter) {
+    if (filter && filter.length > 0) {
+        // console.log('hay filtros');
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_products', total_prod, items_page, filter);
+    } else {
+        // console.log('sin filtros');
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=get_products', total_prod, items_page);
+    }
+    
 }
 
+function load_filters() {
+    $('<div class="div-filters"></div>').appendTo('.filters_shop')
+        .html(
+            //ManyToMany
+            // '<select class="filter_categoria">' +
+            //     '<option value="" selected>--Categoria--</option>' +
+            //     '<option value="1">Consola</option>' +
+            //     '<option value="2">Accesorio</option>' +
+            //     '<option value="3">Merchandising</option>' +
+            // '</select>' +
+
+            '<select class="filter_ciudad">' +
+                '<option value="" selected>--Ciudad--</option>' +
+                '<option value="1">Madrid</option>' +
+                '<option value="2">Barcelona</option>' +
+                '<option value="3">Valencia</option>' +
+                '<option value="4">Sevilla</option>' +
+                '<option value="5">Bilbao</option>' +
+                '<option value="6">Zaragoza</option>' +
+                '<option value="7">Málaga</option>' +
+                '<option value="8">Murcia</option>' +
+                '<option value="9">Alicante</option>' +
+                '<option value="10">Córdoba</option>' +
+            '</select>' +
+
+            '<select class="filter_estado">' +
+                '<option value="" selected>--Estado--</option>' +
+                '<option value="1">Nuevo</option>' +
+                '<option value="2">Usado</option>' +
+                '<option value="3">Desgastado</option>' +
+            '</select>' +
+
+            '<select class="filter_marca">' +
+                '<option value="" selected>--Marca--</option>' +
+                '<option value="1">Sony</option>' +
+                '<option value="2">Microsoft</option>' +
+                '<option value="3">Nintendo</option>' +
+            '</select>' +
+            
+            '<select class="filter_tipo_consola">' +
+                '<option value="" selected>--Tipo consola--</option>' +
+                '<option value="1">PlayStation</option>' +
+                '<option value="2">Xbox</option>' +
+                '<option value="3">Nintendo</option>' +
+            '</select>' +
+
+            '<select class="filter_modelo_consola">' +
+                '<option value="" selected>--Modelo consola--</option>' +
+                '<option value="1">PlayStation 5</option>' +
+                '<option value="2">Xbox Series X</option>' +
+                '<option value="3">Nintendo Switch</option>' +
+                '<option value="4">PlayStation 4</option>' +
+                '<option value="5">Xbox One S</option>' +
+                '<option value="6">Nintendo 3DS</option>' +
+                '<option value="7">PlayStation 3</option>' +
+                '<option value="8">Xbox 360</option>' +
+                '<option value="9">Nintendo Wii</option>' +
+                '<option value="10">PlayStation 2</option>' +
+                '<option value="11">PSP</option>' +
+                '<option value="12">PSVita</option>' +
+            '</select>' +
+
+            '<select class="filter_tipo_accesorio">' +
+                '<option value="" selected>--Tipo accesorio--</option>' +
+                '<option value="1">Mandos</option>' +
+                '<option value="2">Cargadores</option>' +
+                '<option value="3">Fundas</option>' +
+            '</select>' +
+
+            '<select class="filter_tipo_merchandising">' +
+                '<option value="" selected>--Tipo merchandising--</option>' +
+                '<option value="1">Camisetas</option>' +
+                '<option value="2">Tazas</option>' +
+                '<option value="3">Figuras</option>' +
+                '<option value="4">Accesorios</option>' +
+            '</select>' +
+
+            //ManyToMany
+            // '<select class="filter_tipo_venta">' +
+            //     '<option value="" disabled selected>--Tipo venta--</option>' +
+            //     '<option value="1">Envío disponible</option>' +
+            //     '<option value="2">Recogida correos</option>' +
+            //     '<option value="3">Presencial</option>' +
+            // '</select>'+
+
+
+            // '<div id="overlay">' +
+            //     '<div class= "cv-spinner" >' +
+            //         '<span class="spinner"></span>' +
+            //     '</div >' +
+            // '</div > ' +
+            '<button class="filter_button button_spinner" id="Button_filter">Filter</button>' +
+            '<button class="filter_remove" id="Remove_filter">Remove</button>');
+            $(document).on('click', '.filter_remove', function() {
+                filter_remove();
+            });
+}
+
+function filter_click(total_prod = 0, items_page) {
+    // Filtro categoría
+        $('.filter_categoria').change(function () {
+            localStorage.setItem('filter_categoria', this.value);
+        });
+        if (localStorage.getItem('filter_categoria')) {
+            $('.filter_categoria').val(localStorage.getItem('filter_categoria'));
+        }
+
+    // Filtro ciudad
+        $('.filter_ciudad').change(function () {
+            localStorage.setItem('filter_ciudad', this.value);
+        });
+        if (localStorage.getItem('filter_ciudad')) {
+            $('.filter_ciudad').val(localStorage.getItem('filter_ciudad'));
+        }
+
+    // Filtro estado
+        $('.filter_estado').change(function () {
+            localStorage.setItem('filter_estado', this.value);
+        });
+        if (localStorage.getItem('filter_estado')) {
+            $('.filter_estado').val(localStorage.getItem('filter_estado'));
+        }
+
+    // Filtro marca
+        $('.filter_marca').change(function () {
+            localStorage.setItem('filter_marca', this.value);
+        });
+        if (localStorage.getItem('filter_marca')) {
+            $('.filter_marca').val(localStorage.getItem('filter_marca'));
+        }
+
+    // Filtro tipo consola
+        $('.filter_tipo_consola').change(function () {
+            localStorage.setItem('filter_tipo_consola', this.value);
+        });
+        if (localStorage.getItem('filter_tipo_consola')) {
+            $('.filter_tipo_consola').val(localStorage.getItem('filter_tipo_consola'));
+        }
+
+    // Filtro modelo consola
+        $('.filter_modelo_consola').change(function () {
+            localStorage.setItem('filter_modelo_consola', this.value);
+        });
+        if (localStorage.getItem('filter_modelo_consola')) {
+            $('.filter_modelo_consola').val(localStorage.getItem('filter_modelo_consola'));
+        }
+
+    // Filtro tipo accesorio
+        $('.filter_tipo_accesorio').change(function () {
+            localStorage.setItem('filter_tipo_accesorio', this.value);
+        });
+        if (localStorage.getItem('filter_tipo_accesorio')) {
+            $('.filter_tipo_accesorio').val(localStorage.getItem('filter_tipo_accesorio'));
+        }
+
+    // Filtro tipo merchandising
+        $('.filter_tipo_merchandising').change(function () {
+            localStorage.setItem('filter_tipo_merchandising', this.value);
+        });
+        if (localStorage.getItem('filter_tipo_merchandising')) {
+            $('.filter_tipo_merchandising').val(localStorage.getItem('filter_tipo_merchandising'));
+        }
+
+    // Filtro tipo venta
+        $('.filter_tipo_venta').change(function () {
+            localStorage.setItem('filter_tipo_venta', this.value);
+        });
+        if (localStorage.getItem('filter_tipo_venta')) {
+            $('.filter_tipo_venta').val(localStorage.getItem('filter_tipo_venta'));
+        }
+
+    $(document).on('click', '.filter_button', function () {
+        var filter = [];
+
+        if (localStorage.getItem('filter_categoria')) {
+            filter.push(['categoria', localStorage.getItem('filter_categoria')]);
+        }
+        if (localStorage.getItem('filter_ciudad')) {
+            filter.push(['ciudad', localStorage.getItem('filter_ciudad')]);
+        }
+        if (localStorage.getItem('filter_estado')) {
+            filter.push(['estado', localStorage.getItem('filter_estado')]);
+        }
+        if (localStorage.getItem('filter_marca')) {
+            filter.push(['marca', localStorage.getItem('filter_marca')]);
+        }
+        if (localStorage.getItem('filter_tipo_consola')) {
+            filter.push(['tipo_consola', localStorage.getItem('filter_tipo_consola')]);
+        }
+        if (localStorage.getItem('filter_modelo_consola')) {
+            filter.push(['modelo_consola', localStorage.getItem('filter_modelo_consola')]);
+        }
+        if (localStorage.getItem('filter_tipo_accesorio')) {
+            filter.push(['tipo_accesorio', localStorage.getItem('filter_tipo_accesorio')]);
+        }
+        if (localStorage.getItem('filter_tipo_merchandising')) {
+            filter.push(['tipo_merchandising', localStorage.getItem('filter_tipo_merchandising')]);
+        }
+        if (localStorage.getItem('filter_tipo_venta')) {
+            filter.push(['tipo_venta', localStorage.getItem('filter_tipo_venta')]);
+        }
+
+        // localStorage.setItem('filter', filter);
+        localStorage.setItem('filter', JSON.stringify(filter));
+
+        // console.log('Filtros aplicados:');
+        // console.log(filter);
+        if (filter.length != 0) {
+            // console.log('hay filtros 2');
+            ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_products', total_prod, items_page, filter);
+        } else {
+            // console.log('sin filtros 2');
+            ajaxForSearch('module/shop/controller/controller_shop.php?op=get_products', total_prod, items_page);
+        }
+
+        // highlight(filter);
+    });
+
+}
+
+function filter_remove(){
+    localStorage.removeItem('filter_categoria');
+    localStorage.removeItem('filter_ciudad');
+    localStorage.removeItem('filter_estado');
+    localStorage.removeItem('filter_marca');
+    localStorage.removeItem('filter_tipo_consola');
+    localStorage.removeItem('filter_modelo_consola');
+    localStorage.removeItem('filter_tipo_accesorio');
+    localStorage.removeItem('filter_tipo_merchandising');
+    localStorage.removeItem('filter_tipo_venta');
+
+    // Restablecer los selects a su valor inicial
+    $('.filter_categoria, .filter_ciudad, .filter_estado, .filter_marca, .filter_tipo_consola, '+
+        '.filter_modelo_consola, .filter_tipo_accesorio, .filter_tipo_merchandising, .filter_tipo_venta').val('');
+};
 
 function loadDetails(id_producto) {
     ajaxPromise('module/shop/controller/controller_shop.php?op=get_details&id=' + id_producto, 'GET', 'JSON')
@@ -261,6 +496,8 @@ function clicks() {
 $(document).ready(function () {
     loadProducts();
     clicks();
+    load_filters();
+    filter_click();
     $('#details_product_shop').addClass('hidden'); //Ocultamos los detalles_producto
     // console.log("Bienvenido al Catálogo");
 });

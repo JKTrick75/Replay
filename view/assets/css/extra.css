@@ -225,14 +225,58 @@
   color: rgb(56, 56, 56);
 }
 
-/* ------------------------------------------------------------------ */
-/* =========================== SHOP CARDS =========================== */
-/* ------------------------------------------------------------------ */
+/* =========================== LAYOUT =========================== */
+
+/* -------------------------------------------------------------------- */
+/* ============================= LIST SHOP ============================ */
+/* -------------------------------------------------------------------- */
+.list_product_shop {
+  display: flex;
+  width: 100%;
+  align-items: flex-start; /* Alinea los elementos al inicio */
+}
+
+/* COLUMNA FILTROS */
+.filters_shop {
+  padding: 10px;
+  margin-left: 10px;
+  width: 15%; /* Ancho filtros */
+  text-align: left;
+  position: sticky; /* Hace que el elemento sea sticky */
+  top: 75px; /* Se pega al top de la ventana */
+  align-self: flex-start; /* Alinea el elemento al inicio del contenedor flex */
+  height: 100vh; /* Altura completa de la ventana */
+  overflow-y: auto; /* Permite scroll si el contenido es muy largo */
+}
+.filters_shop .default_filter{
+  text-align: center;
+}
+.filters_shop h4{
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+/* COLUMNA LISTA PRODUCTOS */
 .content_shop_products {
-  width: 60%; /* COLUMNA LISTA PRODUCTOS */
+  width: 40%; /* Ancho productos */
   margin-left: 0;
   padding: 20px;
 }
+
+/* COLUMNA MAPS */
+#container_map {
+  width: 40%; /* Ancho maps */
+  background-color: #f0f0f0; /* Color temporal de obras */
+  position: sticky; /* Hace que el elemento sea sticky */
+  top: 75px; /* Se pega al top de la ventana */
+  align-self: flex-start; /* Alinea el elemento al inicio del contenedor flex */
+  height: 100vh; /* Altura completa de la ventana */
+  overflow-y: auto; /* Permite scroll si el contenido es muy largo */
+}
+
+/* ------------------------------------------------------------------ */
+/* =========================== SHOP CARDS =========================== */
+/* ------------------------------------------------------------------ */
 .list_product { /* Estilos para cada tarjeta de producto */
   background-color: #fff;
   border: 1px solid #ddd;
@@ -342,20 +386,6 @@
   background-color: #c65a48;
 }
 
-/* =========================== LAYOUT =========================== */
-.list_product_shop {
-  display: flex;
-  width: 100%;
-}
-#map-container {
-  width: 50%; /* COLUMNA MAPS */
-  background-color: #f0f0f0; /* Color temporal de obras */
-}
-
-.container__shop { /* CONTENEDOR SHOP, ANCHO PAGINA */
-  margin-left: 10px;
-  margin-right: 10px;
-}
 
 .hidden {
   display: none !important; 
@@ -643,7 +673,7 @@
   display: flex !important; /* Asegurar visibilidad */
   opacity: 1 !important;
   visibility: visible !important;
-  z-index: 1000; /* Que estén por encima de otros elementos */
+  z-index: 500; /* Que estén por encima de otros elementos */
   align-items: center;
   justify-content: center;
   border-radius: 50%; /* Bordes redondeados */
@@ -683,7 +713,7 @@
   display: flex !important; 
   opacity: 1 !important;
   visibility: visible !important;
-  z-index: 1000; 
+  z-index: 500; 
   align-items: center;
   justify-content: center;
   width: 30px !important;

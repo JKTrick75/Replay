@@ -37,11 +37,12 @@ switch ($_GET['op']) {
         break;
 
     case 'filter_products';
-        error_log('======================================================================================');
+        // error_log('======================================================================================');
         // error_log($_POST['filter']);
+        // echo json_encode($_POST['filter']);
         
         $daoshop = new DAOShop();
-        $Products = $daoshop -> filters_product($_POST['filter']);
+        $Products = $daoshop -> filters_product();
         
         if (!empty($Products)) {
             echo json_encode($Products);
@@ -151,8 +152,8 @@ switch ($_GET['op']) {
     
             if (!empty($filter_ciudad || $filter_categoria || $filter_estado || $filter_marca || $filter_tipo_consola || $filter_modelo_consola || $filter_tipo_accesorio || $filter_tipo_merchandising || $filter_tipo_venta)) {
                 $rdo = array();
-                $rdo[0][] = $filter_ciudad;
-                $rdo[1][] = $filter_categoria;
+                $rdo[0][] = $filter_categoria;
+                $rdo[1][] = $filter_ciudad;
                 $rdo[2][] = $filter_estado;
                 $rdo[3][] = $filter_marca;
                 $rdo[4][] = $filter_tipo_consola;

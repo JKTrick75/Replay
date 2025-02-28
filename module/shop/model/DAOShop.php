@@ -57,24 +57,75 @@
 			return $retrArray;
 		}
 
-		function filters_product($filter) {
+		function filters_product() {
+			$filter = $_POST['filter'];
+			$categoria = $filter[0]['categoria'];
+			$ciudad = $filter[1]['ciudad'];
+			$estado = $filter[2]['estado'];
+			$marca = $filter[3]['marca'];
+			$tipo_consola = $filter[4]['tipo_consola'];
+			$modelo_consola = $filter[5]['modelo_consola'];
+			$tipo_accesorio = $filter[6]['tipo_accesorio'];
+			$tipo_merchandising = $filter[7]['tipo_merchandising'];
+			$tipo_venta = $filter[8]['tipo_venta'];
+
+			// error_log("*********************************************************Start");
+			// error_log("Recogemos los campos del filtro:");
+			// error_log($categoria[0]);
+			// error_log($categoria[1]);
+			// error_log($ciudad);
+			// error_log($estado);
+			// error_log($marca);
+			// error_log($tipo_consola);
+			// error_log($modelo_consola);
+			// error_log($tipo_accesorio);
+			// error_log($tipo_merchandising);
+			// error_log($tipo_venta);
+			// error_log("*********************************************************End");
+
 			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, 
 						  GROUP_CONCAT(i.img_producto SEPARATOR ':') AS img_producto
 					FROM producto p 
 					INNER JOIN img_producto i ON p.id_producto = i.id_producto
 					INNER JOIN estado e ON p.estado = e.id_estado
-					INNER JOIN ciudad c ON p.ciudad = c.id_ciudad";
+					INNER JOIN ciudad c ON p.ciudad = c.id_ciudad
+					INNER JOIN producto_categoria pc ON p.id_producto = pc.id_producto
+					WHERE 1=1";
 
-			for ($i=0; $i < count($filter); $i++){
-				if ($i==0){
-					$sql.= " WHERE p." . $filter[$i][0] . "=" . $filter[$i][1];
-				}else {
-					$sql.= " AND p." . $filter[$i][0] . "=" . $filter[$i][1];
-				}        
+			if ($categoria != '*') {
+				$categoria_sql = implode(", ", $categoria);
+				$sql .= " AND pc.id_categoria IN ($categoria_sql)";
 			}
+
+			if ($ciudad != '*'){
+				$sql.= " AND p.ciudad = '$ciudad[0]'";
+			}
+			if ($estado != '*'){
+				$sql.= " AND p.estado = '$estado[0]'";
+			}
+			if ($marca != '*'){
+				$sql.= " AND p.marca = '$marca[0]'";
+			}
+			if ($tipo_consola != '*'){
+				$sql.= " AND p.tipo_consola = '$tipo_consola[0]'";
+			}
+			if ($modelo_consola != '*'){
+				$sql.= " AND p.modelo_consola = '$modelo_consola[0]'";
+			}
+			if ($tipo_accesorio != '*'){
+				$sql.= " AND p.tipo_accesorio = '$tipo_accesorio[0]'";
+			}
+			if ($tipo_merchandising != '*'){
+				$sql.= " AND p.tipo_merchandising = '$tipo_merchandising[0]'";
+			}
+			// if ($tipo_venta != '*'){
+			// 	$sql.= " AND p.id_producto IN (SELECT id_producto FROM tipo_venta_producto WHERE id_tipo_venta = '$tipo_venta')";
+			// }
+
 
 			$sql.= " GROUP BY p.id_producto";
 
+			error_log("Consulta SQL:");
 			error_log($sql);
 
 			$conexion = connect::con();
@@ -171,19 +222,20 @@
 			return $salesArray;
 		}
 
-		function filter_ciudad(){
-			$sql = "SELECT id_ciudad, nom_ciudad 
-					FROM ciudad 
-					ORDER BY nom_ciudad";
+		function filter_categoria(){
+			$sql = "SELECT id_categoria, nom_categoria 
+					FROM categoria
+					ORDER BY 1";
 
 			$options = $this->execute_query($sql);
 
 			return $options;
 		}
 
-		function filter_categoria(){
-			$sql = "SELECT id_categoria, nom_categoria 
-					FROM categoria";
+		function filter_ciudad(){
+			$sql = "SELECT id_ciudad, nom_ciudad 
+					FROM ciudad 
+					ORDER BY 2";
 
 			$options = $this->execute_query($sql);
 
@@ -192,7 +244,8 @@
 
 		function filter_estado(){
 			$sql = "SELECT id_estado, nom_estado 
-					FROM estado";
+					FROM estado
+					ORDER BY 1";
 
 			$options = $this->execute_query($sql);
 
@@ -201,7 +254,8 @@
 
 		function filter_marca(){
 			$sql = "SELECT id_marca, nom_marca 
-					FROM marca";
+					FROM marca
+					ORDER BY 1";
 
 			$options = $this->execute_query($sql);
 
@@ -210,7 +264,8 @@
 
 		function filter_tipo_consola(){
 			$sql = "SELECT id_tipo_consola, nom_tipo_consola 
-					FROM tipo_consola";
+					FROM tipo_consola
+					ORDER BY 1";
 
 			$options = $this->execute_query($sql);
 
@@ -219,7 +274,8 @@
 
 		function filter_modelo_consola(){
 			$sql = "SELECT id_modelo_consola, nom_modelo_consola 
-					FROM modelo_consola";
+					FROM modelo_consola
+					ORDER BY 1";
 
 			$options = $this->execute_query($sql);
 
@@ -228,7 +284,8 @@
 
 		function filter_tipo_accesorio(){
 			$sql = "SELECT id_tipo_accesorio, nom_tipo_accesorio 
-					FROM tipo_accesorio";
+					FROM tipo_accesorio
+					ORDER BY 1";
 
 			$options = $this->execute_query($sql);
 
@@ -237,7 +294,8 @@
 
 		function filter_tipo_merchandising(){
 			$sql = "SELECT id_tipo_merchandising, nom_tipo_merchandising 
-					FROM tipo_merchandising";
+					FROM tipo_merchandising
+					ORDER BY 1";
 
 			$options = $this->execute_query($sql);
 
@@ -246,7 +304,8 @@
 
 		function filter_tipo_venta(){
 			$sql = "SELECT id_tipo_venta, nom_tipo_venta 
-					FROM tipo_venta";
+					FROM tipo_venta
+					ORDER BY 1";
 
 			$options = $this->execute_query($sql);
 

@@ -68,6 +68,8 @@
 			$tipo_accesorio = $filter[6]['tipo_accesorio'];
 			$tipo_merchandising = $filter[7]['tipo_merchandising'];
 			$tipo_venta = $filter[8]['tipo_venta'];
+			$precioMin = $filter[9]['precio_min'];
+			$precioMax = $filter[10]['precio_max'];
 
 			// error_log("*********************************************************Start");
 			// error_log("Recogemos los campos del filtro:");
@@ -81,6 +83,8 @@
 			// error_log($tipo_accesorio);
 			// error_log($tipo_merchandising);
 			// error_log($tipo_venta);
+			// error_log($precioMin);
+			// error_log($precioMax);
 			// error_log("*********************************************************End");
 
 			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, 
@@ -90,38 +94,41 @@
 					INNER JOIN estado e ON p.estado = e.id_estado
 					INNER JOIN ciudad c ON p.ciudad = c.id_ciudad
 					INNER JOIN producto_categoria pc ON p.id_producto = pc.id_producto
+					INNER JOIN tipo_venta_producto tvp ON p.id_producto = tvp.id_producto
 					WHERE 1=1";
 
 			if ($categoria != '*') {
 				$categoria_sql = implode(", ", $categoria);
 				$sql .= " AND pc.id_categoria IN ($categoria_sql)";
 			}
-
 			if ($ciudad != '*'){
-				$sql.= " AND p.ciudad = '$ciudad[0]'";
+				$sql .= " AND p.ciudad = '$ciudad[0]'";
 			}
 			if ($estado != '*'){
-				$sql.= " AND p.estado = '$estado[0]'";
+				$sql .= " AND p.estado = '$estado[0]'";
 			}
 			if ($marca != '*'){
-				$sql.= " AND p.marca = '$marca[0]'";
+				$sql .= " AND p.marca = '$marca[0]'";
 			}
 			if ($tipo_consola != '*'){
-				$sql.= " AND p.tipo_consola = '$tipo_consola[0]'";
+				$sql .= " AND p.tipo_consola = '$tipo_consola[0]'";
 			}
 			if ($modelo_consola != '*'){
-				$sql.= " AND p.modelo_consola = '$modelo_consola[0]'";
+				$sql .= " AND p.modelo_consola = '$modelo_consola[0]'";
 			}
 			if ($tipo_accesorio != '*'){
-				$sql.= " AND p.tipo_accesorio = '$tipo_accesorio[0]'";
+				$sql .= " AND p.tipo_accesorio = '$tipo_accesorio[0]'";
 			}
 			if ($tipo_merchandising != '*'){
-				$sql.= " AND p.tipo_merchandising = '$tipo_merchandising[0]'";
+				$sql .= " AND p.tipo_merchandising = '$tipo_merchandising[0]'";
 			}
-			// if ($tipo_venta != '*'){
-			// 	$sql.= " AND p.id_producto IN (SELECT id_producto FROM tipo_venta_producto WHERE id_tipo_venta = '$tipo_venta')";
-			// }
-
+			if ($tipo_venta != '*') {
+				$tipo_venta_sql = implode(", ", $tipo_venta);
+				$sql .= " AND tvp.id_tipo_venta IN ($tipo_venta_sql)";
+			}
+			if (isset($precioMin) && isset($precioMax)) {
+				$sql .= " AND p.precio BETWEEN $precioMin[0] AND $precioMax[0]";
+			}
 
 			$sql.= " GROUP BY p.id_producto";
 
@@ -306,6 +313,15 @@
 			$sql = "SELECT id_tipo_venta, nom_tipo_venta 
 					FROM tipo_venta
 					ORDER BY 1";
+
+			$options = $this->execute_query($sql);
+
+			return $options;
+		}
+
+		function filter_precio(){
+			$sql = "SELECT MAX(precio) AS precio_max
+					FROM producto";
 
 			$options = $this->execute_query($sql);
 

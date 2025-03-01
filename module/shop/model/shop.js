@@ -1,7 +1,7 @@
 function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
     ajaxPromise(url, 'POST', 'JSON', { 'total_prod': total_prod, 'items_page': items_page, 'filter': filter })
         .then(function (data) {
-            console.log(data);
+            // console.log(data); //Mostrar productos listados
             $('.content_shop_products').empty();
             $('.detalles_producto' && '.imagen_producto' && 'details_product_shop').empty();
 
@@ -99,7 +99,10 @@ function load_filters() {
 
             '<div class="precio">' +
                 '<h4>Precio</h4>' +
-                '<p>filtro precio</p>' +
+                '<div id="price-slider"></div>'+
+                '<p>Min/Max: <span id="price-min"></span> - <span id="price-max"></span></p>'+
+                '<input type="hidden" id="filter_precio_min" name="precio_min" />'+
+                '<input type="hidden" id="filter_precio_max" name="precio_max" />'+
             '</div>' +
 
             '<div class="estado">' +
@@ -140,10 +143,7 @@ function load_filters() {
 
             '<div class="tipo_venta">' +
                 '<h4>Tipo de venta</h4>' +
-                // '<select class="filter_tipo_venta" id="filter_tipo_venta">' +
-                //     '<option value="*" class="default_filter" selected>Todos</option>' +
-                // '</select><br><br>'+
-            '</div>' +
+            '</div><br>' +
 
             // '<div id="overlay">' +
             //     '<div class= "cv-spinner" >' +
@@ -157,7 +157,7 @@ function load_filters() {
             ajaxPromise('module/shop/controller/controller_shop.php?op=get_filters', 'GET', 'JSON')
             .then(function (data) {
 
-                // console.log(data);
+                // console.log(data); //Mostrar filtros recogidos
 
                 // Rellenar filtros categoria
                 for (categoria in data[0][0]) {
@@ -204,13 +204,39 @@ function load_filters() {
 
                 // Rellenar filtros tipo_venta
                 for (tipo_venta in data[8][0]) {
-                    $('.filter_tipo_venta').append(`<option value="${data[8][0][tipo_venta].id_tipo_venta}">${data[8][0][tipo_venta].nom_tipo_venta}</option>`);
+                    $('.tipo_venta').append(`<input type="checkbox" value="${data[8][0][tipo_venta].id_tipo_venta}" id="${data[8][0][tipo_venta].id_tipo_venta}" class="filter_tipo_venta"> ${data[8][0][tipo_venta].nom_tipo_venta}</br>`);                          
                 }
+
+                //INICIALIZAR SLIDER FILTRO PRECIO
+                var priceSlider = document.getElementById('price-slider');
+                var priceMin = document.getElementById('price-min');
+                var priceMax = document.getElementById('price-max');
+                var filterPrecioMin = document.getElementById('filter_precio_min');
+                var filterPrecioMax = document.getElementById('filter_precio_max');
+
+                var precio_max = parseInt(data[9][0][0]['precio_max']);
+
+                noUiSlider.create(priceSlider, {
+                    start: [0, precio_max], //Rango del filtro
+                    connect: true,
+                    range: {
+                        'min': 0,
+                        'max': precio_max
+                    },
+                    step: 10,
+                });
+                priceSlider.noUiSlider.on('update', function (values) {
+                    var min = Math.round(values[0]);
+                    var max = Math.round(values[1]);
+                    priceMin.textContent = min + '€';
+                    priceMax.textContent = max + '€';
+                    filterPrecioMin.value = min;
+                    filterPrecioMax.value = max;
+                });
 
             }).catch(function(error) {
                 console.error("Error cargando las opciones de filtros:", error);
             });
-    
 }
 
 function filter_click(total_prod = 0, items_page) {
@@ -224,6 +250,8 @@ function filter_click(total_prod = 0, items_page) {
     var tipo_accesorio = [];
     var tipo_merchandising = [];
     var tipo_venta = [];
+    var precio_min = [];
+    var precio_max = [];
 
     localStorage.removeItem('filter');
 
@@ -326,16 +354,39 @@ function filter_click(total_prod = 0, items_page) {
     }
 
 // Filtro tipo_venta
-    var t_ven = document.getElementById("filter_tipo_venta").value;
-    if (t_ven != 0) {
-        tipo_venta.push(t_ven);
-        if (tipo_venta == "*") {
-            filter.push({ "tipo_venta": "*" });
-        } else {
-            filter.push({ "tipo_venta": tipo_venta });
-        }
+    $.each($("input[class='filter_tipo_venta']:checked"), function() {
+        tipo_venta.push($(this).val());
+    });
+
+    if (tipo_venta.length != 0) {
+        filter.push({ "tipo_venta": tipo_venta });
     } else {
         filter.push({ "tipo_venta": '*' });
+    }
+
+// Filtro precio min
+    var p_min = document.getElementById('filter_precio_min').value;
+    if (p_min != 0) {
+        precio_min.push(p_min);
+        if (precio_min == "*") {
+            filter.push({ "precio_min": "0" });
+        } else {
+            filter.push({ "precio_min": precio_min });
+        }
+    } else {
+        filter.push({ "precio_min": '0' });
+    }
+// Filtro precio max
+    var p_max = document.getElementById('filter_precio_max').value;
+    if (p_max != 0) {
+        precio_max.push(p_max);
+        if (precio_max == "*") {
+            filter.push({ "precio_max": "*" });
+        } else {
+            filter.push({ "precio_max": precio_max });
+        }
+    } else {
+        filter.push({ "precio_max": '*' });
     }
 
     // Guardamos en localStorage los filtros
@@ -348,15 +399,15 @@ function filter_click(total_prod = 0, items_page) {
 }
 
 function filter_remove(){
-    localStorage.removeItem('filter_categoria');
-    localStorage.removeItem('filter_ciudad');
-    localStorage.removeItem('filter_estado');
-    localStorage.removeItem('filter_marca');
-    localStorage.removeItem('filter_tipo_consola');
-    localStorage.removeItem('filter_modelo_consola');
-    localStorage.removeItem('filter_tipo_accesorio');
-    localStorage.removeItem('filter_tipo_merchandising');
-    localStorage.removeItem('filter_tipo_venta');
+    // localStorage.removeItem('filter_categoria');
+    // localStorage.removeItem('filter_ciudad');
+    // localStorage.removeItem('filter_estado');
+    // localStorage.removeItem('filter_marca');
+    // localStorage.removeItem('filter_tipo_consola');
+    // localStorage.removeItem('filter_modelo_consola');
+    // localStorage.removeItem('filter_tipo_accesorio');
+    // localStorage.removeItem('filter_tipo_merchandising');
+    // localStorage.removeItem('filter_tipo_venta');
     localStorage.removeItem('filter');
 
     // Restablecer los selects a su valor inicial

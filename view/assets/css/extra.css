@@ -736,3 +736,21 @@
   font-size: 25px !important; /* Tamaño visible */
   opacity: 1 !important;
 }
+
+/* ------------------------------------------------------------------------------ */
+/* ============================ SLIDER FILTRO PRECIO ============================ */
+/* ------------------------------------------------------------------------------ */
+#price-slider {
+  margin: 20px 0;
+  width: 90%;
+  padding-left: 10px;
+}
+
+.noUi-handle {
+  background: #3d3d3d;
+  cursor: pointer;
+}
+
+.noUi-connect {
+  background: #b8b8b8;
+}

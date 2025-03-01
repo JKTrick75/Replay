@@ -89,14 +89,14 @@ switch ($_GET['op']) {
         
             try {
                 $daoshop = new DAOShop();
-                $filter_ciudad = $daoshop->filter_ciudad();
+                $filter_categoria = $daoshop->filter_categoria();
             } catch (Exception $e) {
                 echo json_encode("error");
             }
 
             try {
                 $daoshop = new DAOShop();
-                $filter_categoria = $daoshop->filter_categoria();
+                $filter_ciudad = $daoshop->filter_ciudad();
             } catch (Exception $e) {
                 echo json_encode("error");
             }
@@ -149,8 +149,15 @@ switch ($_GET['op']) {
             } catch (Exception $e) {
                 echo json_encode("error");
             }
+
+            try {
+                $daoshop = new DAOShop();
+                $filter_precio = $daoshop->filter_precio();
+            } catch (Exception $e) {
+                echo json_encode("error");
+            }
     
-            if (!empty($filter_ciudad || $filter_categoria || $filter_estado || $filter_marca || $filter_tipo_consola || $filter_modelo_consola || $filter_tipo_accesorio || $filter_tipo_merchandising || $filter_tipo_venta)) {
+            if (!empty($filter_ciudad || $filter_categoria || $filter_estado || $filter_marca || $filter_tipo_consola || $filter_modelo_consola || $filter_tipo_accesorio || $filter_tipo_merchandising || $filter_tipo_venta || $filter_precio)) {
                 $rdo = array();
                 $rdo[0][] = $filter_categoria;
                 $rdo[1][] = $filter_ciudad;
@@ -161,6 +168,7 @@ switch ($_GET['op']) {
                 $rdo[6][] = $filter_tipo_accesorio;
                 $rdo[7][] = $filter_tipo_merchandising;
                 $rdo[8][] = $filter_tipo_venta;
+                $rdo[9][] = $filter_precio;
                 echo json_encode($rdo);
             } else {
                 echo json_encode("error");

@@ -237,6 +237,30 @@
   min-height: 1400px;
 }
 
+/* ===================== CONTENIDO PRINCIPAL ===================== */
+.content_shop_products {
+  width: 40%;
+  padding: 20px;
+  margin-left: 250px; /* Espacio para filtros cuando están activos */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Si los filtros estan ocultos, mover los productos a la izquierda */
+/* .filters_shop:not(.active) + .content_shop_products {
+  margin-left: 0;
+} */
+
+/* ===================== GOOGLE MAPS ===================== */
+#container_map {
+  width: 40%;
+  background-color: #f0f0f0;
+  position: sticky;
+  top: 75px;
+  height: 100vh;
+  padding: 20px;
+  margin-left: 20px;
+}
+
 /* ===================== FILTROS (EN FLUJO NATURAL) ===================== */
 .filters_shop {
   position: absolute;
@@ -255,6 +279,10 @@
 
 .filters_shop.active {
   left: 0;
+}
+
+.filters_shop h2 {
+  text-align: center;
 }
 
 /* ===================== BOTÓN TOGGLE ===================== */
@@ -299,30 +327,6 @@
 
 .filter-toggle.active::before {
   content: "✕"; /* Cambia el icono cuando está activo */
-}
-
-/* ===================== CONTENIDO PRINCIPAL ===================== */
-.content_shop_products {
-  width: 40%;
-  padding: 20px;
-  margin-left: 250px; /* Espacio para filtros cuando están activos */
-  transition: all 0.3s ease-in-out;
-}
-
-/* Si los filtros estan ocultos, mover los productos a la izquierda */
-/* .filters_shop:not(.active) + .content_shop_products {
-  margin-left: 0;
-} */
-
-/* ===================== GOOGLE MAPS ===================== */
-#container_map {
-  width: 40%;
-  background-color: #f0f0f0;
-  position: sticky;
-  top: 75px;
-  height: 100vh;
-  padding: 20px;
-  margin-left: 20px;
 }
 
 /* ===================== ELEMENTOS FILTROS ===================== */

@@ -184,3 +184,18 @@
   });
 
 })();
+
+// Scroll al inicio al cargar/recargar
+window.addEventListener('load', () => {
+  window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth' // Animación suave
+  });
+  history.scrollRestoration = 'manual'; // Desactiva memoria del navegador
+});
+
+// Scroll al inicio en cambios de hash (SPA)
+window.addEventListener('hashchange', () => {
+  window.scrollTo(0, 0);
+});

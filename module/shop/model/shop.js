@@ -2,6 +2,7 @@ function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
     ajaxPromise(url, 'POST', 'JSON', { 'total_prod': total_prod, 'items_page': items_page, 'filter': filter })
         .then(function (data) {
             // console.log(data); //Mostrar productos listados
+            window.scrollTo(0, 0); //Mover la pantalla arriba del todo
             $('.content_shop_products').empty();
             $('.detalles_producto' && '.imagen_producto' && 'details_product_shop').empty();
 
@@ -61,6 +62,7 @@ function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
         }).catch(function () {
             console.log('Error en el ajaxPromise de listar productos / No hay productos para estos filtros');
             $(".content_shop_products").empty();
+            $('<div></div>').appendTo('.content_shop_products').html('<img src="view/assets/img/sad-gaming.gif" class="gif_no_stock image_gif">');
             $('<div></div>').appendTo('.content_shop_products').html('<h1>No hay productos con estos filtros</h1>');
             // window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Function ajxForSearch SHOP";
         });
@@ -68,8 +70,9 @@ function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
 
 function loadProducts(total_prod = 0, items_page = 4) {
     var filter = JSON.parse(localStorage.getItem('filter')) || false;
-
     // console.log(filter);
+
+    window.scrollTo(0, 0); //Mover la pantalla arriba del todo
 
     if (filter) {
         // console.log('hay filtros');
@@ -145,11 +148,11 @@ function load_filters() {
                 '<h4>Tipo de venta</h4>' +
             '</div><br>' +
 
-            // '<div id="overlay">' +
-            //     '<div class= "cv-spinner" >' +
-            //         '<span class="spinner"></span>' +
-            //     '</div >' +
-            // '</div > ' +
+            '<div id="overlay">' +
+                '<div class= "cv-spinner" >' +
+                    '<span class="spinner"></span>' +
+                '</div >' +
+            '</div > ' +
             '<button class="filter_button button_spinner" id="Button_filter">Filtrar</button>&nbsp&nbsp&nbsp' +
             '<button class="filter_remove" id="Remove_filter">Borrar filtros</button>');
 
@@ -207,7 +210,7 @@ function load_filters() {
                     $('.tipo_venta').append(`<input type="checkbox" value="${data[8][0][tipo_venta].id_tipo_venta}" id="${data[8][0][tipo_venta].id_tipo_venta}" class="filter_tipo_venta"> ${data[8][0][tipo_venta].nom_tipo_venta}</br>`);                          
                 }
 
-                //INICIALIZAR SLIDER FILTRO PRECIO
+                //SLIDER FILTRO PRECIO
                 var priceSlider = document.getElementById('price-slider');
                 var priceMin = document.getElementById('price-min');
                 var priceMax = document.getElementById('price-max');
@@ -225,6 +228,7 @@ function load_filters() {
                     },
                     step: 10,
                 });
+                //Actualizar valores del slider
                 priceSlider.noUiSlider.on('update', function (values) {
                     var min = Math.round(values[0]);
                     var max = Math.round(values[1]);
@@ -394,27 +398,17 @@ function filter_click(total_prod = 0, items_page) {
         localStorage.setItem('filter', JSON.stringify(filter));
     }
 
-    location.reload();
+    // Mostrar spinner
+    document.getElementById('overlay').style.display = 'block';
 
+    //Cooldown para ver el spinner antes de recargar
+    setTimeout(function() {
+        location.reload();
+    }, 1500);
 }
 
 function filter_remove(){
-    // localStorage.removeItem('filter_categoria');
-    // localStorage.removeItem('filter_ciudad');
-    // localStorage.removeItem('filter_estado');
-    // localStorage.removeItem('filter_marca');
-    // localStorage.removeItem('filter_tipo_consola');
-    // localStorage.removeItem('filter_modelo_consola');
-    // localStorage.removeItem('filter_tipo_accesorio');
-    // localStorage.removeItem('filter_tipo_merchandising');
-    // localStorage.removeItem('filter_tipo_venta');
     localStorage.removeItem('filter');
-
-    // Restablecer los selects a su valor inicial
-    // $('.filter_categoria, .filter_ciudad, .filter_estado, .filter_marca, .filter_tipo_consola, '+
-    //     '.filter_modelo_consola, .filter_tipo_accesorio, .filter_tipo_merchandising, .filter_tipo_venta').val('');
-
-    //En vez de restablecer, recargamos la página para que se vuelvan a mostrar todos los productos tras borrar todo lo de localStorage
     location.reload();
 };
 
@@ -444,11 +438,24 @@ function highlight() {
     // }
 }
 
+function modal_filters() {
+    document.getElementById('filterToggle').addEventListener('click', function() {
+        const filters = document.querySelector('.filters_shop');
+        const btn = this;
+        
+        // Tratamiento de clases para mostrar/ocultar el modal y cambiar el icono/apariencia del botón
+        filters.classList.toggle('active');
+        btn.classList.toggle('active');
+      });
+}
+
 function loadDetails(id_producto) {
+
     ajaxPromise('module/shop/controller/controller_shop.php?op=get_details&id=' + id_producto, 'GET', 'JSON')
         .then(function (data) {
-            // Debug filtros
             // console.log(data);
+
+            window.scrollTo(0, 0); //Mover la pantalla arriba del todo
 
             $('.list_product_shop').empty();
             $('.imagen_producto_dentro').empty();
@@ -620,10 +627,16 @@ function clicks() {
 
 }
 
+function ocultar_elementos() {
+    $('#details_product_shop').addClass('hidden'); //Ocultamos los detalles_producto
+    document.getElementById('overlay').style.display = 'none'; //Ocultamos el spinner
+}
+
 $(document).ready(function () {
     loadProducts();
     clicks();
     load_filters();
-    $('#details_product_shop').addClass('hidden'); //Ocultamos los detalles_producto
+    modal_filters();
+    ocultar_elementos();
     // console.log("Bienvenido al Catálogo");
 });

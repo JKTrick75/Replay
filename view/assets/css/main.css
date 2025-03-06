@@ -479,6 +479,7 @@ h6 {
   background-color: var(--background-color);
   font-size: 14px;
   position: relative;
+  z-index: 1000;
 }
 
 .footer .footer-newsletter {

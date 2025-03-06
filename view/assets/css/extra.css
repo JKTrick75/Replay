@@ -225,56 +225,203 @@
   color: rgb(56, 56, 56);
 }
 
-/* =========================== LAYOUT =========================== */
-
-/* -------------------------------------------------------------------- */
-/* ============================= LIST SHOP ============================ */
-/* -------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ */
+/* ============================= LAYOUT ============================= */
+/* ------------------------------------------------------------------ */
 .list_product_shop {
   display: flex;
   width: 100%;
-  align-items: flex-start; /* Alinea los elementos al inicio */
+  align-items: flex-start;
   padding-bottom: 100px;
+  position: relative;
+  min-height: 1400px;
 }
 
-/* COLUMNA FILTROS */
+/* ===================== FILTROS (EN FLUJO NATURAL) ===================== */
 .filters_shop {
+  position: absolute;
+  left: -250px;
+  top: 65px; /* Ajusta según la altura de tu header */
+  width: 250px;
+  height: auto;
+  background: white;
+  z-index: 100;
+  transition: all 0.3s ease-in-out;
   padding: 10px;
-  margin-left: 10px;
-  width: 15%; /* Ancho filtros */
+  box-shadow: 3px 0 15px rgba(0,0,0,0.1);
+  overflow-y: auto;
   text-align: left;
-  /* Hace que el elemento sea sticky */
-  /* position: sticky;  */
-  top: 75px; /* Se pega al top de la ventana */
-  align-self: flex-start; /* Alinea el elemento al inicio del contenedor flex */
-  height: 100%;
-  overflow-y: auto; /* Permite scroll si el contenido es muy largo */
-}
-.filters_shop .default_filter{
-  text-align: center;
-}
-.filters_shop h4{
-  margin-top: 15px;
-  margin-bottom: 5px;
 }
 
-/* COLUMNA LISTA PRODUCTOS */
+.filters_shop.active {
+  left: 0;
+}
+
+/* ===================== BOTÓN TOGGLE ===================== */
+.filter-toggle {
+  position: absolute;
+  left: 20px;
+  top: 0;
+  z-index: 101;
+  padding: 12px 20px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  color: #495057;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+/* Hover State */
+.filter-toggle:hover {
+  background: #e9ecef;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  transform: translateY(-1px);
+}
+
+/* Active/Pressed State */
+.filter-toggle.active {
+  background: #e2e6ea;
+  border-color: #ced4da;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+  transform: translateY(1px);
+}
+
+/* Icono del botón */
+.filter-toggle::before {
+  content: "☰";
+  font-size: 1.2em;
+  transition: transform 0.3s ease;
+}
+
+.filter-toggle.active::before {
+  content: "✕"; /* Cambia el icono cuando está activo */
+}
+
+/* ===================== CONTENIDO PRINCIPAL ===================== */
 .content_shop_products {
-  width: 40%; /* Ancho productos */
-  margin-left: 0;
+  width: 40%;
   padding: 20px;
-  padding-bottom: 200px; /* Para controlar el sticky del google maps */
+  margin-left: 250px; /* Espacio para filtros cuando están activos */
+  transition: all 0.3s ease-in-out;
 }
 
-/* COLUMNA MAPS */
+/* Si los filtros estan ocultos, mover los productos a la izquierda */
+/* .filters_shop:not(.active) + .content_shop_products {
+  margin-left: 0;
+} */
+
+/* ===================== GOOGLE MAPS ===================== */
 #container_map {
-  width: 40%; /* Ancho maps */
-  background-color: #f0f0f0; /* Color temporal de obras */
-  position: sticky; /* Hace que el elemento sea sticky */
-  top: 75px; /* Se pega al top de la ventana */
-  align-self: flex-start; /* Alinea el elemento al inicio del contenedor flex */
-  height: 100vh; /* Altura completa de la ventana */
-  overflow-y: auto; /* Permite scroll si el contenido es muy largo */
+  width: 40%;
+  background-color: #f0f0f0;
+  position: sticky;
+  top: 75px;
+  height: 100vh;
+  padding: 20px;
+  margin-left: 20px;
+}
+
+/* ===================== ELEMENTOS FILTROS ===================== */
+.filters_shop h2 {
+  font-size: 1.4em;
+  margin-bottom: 20px;
+  color: #333;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+.filters_shop h4 {
+  color: #666;
+  font-size: 0.95em;
+  margin: 20px 0 10px;
+  text-transform: uppercase;
+}
+
+.filters_shop select,
+.filters_shop input[type="checkbox"],
+.filters_shop input[type="radio"] {
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+.filters_shop select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f9f9f9;
+}
+
+/* ===================== BOTONES FILTROS ===================== */
+/* Estilos base para ambos botones */
+.filter_button, 
+.filter_remove {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+/* Botón Filtrar */
+.filter_button {
+  background-color: #E96B56;
+  color: white;
+}
+.filter_button:hover {
+  background-color: #d45a46;
+}
+
+/* Botón Borrar filtros */
+.filter_remove {
+  background-color: #333333;
+  color: white;
+}
+.filter_remove:hover {
+  background-color: #1a1a1a;
+}
+
+/* ===================== SPINNER FILTRAR ===================== */
+#overlay {
+  position: relative;
+  margin-bottom: 15px;
+  height: 30px;
+  display: none;
+}
+
+.cv-spinner {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.spinner {
+  width: 25px;
+  height: 25px;
+  display: inline-block; /* ¡IMPORTANTE! */
+  border: 3px solid rgba(233, 107, 86, 0.3); /* Color base más suave */
+  border-top-color: #E96B56; /* Solo la parte superior con color fuerte */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg); /* Animación más suave */
+  }
+}
+
+/* ===================== SIN STOCK GIF ===================== */
+.gif_no_stock{
+  display: block;
+  margin-left: 100px;
+  margin-right: 100px;
 }
 
 /* ------------------------------------------------------------------ */
@@ -297,8 +444,8 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 .img-container {
-  flex: 0 0 300px; /* Ancho aumentado (antes 120px) */
-  height: 200px; /* Altura fija para mantener relación cuadrada */
+  flex: 0 0 300px;
+  height: 200px;
   overflow: hidden;
   position: relative; /* Para posicionar elementos absolutos luego */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -389,7 +536,7 @@
   background-color: #c65a48;
 }
 
-
+/* ------------ Elementos ocultos ------------- */
 .hidden {
   display: none !important; 
 }
@@ -399,14 +546,20 @@
 /* -------------------------------------------------------------------- */
 /* Contenedor general: cuatro filas */
 #details_product_shop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   display: grid;
-  grid-template-rows: auto auto auto auto; /* top-section, detalles_extra, valoraciones y productos_relacionados */
+  grid-template-rows: auto auto auto auto;
   gap: 30px;
   padding: 30px;
   margin: 0 10px;
   background: #f8f8f8;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  z-index: 950; /* Mayor que los filtros (que tienen z-index: 100) */
+  min-height: 100vh; /* Ocupa toda la altura visible */
 }
 
 /* ---------------------- */
@@ -498,11 +651,9 @@
   background: #218838;
 }
 
-
-
-/* ---------------------- */
+/* ---------------------------- */
 /* Segunda fila: detalles_extra */
-/* ---------------------- */
+/* ---------------------------- */
 .detalles_extra {
   background: #fff;
   padding: 20px;
@@ -510,9 +661,9 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* ---------------------- */
+/* -------------------------- */
 /* Tercera fila: valoraciones */
-/* ---------------------- */
+/* -------------------------- */
 .valoraciones {
   background: #fff;
   padding: 20px;
@@ -520,9 +671,9 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* ---------------------- */
+/* ----------------------------------- */
 /* Cuarta fila: productos_relacionados */
-/* ---------------------- */
+/* ----------------------------------- */
 .productos_relacionados {
   background: #fff;
   padding: 20px;
@@ -566,18 +717,6 @@
 
 #table-shop i {
   color: #E96B56;
-}
-
-/* Responsive: en pantallas pequeñas */
-@media (max-width: 768px) {
-  .top-section {
-    grid-template-columns: 1fr;
-  }
-  
-  .imagen_producto, .detalles_producto, .compra_producto {
-    width: 100%;
-    height: auto; /* Ajusta según se requiera */
-  }
 }
 
 /* Botones de acciones */
@@ -626,11 +765,10 @@
 /* HEADER DETALLES PRODUCTO */
 .header-details {
   position: relative;
-  /* Puedes agregar padding o margin si lo necesitas para separar el título */
 }
 
 .header-details h1 {
-  margin: 0; /* Opcional: elimina márgenes para un mejor posicionamiento */
+  margin: 0;
 }
 /* Icono del corazón */
 .details__heart {
@@ -690,7 +828,6 @@
 #container-date-img .slick-next {
   right: 10px !important;
 }
-
 
 #container-date-img .slick-prev:before,
 #container-date-img .slick-next:before {

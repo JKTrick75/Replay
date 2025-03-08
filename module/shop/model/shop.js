@@ -77,7 +77,6 @@ function loadProducts(total_prod = 0, items_page = 4) {
     if (filter) {
         // console.log('hay filtros');
         ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_products', total_prod, items_page, filter);
-        // highlight(filter);
     } else {
         // console.log('sin filtros');
         ajaxForSearch('module/shop/controller/controller_shop.php?op=get_products', total_prod, items_page);
@@ -89,6 +88,7 @@ function load_filters() {
     $('<div class="div-filters"></div>').appendTo('.filters_shop')
         .html(
             '<h2>Buscar producto</h2>' +
+
             '<div class="categoria">' +
                 '<h4>Categoria</h4>' +
             '</div>' +
@@ -96,7 +96,7 @@ function load_filters() {
             '<div class="ciudad">' +
                 '<h4>Ubicación</h4>' +
                 '<select class="filter_ciudad" id="filter_ciudad">' +
-                    '<option value="*" class="default_filter" selected>Todas</option>' +
+                    '<option value="*" class="default_filter">Todas</option>' +
                 '</select><br>' +
             '</div>' +
 
@@ -119,28 +119,28 @@ function load_filters() {
             '<div class="tipo_consola">' +
                 '<h4>Tipo de consola</h4>' +
                 '<select class="filter_tipo_consola" id="filter_tipo_consola">' +
-                    '<option value="*" class="default_filter" selected>Todos</option>' +
+                    '<option value="*" class="default_filter">Todos</option>' +
                 '</select><br>' +
             '</div>' +
 
             '<div class="modelo_consola">' +
                 '<h4>Modelo</h4>' +
                 '<select class="filter_modelo_consola" id="filter_modelo_consola">' +
-                    '<option value="*" class="default_filter" selected>Todos</option>' +
+                    '<option value="*" class="default_filter">Todos</option>' +
                 '</select><br>' +
             '</div>' +
 
             '<div class="tipo_accesorio">' +
                 '<h4>Accesorios</h4>' +
                 '<select class="filter_tipo_accesorio" id="filter_tipo_accesorio">' +
-                    '<option value="*" class="default_filter" selected>Todos</option>' +
+                    '<option value="*" class="default_filter">Todos</option>' +
                 '</select><br>' +
             '</div>' +
 
             '<div class="tipo_merchandising">' +
                 '<h4>Merchandising</h4>' +
                 '<select class="filter_tipo_merchandising" id="filter_tipo_merchandising">' +
-                    '<option value="*" class="default_filter" selected>Todos</option>' +
+                    '<option value="*" class="default_filter">Todos</option>' +
                 '</select><br>' +
             '</div>' +
 
@@ -154,18 +154,20 @@ function load_filters() {
                 '</div >' +
             '</div > ' +
             '<button class="filter_button button_spinner" id="Button_filter">Filtrar</button>&nbsp&nbsp&nbsp' +
-            '<button class="filter_remove" id="Remove_filter">Borrar filtros</button>');
+            '<button class="filter_remove" id="Remove_filter">Borrar filtros</button><br><br>'+
+            '<p class="results">"Mostrando 16 resultados"</p>'
+        );
 
-            //FILTROS DINAMICOS
-            ajaxPromise('module/shop/controller/controller_shop.php?op=get_filters', 'GET', 'JSON')
+        //FILTROS DINAMICOS
+        return ajaxPromise('module/shop/controller/controller_shop.php?op=get_filters', 'GET', 'JSON') //Ponemos return para controlar abajo en el $document.ready que se ejecute antes que algunas funciones
             .then(function (data) {
 
                 // console.log(data); //Mostrar filtros recogidos
+                // console.log("categoria"+data[0][0][0].id_categoria);
 
                 // Rellenar filtros categoria
                 for (categoria in data[0][0]) {
-                    // $('.filter_categoria').append(`<option value="${data[0][0][categoria].id_categoria}">${data[0][0][categoria].nom_categoria}</option>`);
-                    $('.categoria').append(`<input type="checkbox" value="${data[0][0][categoria].id_categoria}" id="${data[0][0][categoria].id_categoria}" class="filter_categoria"> ${data[0][0][categoria].nom_categoria}</br>`);
+                    $('.categoria').append(`<input type="checkbox" value="${data[0][0][categoria].id_categoria}" id="categoria${data[0][0][categoria].id_categoria}" class="filter_categoria"> ${data[0][0][categoria].nom_categoria}</br>`);
                 }
 
                 // Rellenar filtros ciudad
@@ -175,13 +177,12 @@ function load_filters() {
                 
                 // Rellenar filtros estado
                 for (estado in data[2][0]) {
-                    // $('.filter_estado').append(`<option value="${data[2][0][estado].id_estado}">${data[2][0][estado].nom_estado}</option>`);
-                    $('.estado').append(`<input type="radio" name="filter_estado" value="${data[2][0][estado].id_estado}" id="${data[2][0][estado].id_estado}" class="filter_estado"> ${data[2][0][estado].nom_estado}</br>`);                          
+                    $('.estado').append(`<input type="radio" name="filter_estado" value="${data[2][0][estado].id_estado}" id="estado${data[2][0][estado].id_estado}" class="filter_estado"> ${data[2][0][estado].nom_estado}</br>`);                          
                 }
                 
                 // Rellenar filtros marca filter_marca
                 for (marca in data[3][0]) {
-                    $('.marca').append(`<input type="radio" name="filter_marca" value="${data[3][0][marca].id_marca}" id="${data[3][0][marca].id_marca}" class="filter_marca"> ${data[3][0][marca].nom_marca}</br>`);
+                    $('.marca').append(`<input type="radio" name="filter_marca" value="${data[3][0][marca].id_marca}" id="marca${data[3][0][marca].id_marca}" class="filter_marca"> ${data[3][0][marca].nom_marca}</br>`);
                                         
                 }
 
@@ -207,7 +208,7 @@ function load_filters() {
 
                 // Rellenar filtros tipo_venta
                 for (tipo_venta in data[8][0]) {
-                    $('.tipo_venta').append(`<input type="checkbox" value="${data[8][0][tipo_venta].id_tipo_venta}" id="${data[8][0][tipo_venta].id_tipo_venta}" class="filter_tipo_venta"> ${data[8][0][tipo_venta].nom_tipo_venta}</br>`);                          
+                    $('.tipo_venta').append(`<input type="checkbox" value="${data[8][0][tipo_venta].id_tipo_venta}" id="tipo_venta${data[8][0][tipo_venta].id_tipo_venta}" class="filter_tipo_venta"> ${data[8][0][tipo_venta].nom_tipo_venta}</br>`);                          
                 }
 
                 //SLIDER FILTRO PRECIO
@@ -390,7 +391,7 @@ function filter_click(total_prod = 0, items_page) {
             filter.push({ "precio_max": precio_max });
         }
     } else {
-        filter.push({ "precio_max": '*' });
+        filter.push({ "precio_max": '0' });
     }
 
     // Guardamos en localStorage los filtros
@@ -418,24 +419,79 @@ function highlight() {
     console.log("Estos son los filtros a remarcar:");
     console.log(all_filters);
 
-    if (all_filters[2].category[0] != '*') {
-        document.getElementById('select_cat').value = all_filters[2].category[0];
+    //Categoria
+    if (all_filters[0].categoria != '*') {
+        // console.log(all_filters[0].categoria);
+
+        for (row in all_filters[0].categoria) {
+            // console.log("categoria"+all_filters[0].categoria[row]);
+
+            document.getElementById("categoria"+all_filters[0].categoria[row]).setAttribute('checked', true);
+        }
     }
 
-    //highlight Selects
-    // if (all_filters[2].category[0] != '*') {
-    //     document.getElementById('select_cat').value = all_filters[2].category[0];
-    // }
-    //highlight Radiobuttons
-    // if (all_filters[1].Num_doors[0] != '*') {
-    //     document.getElementById(all_filters[1].Num_doors[0]).setAttribute('checked', true);
-    // }
-    //highlight Checkboxes
-    // if (all_filters[0].Color[0] != '*') {
-    //     for (row in all_filters[0].Color) {
-    //         document.getElementById(all_filters[0].Color[row]).setAttribute('checked', true);
-    //     }
-    // }
+    //Ciudad
+    if (all_filters[1].ciudad != '*') {
+        console.log(all_filters[1].ciudad[0]);
+        document.getElementById('filter_ciudad').value = all_filters[1].ciudad[0];
+    }
+
+    //Estado
+    if (all_filters[2].estado != '*') {
+        document.getElementById("estado"+all_filters[2].estado[0]).setAttribute('checked', true);
+    }
+
+    //Marca
+    if (all_filters[3].marca != '*') {
+        document.getElementById("marca"+all_filters[3].marca[0]).setAttribute('checked', true);
+    }
+
+    //Tipo consola
+    if (all_filters[4].tipo_consola != '*') {
+        document.getElementById('filter_tipo_consola').value = all_filters[4].tipo_consola[0];
+    }
+
+    //Modelo consola
+    if (all_filters[5].modelo_consola != '*') {
+        document.getElementById('filter_modelo_consola').value = all_filters[5].modelo_consola[0];
+    }
+
+    //Tipo accesorio
+    if (all_filters[6].tipo_accesorio != '*') {
+        document.getElementById('filter_tipo_accesorio').value = all_filters[6].tipo_accesorio[0];
+    }
+
+    //Tipo merchandising
+    if (all_filters[7].tipo_merchandising != '*') {
+        document.getElementById('filter_tipo_merchandising').value = all_filters[7].tipo_merchandising[0];
+    }
+
+    //Tipo venta
+    if (all_filters[8].tipo_venta != '*') {
+        // console.log(all_filters[8].tipo_venta);
+
+        for (row in all_filters[8].tipo_venta) {
+            document.getElementById("tipo_venta"+all_filters[8].tipo_venta[row]).setAttribute('checked', true);
+        }
+    }
+
+    // Precio min y max
+    if (all_filters[9].precio_min && all_filters[10].precio_max) {
+        //Recogemos valores y el slider
+        var min = all_filters[9].precio_min[0];
+        var max = all_filters[10].precio_max[0];
+        var priceSlider = document.getElementById('price-slider');
+
+        if (priceSlider.noUiSlider) {
+            priceSlider.noUiSlider.set([min, max]);
+        }
+
+        //Actualizamos los valores
+        document.getElementById('filter_precio_min').value = min;
+        document.getElementById('filter_precio_max').value = max;
+        document.getElementById('price-min').textContent = min + '€';
+        document.getElementById('price-max').textContent = max + '€';
+    }
 }
 
 function modal_filters() {
@@ -605,7 +661,6 @@ function loadDetails(id_producto) {
         });
 }
 
-
 function clicks() {
     // console.log("Cargamos clicks");
     $(document).on("click", ".more_info_button", function () {
@@ -635,8 +690,13 @@ function ocultar_elementos() {
 $(document).ready(function () {
     loadProducts();
     clicks();
-    load_filters();
-    modal_filters();
+    load_filters().then(function() {
+        modal_filters();
+        highlight();
+    }).catch(function(error) {
+        console.error("Error:", error);
+    });
     ocultar_elementos();
+
     // console.log("Bienvenido al Catálogo");
 });

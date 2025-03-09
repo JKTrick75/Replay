@@ -240,7 +240,9 @@
 /* ===================== CONTENIDO PRINCIPAL ===================== */
 .content_shop_products {
   width: 40%;
-  padding: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
   margin-left: 250px; /* Espacio para filtros cuando están activos */
   transition: all 0.3s ease-in-out;
 }
@@ -329,6 +331,11 @@
   content: "✕"; /* Cambia el icono cuando está activo */
 }
 
+/* ===================== COUNT RESULTS ===================== */
+.results{
+  text-align: left;
+  margin-bottom: 10px !important;
+}
 /* ===================== ELEMENTOS FILTROS ===================== */
 .filters_shop h2 {
   font-size: 1.4em;

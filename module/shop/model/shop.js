@@ -13,6 +13,10 @@ function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
                         '<h3>¡No se encuentarn productos con los filters aplicados!</h3>'
                     )
             } else {
+                $('<div></div>').attr({ 'class': 'list_content_shop' }).appendTo('.content_shop_products')
+                        .html(
+                            "<div class='count_products'></div>"
+                        )
                 for (row in data) {
                     // console.log(data[row]);
                     $('<div></div>').attr({ 'id': data[row].id_producto, 'class': 'list_content_shop' }).appendTo('.content_shop_products')
@@ -154,8 +158,7 @@ function load_filters() {
                 '</div >' +
             '</div > ' +
             '<button class="filter_button button_spinner" id="Button_filter">Filtrar</button>&nbsp&nbsp&nbsp' +
-            '<button class="filter_remove" id="Remove_filter">Borrar filtros</button><br><br>'+
-            '<p class="results">"Mostrando 16 resultados"</p>'
+            '<button class="filter_remove" id="Remove_filter">Borrar filtros</button><br><br>'
         );
 
         //FILTROS DINAMICOS
@@ -245,159 +248,7 @@ function load_filters() {
 }
 
 function filter_click(total_prod = 0, items_page) {
-    var filter = [];
-    var categoria = [];
-    var ciudad = [];
-    var estado = [];
-    var marca = [];
-    var tipo_consola = [];
-    var modelo_consola = [];
-    var tipo_accesorio = [];
-    var tipo_merchandising = [];
-    var tipo_venta = [];
-    var precio_min = [];
-    var precio_max = [];
-
-    localStorage.removeItem('filter');
-
-// Filtro categoria
-    $.each($("input[class='filter_categoria']:checked"), function() {
-        categoria.push($(this).val());
-    });
-
-    if (categoria.length != 0) {
-        filter.push({ "categoria": categoria });
-    } else {
-        filter.push({ "categoria": '*' });
-    }
-
-// Filtro ciudad
-    var ciu = document.getElementById("filter_ciudad").value;
-    if (ciu != 0) {
-        ciudad.push(ciu);
-        if (ciudad == "*") {
-            filter.push({ "ciudad": "*" });
-        } else {
-            filter.push({ "ciudad": ciudad });
-        }
-    } else {
-        filter.push({ "ciudad": '*' });
-    }
-
-// Filtro estado
-    $.each($("input[class='filter_estado']:checked"), function() {
-        estado.push($(this).val());
-    });
-
-    if (estado.length != 0) {
-        filter.push({ "estado": estado });
-    } else {
-        filter.push({ "estado": '*' });
-    }
-
-// Filtro marca
-    $.each($("input[class='filter_marca']:checked"), function() {
-        marca.push($(this).val());
-    });
-
-    if (marca.length != 0) {
-        filter.push({ "marca": marca });
-    } else {
-        filter.push({ "marca": '*' });
-    }
-
-// Filtro tipo_consola
-    var t_con = document.getElementById("filter_tipo_consola").value;
-    if (t_con != 0) {
-        tipo_consola.push(t_con);
-        if (tipo_consola == "*") {
-            filter.push({ "tipo_consola": "*" });
-        } else {
-            filter.push({ "tipo_consola": tipo_consola });
-        }
-    } else {
-        filter.push({ "tipo_consola": '*' });
-    }
-
-// Filtro modelo_consola
-    var m_con = document.getElementById("filter_modelo_consola").value;
-    if (m_con != 0) {
-        modelo_consola.push(m_con);
-        if (modelo_consola == "*") {
-            filter.push({ "modelo_consola": "*" });
-        } else {
-            filter.push({ "modelo_consola": modelo_consola });
-        }
-    } else {
-        filter.push({ "modelo_consola": '*' });
-    }
-
-// Filtro tipo_accesorio
-    var t_acc = document.getElementById("filter_tipo_accesorio").value;
-    if (t_acc != 0) {
-        tipo_accesorio.push(t_acc);
-        if (tipo_accesorio == "*") {
-            filter.push({ "tipo_accesorio": "*" });
-        } else {
-            filter.push({ "tipo_accesorio": tipo_accesorio });
-        }
-    } else {
-        filter.push({ "tipo_accesorio": '*' });
-    }
-
-// Filtro tipo_merchandising
-    var t_mer = document.getElementById("filter_tipo_merchandising").value;
-    if (t_mer != 0) {
-        tipo_merchandising.push(t_mer);
-        if (tipo_merchandising == "*") {
-            filter.push({ "tipo_merchandising": "*" });
-        } else {
-            filter.push({ "tipo_merchandising": tipo_merchandising });
-        }
-    } else {
-        filter.push({ "tipo_merchandising": '*' });
-    }
-
-// Filtro tipo_venta
-    $.each($("input[class='filter_tipo_venta']:checked"), function() {
-        tipo_venta.push($(this).val());
-    });
-
-    if (tipo_venta.length != 0) {
-        filter.push({ "tipo_venta": tipo_venta });
-    } else {
-        filter.push({ "tipo_venta": '*' });
-    }
-
-// Filtro precio min
-    var p_min = document.getElementById('filter_precio_min').value;
-    if (p_min != 0) {
-        precio_min.push(p_min);
-        if (precio_min == "*") {
-            filter.push({ "precio_min": "0" });
-        } else {
-            filter.push({ "precio_min": precio_min });
-        }
-    } else {
-        filter.push({ "precio_min": '0' });
-    }
-// Filtro precio max
-    var p_max = document.getElementById('filter_precio_max').value;
-    if (p_max != 0) {
-        precio_max.push(p_max);
-        if (precio_max == "*") {
-            filter.push({ "precio_max": "*" });
-        } else {
-            filter.push({ "precio_max": precio_max });
-        }
-    } else {
-        filter.push({ "precio_max": '0' });
-    }
-
-    // Guardamos en localStorage los filtros
-    if (filter.length != 0) {
-        localStorage.setItem('filter', JSON.stringify(filter));
-    }
+    guardar_filtros_LS();
 
     // Mostrar spinner
     document.getElementById('overlay').style.display = 'block';
@@ -414,83 +265,86 @@ function filter_remove(){
 };
 
 function highlight() {
-    var all_filters = JSON.parse(localStorage.getItem('filter'));
+    //Highlight
+    var all_filters = JSON.parse(localStorage.getItem('filter')) || false;
 
-    console.log("Estos son los filtros a remarcar:");
-    console.log(all_filters);
+    if (all_filters) {
+        // console.log("Estos son los filtros a remarcar:");
+        // console.log(all_filters);
 
-    //Categoria
-    if (all_filters[0].categoria != '*') {
-        // console.log(all_filters[0].categoria);
+        //Categoria
+        if (all_filters[0].categoria != '*') {
+            // console.log(all_filters[0].categoria);
 
-        for (row in all_filters[0].categoria) {
-            // console.log("categoria"+all_filters[0].categoria[row]);
+            for (row in all_filters[0].categoria) {
+                // console.log("categoria"+all_filters[0].categoria[row]);
 
-            document.getElementById("categoria"+all_filters[0].categoria[row]).setAttribute('checked', true);
-        }
-    }
-
-    //Ciudad
-    if (all_filters[1].ciudad != '*') {
-        console.log(all_filters[1].ciudad[0]);
-        document.getElementById('filter_ciudad').value = all_filters[1].ciudad[0];
-    }
-
-    //Estado
-    if (all_filters[2].estado != '*') {
-        document.getElementById("estado"+all_filters[2].estado[0]).setAttribute('checked', true);
-    }
-
-    //Marca
-    if (all_filters[3].marca != '*') {
-        document.getElementById("marca"+all_filters[3].marca[0]).setAttribute('checked', true);
-    }
-
-    //Tipo consola
-    if (all_filters[4].tipo_consola != '*') {
-        document.getElementById('filter_tipo_consola').value = all_filters[4].tipo_consola[0];
-    }
-
-    //Modelo consola
-    if (all_filters[5].modelo_consola != '*') {
-        document.getElementById('filter_modelo_consola').value = all_filters[5].modelo_consola[0];
-    }
-
-    //Tipo accesorio
-    if (all_filters[6].tipo_accesorio != '*') {
-        document.getElementById('filter_tipo_accesorio').value = all_filters[6].tipo_accesorio[0];
-    }
-
-    //Tipo merchandising
-    if (all_filters[7].tipo_merchandising != '*') {
-        document.getElementById('filter_tipo_merchandising').value = all_filters[7].tipo_merchandising[0];
-    }
-
-    //Tipo venta
-    if (all_filters[8].tipo_venta != '*') {
-        // console.log(all_filters[8].tipo_venta);
-
-        for (row in all_filters[8].tipo_venta) {
-            document.getElementById("tipo_venta"+all_filters[8].tipo_venta[row]).setAttribute('checked', true);
-        }
-    }
-
-    // Precio min y max
-    if (all_filters[9].precio_min && all_filters[10].precio_max) {
-        //Recogemos valores y el slider
-        var min = all_filters[9].precio_min[0];
-        var max = all_filters[10].precio_max[0];
-        var priceSlider = document.getElementById('price-slider');
-
-        if (priceSlider.noUiSlider) {
-            priceSlider.noUiSlider.set([min, max]);
+                document.getElementById("categoria"+all_filters[0].categoria[row]).setAttribute('checked', true);
+            }
         }
 
-        //Actualizamos los valores
-        document.getElementById('filter_precio_min').value = min;
-        document.getElementById('filter_precio_max').value = max;
-        document.getElementById('price-min').textContent = min + '€';
-        document.getElementById('price-max').textContent = max + '€';
+        //Ciudad
+        if (all_filters[1].ciudad != '*') {
+            console.log(all_filters[1].ciudad[0]);
+            document.getElementById('filter_ciudad').value = all_filters[1].ciudad[0];
+        }
+
+        //Estado
+        if (all_filters[2].estado != '*') {
+            document.getElementById("estado"+all_filters[2].estado[0]).setAttribute('checked', true);
+        }
+
+        //Marca
+        if (all_filters[3].marca != '*') {
+            document.getElementById("marca"+all_filters[3].marca[0]).setAttribute('checked', true);
+        }
+
+        //Tipo consola
+        if (all_filters[4].tipo_consola != '*') {
+            document.getElementById('filter_tipo_consola').value = all_filters[4].tipo_consola[0];
+        }
+
+        //Modelo consola
+        if (all_filters[5].modelo_consola != '*') {
+            document.getElementById('filter_modelo_consola').value = all_filters[5].modelo_consola[0];
+        }
+
+        //Tipo accesorio
+        if (all_filters[6].tipo_accesorio != '*') {
+            document.getElementById('filter_tipo_accesorio').value = all_filters[6].tipo_accesorio[0];
+        }
+
+        //Tipo merchandising
+        if (all_filters[7].tipo_merchandising != '*') {
+            document.getElementById('filter_tipo_merchandising').value = all_filters[7].tipo_merchandising[0];
+        }
+
+        //Tipo venta
+        if (all_filters[8].tipo_venta != '*') {
+            // console.log(all_filters[8].tipo_venta);
+
+            for (row in all_filters[8].tipo_venta) {
+                document.getElementById("tipo_venta"+all_filters[8].tipo_venta[row]).setAttribute('checked', true);
+            }
+        }
+
+        // Precio min y max
+        if (all_filters[9].precio_min && all_filters[10].precio_max) {
+            //Recogemos valores y el slider
+            var min = all_filters[9].precio_min[0];
+            var max = all_filters[10].precio_max[0];
+            var priceSlider = document.getElementById('price-slider');
+
+            if (priceSlider.noUiSlider) {
+                priceSlider.noUiSlider.set([min, max]);
+            }
+
+            //Actualizamos los valores
+            document.getElementById('filter_precio_min').value = min;
+            document.getElementById('filter_precio_max').value = max;
+            document.getElementById('price-min').textContent = min + '€';
+            document.getElementById('price-max').textContent = max + '€';
+        }
     }
 }
 
@@ -503,6 +357,224 @@ function modal_filters() {
         filters.classList.toggle('active');
         btn.classList.toggle('active');
       });
+}
+
+function count_products(){
+    var filters = JSON.parse(localStorage.getItem('filter')) || false;
+
+    ajaxPromise('module/shop/controller/controller_shop.php?op=count_products', 'POST', 'JSON', { 'filter': filters })
+        .then(function(data) {
+            // console.log(data);
+            //Mostrando X resultados
+            // $(`<p class="results">"Mostrar ${data[0]["cantidad"]} resultados"</p>`).appendTo('.div-filters');
+            $(`<p class="results">"Mostrando ${data[0]["cantidad"]} resultados"</p>`).appendTo('.count_products');
+            
+        }).catch(function() {
+            console.log('Error en el ajaxPromise de contar productos');
+        });
+};
+
+function update_count_products(){
+    guardar_filtros_LS();
+
+    var filters = JSON.parse(localStorage.getItem('filter')) || false;
+
+    ajaxPromise('module/shop/controller/controller_shop.php?op=count_products', 'POST', 'JSON', { 'filter': filters })
+        .then(function(data) {
+            console.log(data);
+            //Mostrando X resultados
+            $('.div-filters .results').remove();
+            $(`<p class="results">"Mostrar ${data[0]["cantidad"]} resultados"</p>`).appendTo('.div-filters');
+            
+        }).catch(function() {
+            console.log('Error en el ajaxPromise de contar productos');
+        });
+}
+
+function radar_filter_update() {
+    //Recogemos y tenemos en cuenta todos los elementos del filtro
+    var filterElements = [
+        '.filter_categoria',
+        '.filter_ciudad',
+        '.filter_estado',
+        '.filter_marca',
+        '.filter_tipo_consola',
+        '.filter_modelo_consola',
+        '.filter_tipo_accesorio',
+        '.filter_tipo_merchandising',
+        '.filter_tipo_venta',
+        '#filter_precio_min',
+        '#filter_precio_max'
+    ];
+
+    //Radar para selects/radio-buttons/checkboxes
+    $(document).on('change input', filterElements.join(', '), function() {
+        update_count_products();
+    });
+
+    //Radar para Slider precios
+    var priceSlider = document.getElementById('price-slider');
+    if (priceSlider && priceSlider.noUiSlider) {
+        priceSlider.noUiSlider.on('set', function() {
+            update_count_products();
+        });
+    }
+}
+
+function guardar_filtros_LS(){
+    var filter = [];
+    var categoria = [];
+    var ciudad = [];
+    var estado = [];
+    var marca = [];
+    var tipo_consola = [];
+    var modelo_consola = [];
+    var tipo_accesorio = [];
+    var tipo_merchandising = [];
+    var tipo_venta = [];
+    var precio_min = [];
+    var precio_max = [];
+
+    localStorage.removeItem('filter');
+
+    // Filtro categoria
+    $.each($("input[class='filter_categoria']:checked"), function() {
+        categoria.push($(this).val());
+    });
+
+    if (categoria.length != 0) {
+        filter.push({ "categoria": categoria });
+    } else {
+        filter.push({ "categoria": '*' });
+    }
+
+    // Filtro ciudad
+    var ciu = document.getElementById("filter_ciudad").value;
+    if (ciu != 0) {
+        ciudad.push(ciu);
+        if (ciudad == "*") {
+            filter.push({ "ciudad": "*" });
+        } else {
+            filter.push({ "ciudad": ciudad });
+        }
+    } else {
+        filter.push({ "ciudad": '*' });
+    }
+
+    // Filtro estado
+    $.each($("input[class='filter_estado']:checked"), function() {
+        estado.push($(this).val());
+    });
+
+    if (estado.length != 0) {
+        filter.push({ "estado": estado });
+    } else {
+        filter.push({ "estado": '*' });
+    }
+
+    // Filtro marca
+    $.each($("input[class='filter_marca']:checked"), function() {
+        marca.push($(this).val());
+    });
+
+    if (marca.length != 0) {
+        filter.push({ "marca": marca });
+    } else {
+        filter.push({ "marca": '*' });
+    }
+
+    // Filtro tipo_consola
+    var t_con = document.getElementById("filter_tipo_consola").value;
+    if (t_con != 0) {
+        tipo_consola.push(t_con);
+        if (tipo_consola == "*") {
+            filter.push({ "tipo_consola": "*" });
+        } else {
+            filter.push({ "tipo_consola": tipo_consola });
+        }
+    } else {
+        filter.push({ "tipo_consola": '*' });
+    }
+
+    // Filtro modelo_consola
+    var m_con = document.getElementById("filter_modelo_consola").value;
+    if (m_con != 0) {
+        modelo_consola.push(m_con);
+        if (modelo_consola == "*") {
+            filter.push({ "modelo_consola": "*" });
+        } else {
+            filter.push({ "modelo_consola": modelo_consola });
+        }
+    } else {
+        filter.push({ "modelo_consola": '*' });
+    }
+
+    // Filtro tipo_accesorio
+    var t_acc = document.getElementById("filter_tipo_accesorio").value;
+    if (t_acc != 0) {
+        tipo_accesorio.push(t_acc);
+        if (tipo_accesorio == "*") {
+            filter.push({ "tipo_accesorio": "*" });
+        } else {
+            filter.push({ "tipo_accesorio": tipo_accesorio });
+        }
+    } else {
+        filter.push({ "tipo_accesorio": '*' });
+    }
+
+    // Filtro tipo_merchandising
+    var t_mer = document.getElementById("filter_tipo_merchandising").value;
+    if (t_mer != 0) {
+        tipo_merchandising.push(t_mer);
+        if (tipo_merchandising == "*") {
+            filter.push({ "tipo_merchandising": "*" });
+        } else {
+            filter.push({ "tipo_merchandising": tipo_merchandising });
+        }
+    } else {
+        filter.push({ "tipo_merchandising": '*' });
+    }
+
+    // Filtro tipo_venta
+    $.each($("input[class='filter_tipo_venta']:checked"), function() {
+        tipo_venta.push($(this).val());
+    });
+
+    if (tipo_venta.length != 0) {
+        filter.push({ "tipo_venta": tipo_venta });
+    } else {
+        filter.push({ "tipo_venta": '*' });
+    }
+
+    // Filtro precio min
+    var p_min = document.getElementById('filter_precio_min').value;
+    if (p_min != 0) {
+        precio_min.push(p_min);
+        if (precio_min == "*") {
+            filter.push({ "precio_min": "0" });
+        } else {
+            filter.push({ "precio_min": precio_min });
+        }
+    } else {
+        filter.push({ "precio_min": '0' });
+    }
+    // Filtro precio max
+    var p_max = document.getElementById('filter_precio_max').value;
+    if (p_max != 0) {
+        precio_max.push(p_max);
+        if (precio_max == "*") {
+            filter.push({ "precio_max": "*" });
+        } else {
+            filter.push({ "precio_max": precio_max });
+        }
+    } else {
+        filter.push({ "precio_max": '0' });
+    }
+
+    // Guardamos en localStorage los filtros
+    if (filter.length != 0) {
+        localStorage.setItem('filter', JSON.stringify(filter));
+    }
 }
 
 function loadDetails(id_producto) {
@@ -693,6 +765,9 @@ $(document).ready(function () {
     load_filters().then(function() {
         modal_filters();
         highlight();
+        count_products();
+        update_count_products();
+        radar_filter_update();
     }).catch(function(error) {
         console.error("Error:", error);
     });

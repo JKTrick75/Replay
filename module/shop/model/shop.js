@@ -248,7 +248,7 @@ function load_filters() {
 }
 
 function filter_click(total_prod = 0, items_page) {
-    guardar_filtros_LS();
+    guardar_filtros_storage();
 
     // Mostrar spinner
     document.getElementById('overlay').style.display = 'block';
@@ -265,7 +265,6 @@ function filter_remove(){
 };
 
 function highlight() {
-    //Highlight
     var all_filters = JSON.parse(localStorage.getItem('filter')) || false;
 
     if (all_filters) {
@@ -375,7 +374,7 @@ function count_products(){
 };
 
 function update_count_products(){
-    guardar_filtros_LS();
+    guardar_filtros_storage();
 
     var filters = JSON.parse(localStorage.getItem('filter')) || false;
 
@@ -421,7 +420,7 @@ function radar_filter_update() {
     }
 }
 
-function guardar_filtros_LS(){
+function guardar_filtros_storage(){
     var filter = [];
     var categoria = [];
     var ciudad = [];

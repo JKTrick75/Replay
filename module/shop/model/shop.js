@@ -248,7 +248,7 @@ function load_filters() {
 }
 
 function filter_click(total_prod = 0, items_page) {
-    guardar_filtros_storage();
+    guardar_filtros_storage("set_filters_count");
 
     // Mostrar spinner
     document.getElementById('overlay').style.display = 'block';
@@ -270,6 +270,7 @@ function highlight() {
     if (all_filters) {
         // console.log("Estos son los filtros a remarcar:");
         // console.log(all_filters);
+        var count_filters = 0;
 
         //Categoria
         if (all_filters[0].categoria != '*') {
@@ -280,42 +281,50 @@ function highlight() {
 
                 document.getElementById("categoria"+all_filters[0].categoria[row]).setAttribute('checked', true);
             }
+            count_filters += 1;
         }
 
         //Ciudad
         if (all_filters[1].ciudad != '*') {
-            console.log(all_filters[1].ciudad[0]);
+            // console.log(all_filters[1].ciudad[0]);
             document.getElementById('filter_ciudad').value = all_filters[1].ciudad[0];
+            count_filters += 1;
         }
 
         //Estado
         if (all_filters[2].estado != '*') {
             document.getElementById("estado"+all_filters[2].estado[0]).setAttribute('checked', true);
+            count_filters += 1;
         }
 
         //Marca
         if (all_filters[3].marca != '*') {
             document.getElementById("marca"+all_filters[3].marca[0]).setAttribute('checked', true);
+            count_filters += 1;
         }
 
         //Tipo consola
         if (all_filters[4].tipo_consola != '*') {
             document.getElementById('filter_tipo_consola').value = all_filters[4].tipo_consola[0];
+            count_filters += 1;
         }
 
         //Modelo consola
         if (all_filters[5].modelo_consola != '*') {
             document.getElementById('filter_modelo_consola').value = all_filters[5].modelo_consola[0];
+            count_filters += 1;
         }
 
         //Tipo accesorio
         if (all_filters[6].tipo_accesorio != '*') {
             document.getElementById('filter_tipo_accesorio').value = all_filters[6].tipo_accesorio[0];
+            count_filters += 1;
         }
 
         //Tipo merchandising
         if (all_filters[7].tipo_merchandising != '*') {
             document.getElementById('filter_tipo_merchandising').value = all_filters[7].tipo_merchandising[0];
+            count_filters += 1;
         }
 
         //Tipo venta
@@ -325,6 +334,7 @@ function highlight() {
             for (row in all_filters[8].tipo_venta) {
                 document.getElementById("tipo_venta"+all_filters[8].tipo_venta[row]).setAttribute('checked', true);
             }
+            count_filters += 1;
         }
 
         // Precio min y max
@@ -343,7 +353,16 @@ function highlight() {
             document.getElementById('filter_precio_max').value = max;
             document.getElementById('price-min').textContent = min + '€';
             document.getElementById('price-max').textContent = max + '€';
+
+            if (min != 0 || max != 500){
+                count_filters += 1;
+            }
         }
+
+        console.log(count_filters);
+
+        document.getElementById('filterToggle').style.setProperty('--number', `"${count_filters}"`);
+
     }
 }
 
@@ -374,9 +393,9 @@ function count_products(){
 };
 
 function update_count_products(){
-    guardar_filtros_storage();
+    guardar_filtros_storage("update_filters_count");
 
-    var filters = JSON.parse(localStorage.getItem('filter')) || false;
+    var filters = JSON.parse(localStorage.getItem('filter_update')) || false;
 
     ajaxPromise('module/shop/controller/controller_shop.php?op=count_products', 'POST', 'JSON', { 'filter': filters })
         .then(function(data) {
@@ -420,7 +439,7 @@ function radar_filter_update() {
     }
 }
 
-function guardar_filtros_storage(){
+function guardar_filtros_storage(modo_guardado){
     var filter = [];
     var categoria = [];
     var ciudad = [];
@@ -433,8 +452,6 @@ function guardar_filtros_storage(){
     var tipo_venta = [];
     var precio_min = [];
     var precio_max = [];
-
-    localStorage.removeItem('filter');
 
     // Filtro categoria
     $.each($("input[class='filter_categoria']:checked"), function() {
@@ -570,9 +587,20 @@ function guardar_filtros_storage(){
         filter.push({ "precio_max": '0' });
     }
 
-    // Guardamos en localStorage los filtros
-    if (filter.length != 0) {
-        localStorage.setItem('filter', JSON.stringify(filter));
+    if (modo_guardado == "set_filters_count"){
+        localStorage.removeItem('filter');
+
+        // Guardamos en localStorage los filtros
+        if (filter.length != 0) {
+            localStorage.setItem('filter', JSON.stringify(filter));
+        }
+    }else if (modo_guardado == "update_filters_count"){
+        localStorage.removeItem('filter_update');
+
+        // Guardamos en localStorage los filtros
+        if (filter.length != 0) {
+            localStorage.setItem('filter_update', JSON.stringify(filter));
+        }
     }
 }
 

@@ -29,7 +29,7 @@
 		// }
 
 		function select_products_carousel() {
-			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, 
+			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, p.lat, p.long,
 						  GROUP_CONCAT(i.img_producto SEPARATOR ':') AS img_producto
 					FROM producto p 
 					INNER JOIN img_producto i ON p.id_producto = i.id_producto
@@ -50,7 +50,9 @@
 						"color" => $row["color"],
 						"nom_estado" => $row["nom_estado"],
 						"nom_ciudad" => $row["nom_ciudad"],
-						"img_producto" => explode(":", $row['img_producto'])
+						"img_producto" => explode(":", $row['img_producto']),
+						"lat" => $row["lat"],
+						"long" => $row["long"]
 					);
 				}
 			}
@@ -87,7 +89,7 @@
 			// error_log($precioMax);
 			// error_log("*********************************************************End");
 
-			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, 
+			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, p.lat, p.long,
 						  GROUP_CONCAT(i.img_producto SEPARATOR ':') AS img_producto
 					FROM producto p 
 					INNER JOIN img_producto i ON p.id_producto = i.id_producto
@@ -148,7 +150,9 @@
 						"color" => $row["color"],
 						"nom_estado" => $row["nom_estado"],
 						"nom_ciudad" => $row["nom_ciudad"],
-						"img_producto" => explode(":", $row['img_producto'])
+						"img_producto" => explode(":", $row['img_producto']),
+						"lat" => $row["lat"],
+						"long" => $row["long"]
 					);
 				}
 			}
@@ -174,7 +178,9 @@
 						mc.nom_modelo_consola,
 						tc.nom_tipo_consola, 
 						tm.nom_tipo_merchandising, 
-						ta.nom_tipo_accesorio
+						ta.nom_tipo_accesorio,
+						p.lat,
+						p.long
 					FROM producto p
 					INNER JOIN marca m ON p.marca = m.id_marca
 					INNER JOIN estado e ON p.estado = e.id_estado

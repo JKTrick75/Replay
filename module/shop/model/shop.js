@@ -1,7 +1,12 @@
+/* ============================================================================================ */
+/*                                          LISTAR PRODUCTOS                                    */
+/* ============================================================================================ */
+
 function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
     ajaxPromise(url, 'POST', 'JSON', { 'total_prod': total_prod, 'items_page': items_page, 'filter': filter })
         .then(function (data) {
-            // console.log(data); //Mostrar productos listados
+            console.log(data); //Mostrar productos listados
+
             window.scrollTo(0, 0); //Mover la pantalla arriba del todo
             $('.content_shop_products').empty();
             $('.detalles_producto' && '.imagen_producto' && 'details_product_shop').empty();
@@ -13,15 +18,19 @@ function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
                         '<h3>¡No se encuentarn productos con los filters aplicados!</h3>'
                     )
             } else {
+                //Añadir contador productos
                 $('<div></div>').attr({ 'class': 'list_content_shop' }).appendTo('.content_shop_products')
                         .html(
                             "<div class='count_products'></div>"
                         )
+                //Cargar Mapa
+                load_map_shop();
+                //Generar tarjetas productos
                 for (row in data) {
                     // console.log(data[row]);
                     $('<div></div>').attr({ 'id': data[row].id_producto, 'class': 'list_content_shop' }).appendTo('.content_shop_products')
                         .html(
-                            "<div class='list_product'>" +
+                            "<div class='list_product more_info_button' id='" + data[row].id_producto + "'>" +
                                 "<div id='carousel_list_product-"+data[row].id_producto+"' class='img-container'></div>" + //Aquí va el carousel de las fotos list
                                 "<div class='product-info'>" +
                                     "<div class='product-content'>" +
@@ -36,7 +45,7 @@ function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
                                             "<li> <i id='col-ico' class='fa-solid fa-map-location-dot fa-xl'></i>Ciudad: " + data[row].nom_ciudad + "</li>" +
                                         "</ul>" +
                                         "<div class='buttons'>" +
-                                            "<button id='" + data[row].id_producto + "' class='more_info_button button add'>Detalles</button>" +
+                                            // "<button id='" + data[row].id_producto + "' class='more_info_button button add'>Detalles</button>" +
                                             "<button class='button buy'>Comprar</button>" +
                                         "</div>" +
                                     "</div>" +
@@ -60,6 +69,8 @@ function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
                             arrows: true
                         });
         
+                        //Aquí añadimos los marcadores al mapa
+                        load_markers(data[row]);
                 }
 
             }
@@ -71,6 +82,10 @@ function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
             // window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Function ajxForSearch SHOP";
         });
 }
+
+/* ============================================================================================ */
+/*                                            FILTROS                                           */
+/* ============================================================================================ */
 
 function loadProducts(total_prod = 0, items_page = 4) {
     var filter = JSON.parse(localStorage.getItem('filter')) || false;
@@ -359,10 +374,8 @@ function highlight() {
             }
         }
 
-        console.log(count_filters);
-
+        // console.log(count_filters);
         document.getElementById('filterToggle').style.setProperty('--number', `"${count_filters}"`);
-
     }
 }
 
@@ -399,7 +412,7 @@ function update_count_products(){
 
     ajaxPromise('module/shop/controller/controller_shop.php?op=count_products', 'POST', 'JSON', { 'filter': filters })
         .then(function(data) {
-            console.log(data);
+            // console.log(data);
             //Mostrando X resultados
             $('.div-filters .results').remove();
             $(`<p class="results">"Mostrar ${data[0]["cantidad"]} resultados"</p>`).appendTo('.div-filters');
@@ -604,6 +617,10 @@ function guardar_filtros_storage(modo_guardado){
     }
 }
 
+/* ============================================================================================ */
+/*                                            DETAILS                                           */
+/* ============================================================================================ */
+
 function loadDetails(id_producto) {
 
     ajaxPromise('module/shop/controller/controller_shop.php?op=get_details&id=' + id_producto, 'GET', 'JSON')
@@ -743,6 +760,9 @@ function loadDetails(id_producto) {
                 autoplaySpeed: 3000
             });
 
+            load_map_details(data);
+            load_markers_details(data);
+
             // console.log(data[0].id_producto);
             // console.log(data[0].nom_marca);
             // console.log(data[0].nom_modelo_consola);
@@ -760,9 +780,103 @@ function loadDetails(id_producto) {
         });
 }
 
+/* ============================================================================================ */
+/*                                            MAPS                                              */
+/* ============================================================================================ */
+
+var map;
+var map_details;
+
+function load_map_shop() {
+    map = L.map('container_map').setView([40.41587070194395, -3.685132043276392], 6);
+    L.tileLayer('https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.{ext}', {
+        minZoom: 0,
+        maxZoom: 20,
+        attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        ext: 'png'
+    }).addTo(map);
+}
+
+function load_map_details(data) {
+    //Recogemos datos
+    var position = [parseFloat(data[0].lat),  parseFloat(data[0].long)];
+    //Inicializamos mapa
+    map_details = L.map('container_map_details').setView(position, 16);
+    //Le añadimos la capa/skin visual
+    L.tileLayer('https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.{ext}', {
+        minZoom: 0,
+        maxZoom: 20,
+        attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        ext: 'png'
+    }).addTo(map_details);
+    //Añadimos mejoras, como la escala
+    map_details.zoomControl.setPosition('topright');
+    L.control.scale().addTo(map_details);
+}
+
+function load_markers(data) {
+    // console.log(data);
+    var position = [parseFloat(data.lat), parseFloat(data.long)];
+    
+    //Creamos el elemento del carrusel popup
+    var carouselContainer = $(`<div id='carousel_popup-${data.id_producto}' class='img_container_popup'></div>`);
+    
+    //Añadimos las imágenes al carrousel
+    for (img in data.img_producto) {
+        carouselContainer.append(
+            `<div><img src="${data.img_producto[img]}" class="img-popup-slide"></div>`
+        );
+    }
+    
+    //Creamos el marcador con el popup bindeado, e insertamos el carrousel ya montado
+    var marker = L.marker(position).addTo(map).bindPopup(
+        `<div class='more_info_popup more_info_button' id='${data.id_producto}'>
+            ${carouselContainer.prop('outerHTML')}
+            <h4><b>${data.nom_producto}</b></h4>
+            <table id='table_popup'>
+                <tr>
+                    <td><i class='fa-solid fa-location-dot fa-xl'></i>&nbsp;${data.nom_ciudad}</td>
+                    <td><i class='fa-solid fa-palette fa-xl'></i>&nbsp;${data.color}</td>
+                    <td><i class='fa-solid fa-coins fa-xl'></i>&nbsp;${data.precio} €</td>
+                </tr>
+            </table>
+        </div>`
+    );
+
+    //Inicializamos carrousel cuando se abre el popup
+    marker.on('popupopen', function() {
+        $(`#carousel_popup-${data.id_producto}`).slick({
+            infinite: true,
+            speed: 300,
+            slidesToShow: 1,
+            adaptiveHeight: false,
+            arrows: true,
+            dots: true
+        });
+    });
+}
+
+function load_markers_details(data) {
+    var position = [parseFloat(data[0].lat),  parseFloat(data[0].long)];
+    console.log(data);
+    console.log(data[1][0]);
+    L.marker(position).addTo(map_details).bindPopup(data[0].nom_producto);
+}
+
+/* ============================================================================================ */
+/*                                            CLICKS                                            */
+/* ============================================================================================ */
+
 function clicks() {
     // console.log("Cargamos clicks");
-    $(document).on("click", ".more_info_button", function () {
+    $(document).on("click", ".more_info_button", function (e) {
+        // Elementos a excluir (carousel, corazón y botón comprar)
+        var excludedElements = '.slick-arrow, .slick-dots, .buy, .list__heart, .fa-heart';
+        //Si el elemento pulsado es uno de los de la lista, paramos el evento del click
+        if ($(e.target).closest(excludedElements).length > 0) {
+            return;
+        }
+
         var id_producto = this.getAttribute('id');
         // console.log("Pillamos el id: " + id_producto);
         loadDetails(id_producto);

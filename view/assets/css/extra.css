@@ -237,7 +237,9 @@
   min-height: 1400px;
 }
 
-/* ===================== CONTENIDO PRINCIPAL ===================== */
+/* ------------------------------------------------------------------ */
+/* ======================== CONTENIDO PRINCIPAL ===================== */
+/* ------------------------------------------------------------------ */
 .content_shop_products {
   width: 40%;
   padding-left: 20px;
@@ -252,18 +254,114 @@
   margin-left: 0;
 } */
 
-/* ===================== GOOGLE MAPS ===================== */
+/* ------------------------------------------------------------------ */
+/* =========================== GOOGLE MAPS ========================== */
+/* ------------------------------------------------------------------ */
 #container_map {
   width: 40%;
   background-color: #f0f0f0;
   position: sticky;
-  top: 75px;
-  height: 100vh;
+  top: 85px;
+  height: 825px;
   padding: 20px;
   margin-left: 20px;
 }
 
-/* ===================== FILTROS (EN FLUJO NATURAL) ===================== */
+/* =========================== POPUPS MARKERS ========================== */
+.leaflet-popup-content {
+  width: 300px !important;
+  font-family: 'Arial', sans-serif;
+  margin: 15px !important;
+}
+
+.more_info_popup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Carrusel */
+.img_container_popup {
+  height: 180px;
+  width: 100%;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.img_container_popup img {
+  width: 100% !important;
+  height: 180px !important;
+  object-fit: contain;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+}
+
+/* Flechas del carrusel */
+.slick-prev:before,
+.slick-next:before {
+  color: #E96B56 !important;
+  font-size: 25px !important;
+}
+
+.slick-prev {
+  left: 5px !important;
+  z-index: 1;
+}
+
+.slick-next {
+  right: 5px !important;
+}
+
+/* Puntos de navegación */
+.slick-dots {
+  bottom: 5px !important;
+}
+
+.slick-dots li button:before {
+  color: #E96B56 !important;
+  opacity: 0.5;
+  font-size: 10px !important;
+}
+
+.slick-dots li.slick-active button:before {
+  opacity: 1;
+}
+
+/* Texto y tabla */
+.more_info_popup h4 {
+  color: #333;
+  font-size: 1.1rem;
+  text-align: center;
+  line-height: 1.3;
+  margin: 5px 0 0 0;
+}
+
+#table_popup {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+#table_popup td {
+  padding: 8px 4px;
+  font-size: 0.85rem;
+  color: #555;
+  vertical-align: middle;
+  border-bottom: 1px solid #eee;
+}
+
+#table_popup i {
+  color: #E96B56 !important;
+  width: 25px;
+  text-align: center;
+  vertical-align: middle;
+  transition: color 0.3s ease;
+}
+
+/* ------------------------------------------------------------------------ */
+/* ============================== FILTROS  ================================ */
+/* ------------------------------------------------------------------------ */
 .filters_shop {
   position: absolute;
   left: -250px;
@@ -508,14 +606,15 @@
 .product-content h1 b {
   font-weight: 600;
 }
-.list__heart {
-  color: #e74c3c;
+.list__heart i {
+  color: #8d8c8c;
   cursor: pointer;
   transition: transform 0.3s ease;
   margin-left: 10px;
 }
-.list__heart:hover {
-  transform: scale(1.2);
+.list__heart i:hover {
+  transform: scale(1.1);
+  color: #E96B56;
 }
 .product-content ul {
   list-style: none;
@@ -531,11 +630,8 @@
   align-items: center;
 }
 .product-content ul li i {
-  color: #007BFF;
-  margin-right: 8px;
-}
-.list_product i {
   color: #E96B56 !important;
+  margin-right: 8px;
 }
 
 /* Buttons */
@@ -560,11 +656,13 @@
   background-color: rgb(36, 35, 35);
 }
 .buttons .buy {
-  background-color: #E96B56;
+  /* background-color: #E96B56; */
+  background-color: #333333;
   color: #fff;
 }
 .buttons .buy:hover {
-  background-color: #c65a48;
+  /* background-color: #c65a48; */
+  background-color: rgb(36, 35, 35);
 }
 
 /* ------------ Elementos ocultos ------------- */
@@ -575,6 +673,10 @@
 /* -------------------------------------------------------------------- */
 /* =========================== DETAILS SHOP =========================== */
 /* -------------------------------------------------------------------- */
+.container__shop{
+  position: relative;
+  min-height: 2000px;
+}
 /* Contenedor general: cuatro filas */
 #details_product_shop {
   position: absolute;
@@ -582,7 +684,7 @@
   left: 0;
   width: 100%;
   display: grid;
-  grid-template-rows: auto auto auto auto;
+  grid-template-rows: auto auto auto auto auto;
   gap: 30px;
   padding: 30px;
   margin: 0 10px;
@@ -590,7 +692,8 @@
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   z-index: 950; /* Mayor que los filtros (que tienen z-index: 100) */
-  min-height: 100vh; /* Ocupa toda la altura visible */
+  min-height: 100%;
+  padding-bottom: 150px; /* Espacio para el footer */
 }
 
 /* ---------------------- */
@@ -693,7 +796,28 @@
 }
 
 /* -------------------------- */
-/* Tercera fila: valoraciones */
+/* Tercera fila: ubicación    */
+/* -------------------------- */
+.ubicacion {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  height: 600px;
+  padding-bottom: 80px;
+}
+
+#container_map_details {
+  width: 100%;
+  height: 100%;
+  background-color: #f0f0f0;
+  /* padding: 20px; */
+  margin-right: 20px;
+}
+
+/* -------------------------- */
+/* Cuarta fila: valoraciones */
 /* -------------------------- */
 .valoraciones {
   background: #fff;
@@ -703,7 +827,7 @@
 }
 
 /* ----------------------------------- */
-/* Cuarta fila: productos_relacionados */
+/* Quinta fila: productos_relacionados */
 /* ----------------------------------- */
 .productos_relacionados {
   background: #fff;

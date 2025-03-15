@@ -59,7 +59,8 @@
 			return $retrArray;
 		}
 
-		function filters_product() {
+		function filter_shop() {
+			//Recogemos valores filtro_shop
 			$filter = $_POST['filter'];
 			$categoria = $filter[0]['categoria'];
 			$ciudad = $filter[1]['ciudad'];
@@ -73,22 +74,93 @@
 			$precioMin = $filter[9]['precio_min'];
 			$precioMax = $filter[10]['precio_max'];
 
-			// error_log("*********************************************************Start");
-			// error_log("Recogemos los campos del filtro:");
-			// error_log($categoria[0]);
-			// error_log($categoria[1]);
-			// error_log($ciudad);
-			// error_log($estado);
-			// error_log($marca);
-			// error_log($tipo_consola);
-			// error_log($modelo_consola);
-			// error_log($tipo_accesorio);
-			// error_log($tipo_merchandising);
-			// error_log($tipo_venta);
-			// error_log($precioMin);
-			// error_log($precioMax);
-			// error_log("*********************************************************End");
+			//Montamos query dinámica
+			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, p.lat, p.long,
+						  GROUP_CONCAT(i.img_producto SEPARATOR ':') AS img_producto
+					FROM producto p 
+					INNER JOIN img_producto i ON p.id_producto = i.id_producto
+					INNER JOIN estado e ON p.estado = e.id_estado
+					INNER JOIN ciudad c ON p.ciudad = c.id_ciudad
+					INNER JOIN producto_categoria pc ON p.id_producto = pc.id_producto
+					INNER JOIN tipo_venta_producto tvp ON p.id_producto = tvp.id_producto
+					WHERE 1=1";
 
+			if ($categoria != '*') {
+				$categoria_sql = implode(", ", $categoria);
+				$sql .= " AND pc.id_categoria IN ($categoria_sql)";
+			}
+			if ($ciudad != '*'){
+				$sql .= " AND p.ciudad = '$ciudad[0]'";
+			}
+			if ($estado != '*'){
+				$sql .= " AND p.estado = '$estado[0]'";
+			}
+			if ($marca != '*'){
+				$sql .= " AND p.marca = '$marca[0]'";
+			}
+			if ($tipo_consola != '*'){
+				$sql .= " AND p.tipo_consola = '$tipo_consola[0]'";
+			}
+			if ($modelo_consola != '*'){
+				$sql .= " AND p.modelo_consola = '$modelo_consola[0]'";
+			}
+			if ($tipo_accesorio != '*'){
+				$sql .= " AND p.tipo_accesorio = '$tipo_accesorio[0]'";
+			}
+			if ($tipo_merchandising != '*'){
+				$sql .= " AND p.tipo_merchandising = '$tipo_merchandising[0]'";
+			}
+			if ($tipo_venta != '*') {
+				$tipo_venta_sql = implode(", ", $tipo_venta);
+				$sql .= " AND tvp.id_tipo_venta IN ($tipo_venta_sql)";
+			}
+			if (isset($precioMin) && isset($precioMax)) {
+				$sql .= " AND p.precio BETWEEN $precioMin[0] AND $precioMax[0]";
+			}
+
+			$sql.= " GROUP BY p.id_producto";
+
+			error_log("Consulta SQL:");
+			error_log($sql);
+
+			$conexion = connect::con();
+			$res = mysqli_query($conexion, $sql);
+			connect::close($conexion);
+
+			if (mysqli_num_rows($res) > 0) {
+				while ($row = mysqli_fetch_assoc($res)) {
+					$retrArray[] = array(
+						"id_producto" => $row["id_producto"],
+						"nom_producto" => $row["nom_producto"],
+						"precio" => $row["precio"],
+						"color" => $row["color"],
+						"nom_estado" => $row["nom_estado"],
+						"nom_ciudad" => $row["nom_ciudad"],
+						"img_producto" => explode(":", $row['img_producto']),
+						"lat" => $row["lat"],
+						"long" => $row["long"]
+					);
+				}
+			}
+			return $retrArray;
+		}
+
+		function filter_home() {
+			//Recogemos valores filtro_shop
+			$filter = $_POST['filter'];
+			$categoria = $filter[0]['categoria'];
+			$ciudad = $filter[1]['ciudad'];
+			$estado = $filter[2]['estado'];
+			$marca = $filter[3]['marca'];
+			$tipo_consola = $filter[4]['tipo_consola'];
+			$modelo_consola = $filter[5]['modelo_consola'];
+			$tipo_accesorio = $filter[6]['tipo_accesorio'];
+			$tipo_merchandising = $filter[7]['tipo_merchandising'];
+			$tipo_venta = $filter[8]['tipo_venta'];
+			$precioMin = $filter[9]['precio_min'];
+			$precioMax = $filter[10]['precio_max'];
+
+			//Montamos query dinámica
 			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, p.lat, p.long,
 						  GROUP_CONCAT(i.img_producto SEPARATOR ':') AS img_producto
 					FROM producto p 

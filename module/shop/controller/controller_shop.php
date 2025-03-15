@@ -19,7 +19,7 @@ switch ($_GET['op']) {
 
         break;
 
-    case 'get_products';
+    case 'get_all_products';
         try {
             $daoshop = new DAOShop();
             // $Products = $daoshop->select_products();
@@ -36,13 +36,29 @@ switch ($_GET['op']) {
         }
         break;
 
-    case 'filter_products';
+    case 'filter_shop';
         // error_log('======================================================================================');
         // error_log($_POST['filter']);
         // echo json_encode($_POST['filter']);
         
         $daoshop = new DAOShop();
-        $Products = $daoshop -> filters_product();
+        $Products = $daoshop -> filter_shop();
+        
+        if (!empty($Products)) {
+            echo json_encode($Products);
+        }
+        else {
+            echo "error";
+        }
+        break;
+    
+    case 'filter_home';
+        // error_log('======================================================================================');
+        // error_log($_POST['filter']);
+        // echo json_encode($_POST['filter']);
+        
+        $daoshop = new DAOShop();
+        $Products = $daoshop -> filter_home();
         
         if (!empty($Products)) {
             echo json_encode($Products);

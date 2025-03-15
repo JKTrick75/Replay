@@ -88,17 +88,21 @@ function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
 /* ============================================================================================ */
 
 function loadProducts(total_prod = 0, items_page = 4) {
-    var filter = JSON.parse(localStorage.getItem('filter')) || false;
+    var filter_shop = JSON.parse(localStorage.getItem('filter_shop')) || false;
+    var filter_home = JSON.parse(localStorage.getItem('filter_home')) || false;
+    
     // console.log(filter);
 
     window.scrollTo(0, 0); //Mover la pantalla arriba del todo
 
-    if (filter) {
+    if(filter_home){
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_home', total_prod, items_page, filter_home);
+    }else if (filter_shop) {
         // console.log('hay filtros');
-        ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_products', total_prod, items_page, filter);
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_shop', total_prod, items_page, filter_shop);
     } else {
         // console.log('sin filtros');
-        ajaxForSearch('module/shop/controller/controller_shop.php?op=get_products', total_prod, items_page);
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=get_all_products', total_prod, items_page);
     }
     
 }
@@ -268,6 +272,10 @@ function filter_click(total_prod = 0, items_page) {
     // Mostrar spinner
     document.getElementById('overlay').style.display = 'block';
 
+    //Borramos los demás posibles filtros
+    localStorage.removeItem('filter_home');
+    localStorage.removeItem('filter_search');
+
     //Cooldown para ver el spinner antes de recargar
     setTimeout(function() {
         location.reload();
@@ -275,12 +283,16 @@ function filter_click(total_prod = 0, items_page) {
 }
 
 function filter_remove(){
-    localStorage.removeItem('filter');
+    //Quitamos todos los posibles filtros
+    localStorage.removeItem('filter_shop');
+    localStorage.removeItem('filter_home');
+    localStorage.removeItem('filter_search');
+    //Recargamos página
     location.reload();
 };
 
 function highlight() {
-    var all_filters = JSON.parse(localStorage.getItem('filter')) || false;
+    var all_filters = JSON.parse(localStorage.getItem('filter_shop')) || false;
 
     if (all_filters) {
         // console.log("Estos son los filtros a remarcar:");
@@ -391,7 +403,7 @@ function modal_filters() {
 }
 
 function count_products(){
-    var filters = JSON.parse(localStorage.getItem('filter')) || false;
+    var filters = JSON.parse(localStorage.getItem('filter_shop')) || false;
 
     ajaxPromise('module/shop/controller/controller_shop.php?op=count_products', 'POST', 'JSON', { 'filter': filters })
         .then(function(data) {
@@ -408,7 +420,7 @@ function count_products(){
 function update_count_products(){
     guardar_filtros_storage("update_filters_count");
 
-    var filters = JSON.parse(localStorage.getItem('filter_update')) || false;
+    var filters = JSON.parse(localStorage.getItem('filter_shop_update')) || false;
 
     ajaxPromise('module/shop/controller/controller_shop.php?op=count_products', 'POST', 'JSON', { 'filter': filters })
         .then(function(data) {
@@ -601,18 +613,18 @@ function guardar_filtros_storage(modo_guardado){
     }
 
     if (modo_guardado == "set_filters_count"){
-        localStorage.removeItem('filter');
+        localStorage.removeItem('filter_shop');
 
         // Guardamos en localStorage los filtros
         if (filter.length != 0) {
-            localStorage.setItem('filter', JSON.stringify(filter));
+            localStorage.setItem('filter_shop', JSON.stringify(filter));
         }
     }else if (modo_guardado == "update_filters_count"){
-        localStorage.removeItem('filter_update');
+        localStorage.removeItem('filter_shop_update');
 
         // Guardamos en localStorage los filtros
         if (filter.length != 0) {
-            localStorage.setItem('filter_update', JSON.stringify(filter));
+            localStorage.setItem('filter_shop_update', JSON.stringify(filter));
         }
     }
 }
@@ -858,8 +870,8 @@ function load_markers(data) {
 
 function load_markers_details(data) {
     var position = [parseFloat(data[0].lat),  parseFloat(data[0].long)];
-    console.log(data);
-    console.log(data[1][0]);
+    // console.log(data);
+    // console.log(data[1][0]);
     L.marker(position).addTo(map_details).bindPopup(data[0].nom_producto);
 }
 

@@ -439,6 +439,9 @@ function highlight() {
         // console.log(count_filters);
         document.getElementById('filterToggle').style.setProperty('--number', `"${count_filters}"`);
     }
+
+    // if (filter_search){
+    // }
 }
 
 function modal_filters() {
@@ -453,14 +456,8 @@ function modal_filters() {
 }
 
 function count_products(){
-    var filters = JSON.parse(localStorage.getItem('filter_shop')) || false;
-
-    if(filters == false){
-        filters = JSON.parse(localStorage.getItem('filter_home')) || false;
-    }
-    // else if(!filters){
-    //     filters = JSON.parse(localStorage.getItem('filter_search')) || false;
-    // }
+    // var filters = JSON.parse(localStorage.getItem('filter_shop')) || false;
+    var filters = JSON.parse(localStorage.getItem('filter_shop_update')) || false;
 
     ajaxPromise('module/shop/controller/controller_shop.php?op=count_products', 'POST', 'JSON', { 'filter': filters })
         .then(function(data) {
@@ -974,8 +971,8 @@ $(document).ready(function () {
     load_filters().then(function() {
         modal_filters();
         highlight();
-        count_products();
         update_count_products();
+        count_products();
         radar_filter_update();
     }).catch(function(error) {
         console.error("Error:", error);

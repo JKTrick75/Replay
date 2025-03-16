@@ -2,7 +2,7 @@ function loadCategories() {
     ajaxPromise('module/home/controller/controller_homepage.php?op=get_categories', 'GET', 'JSON')
         .then(function (data) {
             var categories = "";
-            console.log(data);
+            // console.log(data);
 
             for (var i = 0; i < data.length; i++) {
                 var nombre = data[i].nom_categoria,

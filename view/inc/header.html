@@ -15,7 +15,18 @@
                     <li><a href="index.php?page=aboutus">Conocenos</a></li>
                     <li><a href="index.php?page=services">Servicios</a></li>
                     <li><a href="index.php?page=contactus">Contacto</a></li>
-                    <li><a href="index.php?page=portfolio">Portfolio</a></li>
+                    <div class="div_search">
+                        <select class="search_tipo_consola">
+                            <option disabled selected>- Tipo consola -</option>
+                        </select>
+                        <select class="search_modelo_consola">
+                            <option disabled selected>- Modelo -</option>
+                        </select>
+                        <input type="text" id="autocom" autocomplete="off" placeholder="Ubicación"/>
+                        <div id="search_auto"></div>
+                        <input type="button" value="buscar" id="search-btn" class="btna third"/>
+                    </div>
+                    <!-- <li><a href="index.php?page=portfolio">Portfolio</a></li>
                     <li><a href="index.php?page=team">Team</a></li>
                     <li><a href="index.php?page=pricing">Pricing</a></li>
                     <li><a href="index.php?page=blog">Blog</a></li>
@@ -39,7 +50,7 @@
                             <li><a href="#">Dropdown 3</a></li>
                             <li><a href="#">Dropdown 4</a></li>
                         </ul>
-                    </li>
+                    </li> -->
                     <!-- <li><a href="index.php?page=controller_course&op=list">Cursos</a></li> -->
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>

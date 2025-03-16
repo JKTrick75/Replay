@@ -102,7 +102,7 @@
 		}
 
 		function select_CarouselProductos() {
-			$sql= "SELECT p.nom_producto, i.img_producto
+			$sql= "SELECT p.nom_producto, i.img_producto, p.id_producto
 				FROM producto p INNER JOIN img_producto i 
 				ON p.id_producto = i.id_producto
 				WHERE i.id_img = (SELECT MIN(i2.id_img) 

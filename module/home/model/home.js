@@ -31,7 +31,7 @@ function carrousel_Productos_New() {
                 $('<div></div>').attr('class', "carousel__elements").attr('id', data[row].nom_producto).appendTo(".carousel__new__productos")
                     .html(
                         "<div class='col-sm-4 carousel__productos'>" +
-                            "<div class='carousel__productos-inner text-center'>" +
+                            "<div class='carousel__productos-inner text-center filter_new_product' id='" + data[row].id_producto + "'>" +
                                 "<img class='carousel__img' src='" + data[row].img_producto + "' alt=''><br>" 
                                 + data[row].nom_producto +
                             "</div>" +
@@ -59,13 +59,14 @@ function loadMarcas() {
 
             for (var i = 0; i < data.length; i++) {
                 var nombre = data[i].nom_marca,
-                    imagen = data[i].img_marca;
+                    imagen = data[i].img_marca,
+                    id = data[i].id_marca;
 
                 // Crear tarjetas de marca
                 marcas += "<div class='col-sm-4 marca'>" +
-                    "<div class='marca-inner text-center'>" +
-                    "<img src='" + imagen + "' class='img_marca'>" +
-                    "<br/>" + nombre +
+                    "<div class='marca-inner text-center filter_marca' id='" + id + "'>" +
+                        "<img src='" + imagen + "' class='img_marca'>" +
+                        "<br/>" + nombre +
                     "</div>" +
                     "</div>";
             }
@@ -83,11 +84,12 @@ function loadTipoConsola() {
 
             for (var i = 0; i < data.length; i++) {
                 var nombre = data[i].nom_tipo_consola,
-                    imagen = data[i].img_tipo_consola;
+                    imagen = data[i].img_tipo_consola,
+                    id = data[i].id_tipo_consola;
 
                 // Crear tarjetas de tipo_consola
                 tipo_consola += "<div class='col-sm-4 tipo_consola'>" +
-                    "<div class='tipo_consola-inner text-center'>" +
+                    "<div class='tipo_consola-inner text-center filter_tipo_consola' id='" + id + "'>" +
                     "<img src='" + imagen + "' class='img_tipo_consola'>" +
                     "<br/>" + nombre +
                     "</div>" +
@@ -107,7 +109,7 @@ function carrousel_Ciudades() {
                 $('<div></div>').attr('class', "carousel__elements").attr('id', data[row].nom_ciudad).appendTo(".carousel__list__ciudades")
                     .html(
                         "<div class='col-sm-4 carousel__ciudad'>" +
-                            "<div class='carousel__ciudad-inner text-center'>" +
+                            "<div class='carousel__ciudad-inner text-center filter_ciudad' id='" + data[row].id_ciudad + "'>" +
                                 "<img class='carousel__img' src='" + data[row].img_ciudad + "' alt=''><br>" + data[row].nom_ciudad +
                             "</div>" +
                         "</div>"
@@ -137,11 +139,12 @@ function loadEstado() {
 
             for (var i = 0; i < data.length; i++) {
                 var nombre = data[i].nom_estado,
-                    imagen = data[i].img_estado;
+                    imagen = data[i].img_estado,
+                    id = data[i].id_estado;
 
                 // Crear tarjetas de estado
                 estado += "<div class='col-sm-4 estado'>" +
-                    "<div class='estado-inner text-center'>" +
+                    "<div class='estado-inner text-center filter_estado' id='" + id + "'>" +
                     "<img src='" + imagen + "' class='img_estado'>" +
                     "<br/>" + nombre +
                     "</div>" +
@@ -161,11 +164,12 @@ function loadTipoVenta() {
 
             for (var i = 0; i < data.length; i++) {
                 var nombre = data[i].nom_tipo_venta,
-                    imagen = data[i].img_tipo_venta;
+                    imagen = data[i].img_tipo_venta
+                    id = data[i].id_tipo_venta;
 
                 // Crear tarjetas de tipo_venta
                 tipo_venta += "<div class='col-sm-4 tipo_venta'>" +
-                    "<div class='tipo_venta-inner text-center'>" +
+                    "<div class='tipo_venta-inner text-center filter_tipo_venta' id='" + id + "'>" +
                     "<img src='" + imagen + "' class='img_tipo_venta'>" +
                     "<br/>" + nombre +
                     "</div>" +
@@ -183,7 +187,7 @@ function clicks(){
         // console.log("pulsaste en categorias");
         var filters = [];
         //Pillamos la id de la tarjeta pulsada
-        filters.push({"categoria":[this.getAttribute('id')]});
+        filters.push(["categoria",this.getAttribute('id')]);
         //Borramos todos los filtros posibles que haya en el localStorage
         localStorage.removeItem('filter_shop');
         localStorage.removeItem('filter_home');
@@ -195,25 +199,96 @@ function clicks(){
         }, 200);  
     }); 
 
-    $(document).on("click",'img.services__img', function (){
+    $(document).on("click",'div.filter_new_product', function (){
         var filters = [];
-        filters.push({"type":[this.getAttribute('id')]});
+        //Pillamos la id de la tarjeta pulsada
+        filters.push(["id_producto",this.getAttribute('id')]);
+        //Borramos todos los filtros posibles que haya en el localStorage
+        localStorage.removeItem('filter_shop');
         localStorage.removeItem('filter_home');
+        localStorage.removeItem('filter_search');
+        //Añadimos el que nos interesa filtrar ahora
         localStorage.setItem('filter_home', JSON.stringify(filters)); 
         setTimeout(function(){ 
             window.location.href = 'index.php?page=controller_shop&op=list';
-        }, 1000);  
+        }, 200);  
+    }); 
+    
+    $(document).on("click",'div.filter_marca', function (){
+        var filters = [];
+        //Pillamos la id de la tarjeta pulsada
+        filters.push(["marca",this.getAttribute('id')]);
+        //Borramos todos los filtros posibles que haya en el localStorage
+        localStorage.removeItem('filter_shop');
+        localStorage.removeItem('filter_home');
+        localStorage.removeItem('filter_search');
+        //Añadimos el que nos interesa filtrar ahora
+        localStorage.setItem('filter_home', JSON.stringify(filters)); 
+        setTimeout(function(){ 
+            window.location.href = 'index.php?page=controller_shop&op=list';
+        }, 200);  
+    });   
+
+    $(document).on("click",'div.filter_tipo_consola', function (){
+        var filters = [];
+        //Pillamos la id de la tarjeta pulsada
+        filters.push(["tipo_consola",this.getAttribute('id')]);
+        //Borramos todos los filtros posibles que haya en el localStorage
+        localStorage.removeItem('filter_shop');
+        localStorage.removeItem('filter_home');
+        localStorage.removeItem('filter_search');
+        //Añadimos el que nos interesa filtrar ahora
+        localStorage.setItem('filter_home', JSON.stringify(filters)); 
+        setTimeout(function(){ 
+            window.location.href = 'index.php?page=controller_shop&op=list';
+        }, 200);  
+    }); 
+
+    $(document).on("click",'div.filter_ciudad', function (){
+        var filters = [];
+        //Pillamos la id de la tarjeta pulsada
+        filters.push(["ciudad",this.getAttribute('id')]);
+        //Borramos todos los filtros posibles que haya en el localStorage
+        localStorage.removeItem('filter_shop');
+        localStorage.removeItem('filter_home');
+        localStorage.removeItem('filter_search');
+        //Añadimos el que nos interesa filtrar ahora
+        localStorage.setItem('filter_home', JSON.stringify(filters)); 
+        setTimeout(function(){ 
+            window.location.href = 'index.php?page=controller_shop&op=list';
+        }, 200);  
     });
 
-    $(document).on("click",'img.brand__img', function (){
+    $(document).on("click",'div.filter_estado', function (){
         var filters = [];
-        filters.push({"marca":[this.getAttribute('id')]});
+        //Pillamos la id de la tarjeta pulsada
+        filters.push(["estado",this.getAttribute('id')]);
+        //Borramos todos los filtros posibles que haya en el localStorage
+        localStorage.removeItem('filter_shop');
         localStorage.removeItem('filter_home');
+        localStorage.removeItem('filter_search');
+        //Añadimos el que nos interesa filtrar ahora
         localStorage.setItem('filter_home', JSON.stringify(filters)); 
         setTimeout(function(){ 
             window.location.href = 'index.php?page=controller_shop&op=list';
-        }, 1000);
-    });
+        }, 200);  
+    }); 
+
+    $(document).on("click",'div.filter_tipo_venta', function (){
+        var filters = [];
+        //Pillamos la id de la tarjeta pulsada
+        filters.push(["tipo_venta",this.getAttribute('id')]);
+        //Borramos todos los filtros posibles que haya en el localStorage
+        localStorage.removeItem('filter_shop');
+        localStorage.removeItem('filter_home');
+        localStorage.removeItem('filter_search');
+        //Añadimos el que nos interesa filtrar ahora
+        localStorage.setItem('filter_home', JSON.stringify(filters)); 
+        setTimeout(function(){ 
+            window.location.href = 'index.php?page=controller_shop&op=list';
+        }, 200);  
+    }); 
+
 }
 
 $(document).ready(function () {

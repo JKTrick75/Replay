@@ -292,83 +292,86 @@ function filter_remove(){
 };
 
 function highlight() {
-    var all_filters = JSON.parse(localStorage.getItem('filter_shop')) || false;
+    // console.log('Highlight');
+    var filter_shop = JSON.parse(localStorage.getItem('filter_shop')) || false;
+    var filter_home = JSON.parse(localStorage.getItem('filter_home')) || false;
+    var filter_search = JSON.parse(localStorage.getItem('filter_search')) || false;
 
-    if (all_filters) {
+    if (filter_shop) {
         // console.log("Estos son los filtros a remarcar:");
-        // console.log(all_filters);
+        // console.log(filter_shop);
         var count_filters = 0;
 
         //Categoria
-        if (all_filters[0].categoria != '*') {
-            // console.log(all_filters[0].categoria);
+        if (filter_shop[0].categoria != '*') {
+            // console.log(filter_shop[0].categoria);
 
-            for (row in all_filters[0].categoria) {
-                // console.log("categoria"+all_filters[0].categoria[row]);
+            for (row in filter_shop[0].categoria) {
+                // console.log("categoria"+filter_shop[0].categoria[row]);
 
-                document.getElementById("categoria"+all_filters[0].categoria[row]).setAttribute('checked', true);
+                document.getElementById("categoria"+filter_shop[0].categoria[row]).setAttribute('checked', true);
             }
             count_filters += 1;
         }
 
         //Ciudad
-        if (all_filters[1].ciudad != '*') {
-            // console.log(all_filters[1].ciudad[0]);
-            document.getElementById('filter_ciudad').value = all_filters[1].ciudad[0];
+        if (filter_shop[1].ciudad != '*') {
+            // console.log(filter_shop[1].ciudad[0]);
+            document.getElementById('filter_ciudad').value = filter_shop[1].ciudad[0];
             count_filters += 1;
         }
 
         //Estado
-        if (all_filters[2].estado != '*') {
-            document.getElementById("estado"+all_filters[2].estado[0]).setAttribute('checked', true);
+        if (filter_shop[2].estado != '*') {
+            document.getElementById("estado"+filter_shop[2].estado[0]).setAttribute('checked', true);
             count_filters += 1;
         }
 
         //Marca
-        if (all_filters[3].marca != '*') {
-            document.getElementById("marca"+all_filters[3].marca[0]).setAttribute('checked', true);
+        if (filter_shop[3].marca != '*') {
+            document.getElementById("marca"+filter_shop[3].marca[0]).setAttribute('checked', true);
             count_filters += 1;
         }
 
         //Tipo consola
-        if (all_filters[4].tipo_consola != '*') {
-            document.getElementById('filter_tipo_consola').value = all_filters[4].tipo_consola[0];
+        if (filter_shop[4].tipo_consola != '*') {
+            document.getElementById('filter_tipo_consola').value = filter_shop[4].tipo_consola[0];
             count_filters += 1;
         }
 
         //Modelo consola
-        if (all_filters[5].modelo_consola != '*') {
-            document.getElementById('filter_modelo_consola').value = all_filters[5].modelo_consola[0];
+        if (filter_shop[5].modelo_consola != '*') {
+            document.getElementById('filter_modelo_consola').value = filter_shop[5].modelo_consola[0];
             count_filters += 1;
         }
 
         //Tipo accesorio
-        if (all_filters[6].tipo_accesorio != '*') {
-            document.getElementById('filter_tipo_accesorio').value = all_filters[6].tipo_accesorio[0];
+        if (filter_shop[6].tipo_accesorio != '*') {
+            document.getElementById('filter_tipo_accesorio').value = filter_shop[6].tipo_accesorio[0];
             count_filters += 1;
         }
 
         //Tipo merchandising
-        if (all_filters[7].tipo_merchandising != '*') {
-            document.getElementById('filter_tipo_merchandising').value = all_filters[7].tipo_merchandising[0];
+        if (filter_shop[7].tipo_merchandising != '*') {
+            document.getElementById('filter_tipo_merchandising').value = filter_shop[7].tipo_merchandising[0];
             count_filters += 1;
         }
 
         //Tipo venta
-        if (all_filters[8].tipo_venta != '*') {
-            // console.log(all_filters[8].tipo_venta);
+        if (filter_shop[8].tipo_venta != '*') {
+            // console.log(filter_shop[8].tipo_venta);
 
-            for (row in all_filters[8].tipo_venta) {
-                document.getElementById("tipo_venta"+all_filters[8].tipo_venta[row]).setAttribute('checked', true);
+            for (row in filter_shop[8].tipo_venta) {
+                document.getElementById("tipo_venta"+filter_shop[8].tipo_venta[row]).setAttribute('checked', true);
             }
             count_filters += 1;
         }
 
         // Precio min y max
-        if (all_filters[9].precio_min && all_filters[10].precio_max) {
+        if (filter_shop[9].precio_min && filter_shop[10].precio_max) {
             //Recogemos valores y el slider
-            var min = all_filters[9].precio_min[0];
-            var max = all_filters[10].precio_max[0];
+            var min = filter_shop[9].precio_min[0];
+            var max = filter_shop[10].precio_max[0];
             var priceSlider = document.getElementById('price-slider');
 
             if (priceSlider.noUiSlider) {
@@ -384,6 +387,53 @@ function highlight() {
             if (min != 0 || max != 500){
                 count_filters += 1;
             }
+        }
+
+        // console.log(count_filters);
+        document.getElementById('filterToggle').style.setProperty('--number', `"${count_filters}"`);
+    }
+
+    if (filter_home) {
+        // console.log("Estos son los filtros a remarcar:");
+        // console.log(filter_home);
+        var count_filters = 0;
+        var highlight_field = filter_home[0][0];
+        var highlight_value = filter_home[0][1];
+
+        //Categoria
+        if (highlight_field == 'categoria') {
+            document.getElementById("categoria"+highlight_value).setAttribute('checked', true);
+            count_filters += 1;
+        }
+
+        //Marca
+        if (highlight_field == 'marca') {
+            document.getElementById("marca"+highlight_value).setAttribute('checked', true);
+            count_filters += 1;
+        }
+
+        //Tipo consola
+        if (highlight_field == 'tipo_consola') {
+            document.getElementById('filter_tipo_consola').value = highlight_value;
+            count_filters += 1;
+        }
+
+        //Ciudad
+        if (highlight_field == 'ciudad') {
+            document.getElementById('filter_ciudad').value = highlight_value;
+            count_filters += 1;
+        }
+
+        //Estado
+        if (highlight_field == 'estado') {
+            document.getElementById("estado"+highlight_value).setAttribute('checked', true);
+            count_filters += 1;
+        }
+
+        //Tipo venta
+        if (highlight_field == 'tipo_venta') {
+            document.getElementById("tipo_venta"+highlight_value).setAttribute('checked', true);
+            count_filters += 1;
         }
 
         // console.log(count_filters);
@@ -405,17 +455,23 @@ function modal_filters() {
 function count_products(){
     var filters = JSON.parse(localStorage.getItem('filter_shop')) || false;
 
+    if(filters == false){
+        filters = JSON.parse(localStorage.getItem('filter_home')) || false;
+    }
+    // else if(!filters){
+    //     filters = JSON.parse(localStorage.getItem('filter_search')) || false;
+    // }
+
     ajaxPromise('module/shop/controller/controller_shop.php?op=count_products', 'POST', 'JSON', { 'filter': filters })
         .then(function(data) {
             // console.log(data);
             //Mostrando X resultados
-            // $(`<p class="results">"Mostrar ${data[0]["cantidad"]} resultados"</p>`).appendTo('.div-filters');
             $(`<p class="results">"Mostrando ${data[0]["cantidad"]} resultados"</p>`).appendTo('.count_products');
             
         }).catch(function() {
             console.log('Error en el ajaxPromise de contar productos');
         });
-};
+}
 
 function update_count_products(){
     guardar_filtros_storage("update_filters_count");

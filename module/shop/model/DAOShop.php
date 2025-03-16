@@ -146,19 +146,15 @@
 		}
 
 		function filter_home() {
+			// error_log('Ejecutamos filtros home, datos recogidos:');
+			// error_log($_POST['filter'][0][0]);
+			// error_log($_POST['filter'][0][1]);
+			// return $_POST;
 			//Recogemos valores filtro_shop
-			$filter = $_POST['filter'];
-			$categoria = $filter[0]['categoria'];
-			$ciudad = $filter[1]['ciudad'];
-			$estado = $filter[2]['estado'];
-			$marca = $filter[3]['marca'];
-			$tipo_consola = $filter[4]['tipo_consola'];
-			$modelo_consola = $filter[5]['modelo_consola'];
-			$tipo_accesorio = $filter[6]['tipo_accesorio'];
-			$tipo_merchandising = $filter[7]['tipo_merchandising'];
-			$tipo_venta = $filter[8]['tipo_venta'];
-			$precioMin = $filter[9]['precio_min'];
-			$precioMax = $filter[10]['precio_max'];
+			$filter_field = $_POST['filter'][0][0];
+			$filter_value = $_POST['filter'][0][1];
+
+			//Solo viene 1 valor desde el home, vemos cual es con if y añadimos el and correspondiente
 
 			//Montamos query dinámica
 			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, p.lat, p.long,
@@ -171,38 +167,28 @@
 					INNER JOIN tipo_venta_producto tvp ON p.id_producto = tvp.id_producto
 					WHERE 1=1";
 
-			if ($categoria != '*') {
-				$categoria_sql = implode(", ", $categoria);
-				$sql .= " AND pc.id_categoria IN ($categoria_sql)";
+			if ($filter_field == 'categoria') {
+				$sql .= " AND pc.id_categoria = '$filter_value'";
 			}
-			if ($ciudad != '*'){
-				$sql .= " AND p.ciudad = '$ciudad[0]'";
+			if ($filter_field == 'id_producto') {
+				$sql .= " AND p.id_producto = '$filter_value'";
 			}
-			if ($estado != '*'){
-				$sql .= " AND p.estado = '$estado[0]'";
+			if ($filter_field == 'marca') {
+				$sql .= " AND p.marca = '$filter_value'";
 			}
-			if ($marca != '*'){
-				$sql .= " AND p.marca = '$marca[0]'";
+			if ($filter_field == 'tipo_consola') {
+				$sql .= " AND p.tipo_consola = '$filter_value'";
 			}
-			if ($tipo_consola != '*'){
-				$sql .= " AND p.tipo_consola = '$tipo_consola[0]'";
+			if ($filter_field == 'ciudad') {
+				$sql .= " AND p.ciudad = '$filter_value'";
 			}
-			if ($modelo_consola != '*'){
-				$sql .= " AND p.modelo_consola = '$modelo_consola[0]'";
+			if ($filter_field == 'estado') {
+				$sql .= " AND p.estado = '$filter_value'";
 			}
-			if ($tipo_accesorio != '*'){
-				$sql .= " AND p.tipo_accesorio = '$tipo_accesorio[0]'";
+			if ($filter_field == 'tipo_venta') {
+				$sql .= " AND tvp.id_tipo_venta = '$filter_value'";
 			}
-			if ($tipo_merchandising != '*'){
-				$sql .= " AND p.tipo_merchandising = '$tipo_merchandising[0]'";
-			}
-			if ($tipo_venta != '*') {
-				$tipo_venta_sql = implode(", ", $tipo_venta);
-				$sql .= " AND tvp.id_tipo_venta IN ($tipo_venta_sql)";
-			}
-			if (isset($precioMin) && isset($precioMax)) {
-				$sql .= " AND p.precio BETWEEN $precioMin[0] AND $precioMax[0]";
-			}
+
 
 			$sql.= " GROUP BY p.id_producto";
 

@@ -90,12 +90,15 @@ function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
 function loadProducts(total_prod = 0, items_page = 4) {
     var filter_shop = JSON.parse(localStorage.getItem('filter_shop')) || false;
     var filter_home = JSON.parse(localStorage.getItem('filter_home')) || false;
+    var filter_search = JSON.parse(localStorage.getItem('filter_search')) || false;
     
     // console.log(filter);
 
     window.scrollTo(0, 0); //Mover la pantalla arriba del todo
 
-    if(filter_home){
+    if(filter_search){
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_search', total_prod, items_page, filter_search);
+    }else if(filter_home){
         ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_home', total_prod, items_page, filter_home);
     }else if (filter_shop) {
         // console.log('hay filtros');
@@ -104,7 +107,6 @@ function loadProducts(total_prod = 0, items_page = 4) {
         // console.log('sin filtros');
         ajaxForSearch('module/shop/controller/controller_shop.php?op=get_all_products', total_prod, items_page);
     }
-    
 }
 
 function load_filters() {

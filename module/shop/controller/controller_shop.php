@@ -40,10 +40,13 @@ switch ($_GET['op']) {
         // error_log('======================================================================================');
         // error_log($_POST['filter']);
         // echo json_encode($_POST['filter']);
-        
-        $daoshop = new DAOShop();
-        $Products = $daoshop -> filter_shop();
-        
+        try{
+            $daoshop = new DAOShop();
+            $Products = $daoshop -> filter_shop();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+
         if (!empty($Products)) {
             echo json_encode($Products);
         }
@@ -53,12 +56,28 @@ switch ($_GET['op']) {
         break;
     
     case 'filter_home';
-        // error_log('======================================================================================');
-        // error_log($_POST['filter']);
-        // echo json_encode($_POST['filter']);
+        try{
+            $daoshop = new DAOShop();
+            $Products = $daoshop -> filter_home();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
         
-        $daoshop = new DAOShop();
-        $Products = $daoshop -> filter_home();
+        if (!empty($Products)) {
+            echo json_encode($Products);
+        }
+        else {
+            echo "error";
+        }
+        break;
+    
+    case 'filter_search';
+        try{
+            $daoshop = new DAOShop();
+            $Products = $daoshop -> filter_search();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
         
         if (!empty($Products)) {
             echo json_encode($Products);
@@ -68,7 +87,7 @@ switch ($_GET['op']) {
         }
         break;
 
-    case 'get_details':
+    case 'get_details';
         try {
             $daoshop = new DAOShop();
             $Product_details = $daoshop->select_details($_GET['id']);
@@ -99,7 +118,7 @@ switch ($_GET['op']) {
         }
         break;
 
-    case 'get_filters':
+    case 'get_filters';
     
         try {
             $daoshop = new DAOShop();

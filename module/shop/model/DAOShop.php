@@ -5,29 +5,6 @@
     
 	class DAOShop{
 
-		// function select_products() {
-		// 	$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, i.img_producto
-		// 			FROM producto p 
-		// 			INNER JOIN img_producto i ON p.id_producto = i.id_producto
-		// 			INNER JOIN estado e ON p.estado = e.id_estado
-		// 			INNER JOIN ciudad c ON p.ciudad = c.id_ciudad
-		// 			WHERE i.id_img = (SELECT MIN(i2.id_img) 
-		// 								FROM img_producto i2 
-		// 								WHERE i2.id_producto = p.id_producto);";
-
-		// 	$conexion = connect::con();
-		// 	$res = mysqli_query($conexion, $sql);
-		// 	connect::close($conexion);
-
-		// 	$retrArray = array();
-		// 	if (mysqli_num_rows($res) > 0) {
-		// 		while ($row = mysqli_fetch_assoc($res)) {
-		// 			$retrArray[] = $row;
-		// 		}
-		// 	}
-		// 	return $retrArray;
-		// }
-
 		function select_products_carousel() {
 			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, p.lat, p.long,
 						  GROUP_CONCAT(i.img_producto SEPARATOR ':') AS img_producto
@@ -150,7 +127,7 @@
 			// error_log($_POST['filter'][0][0]);
 			// error_log($_POST['filter'][0][1]);
 			// return $_POST;
-			//Recogemos valores filtro_shop
+			//Recogemos valores filtro_home
 			$filter_field = $_POST['filter'][0][0];
 			$filter_value = $_POST['filter'][0][1];
 
@@ -189,6 +166,61 @@
 				$sql .= " AND tvp.id_tipo_venta = '$filter_value'";
 			}
 
+
+			$sql.= " GROUP BY p.id_producto";
+
+			error_log("Consulta SQL:");
+			error_log($sql);
+
+			$conexion = connect::con();
+			$res = mysqli_query($conexion, $sql);
+			connect::close($conexion);
+
+			if (mysqli_num_rows($res) > 0) {
+				while ($row = mysqli_fetch_assoc($res)) {
+					$retrArray[] = array(
+						"id_producto" => $row["id_producto"],
+						"nom_producto" => $row["nom_producto"],
+						"precio" => $row["precio"],
+						"color" => $row["color"],
+						"nom_estado" => $row["nom_estado"],
+						"nom_ciudad" => $row["nom_ciudad"],
+						"img_producto" => explode(":", $row['img_producto']),
+						"lat" => $row["lat"],
+						"long" => $row["long"]
+					);
+				}
+			}
+			return $retrArray;
+		}
+
+		function filter_search() {
+			//Recogemos valores filter_search
+			$filter = $_POST['filter'];
+			$tipo_consola = $filter[0]['tipo_consola'];
+			$modelo_consola = $filter[1]['modelo_consola'];
+			$ciudad = $filter[2]['ciudad'];
+
+			//Solo viene 1 valor desde el home, vemos cual es con if y añadimos el and correspondiente
+
+			//Montamos query dinámica
+			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, p.lat, p.long,
+						  GROUP_CONCAT(i.img_producto SEPARATOR ':') AS img_producto
+					FROM producto p 
+					INNER JOIN img_producto i ON p.id_producto = i.id_producto
+					INNER JOIN estado e ON p.estado = e.id_estado
+					INNER JOIN ciudad c ON p.ciudad = c.id_ciudad
+					WHERE 1=1";
+
+			if ($tipo_consola != '*') {
+				$sql .= " AND p.tipo_consola =$tipo_consola[0]";
+			}
+			if ($modelo_consola != '*'){
+				$sql .= " AND p.modelo_consola = '$modelo_consola[0]'";
+			}
+			if ($ciudad != '*'){
+				$sql .= " AND c.nom_ciudad LIKE '%$ciudad[0]%'";
+			}
 
 			$sql.= " GROUP BY p.id_producto";
 

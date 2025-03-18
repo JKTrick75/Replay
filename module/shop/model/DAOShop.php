@@ -213,13 +213,13 @@
 					WHERE 1=1";
 
 			if ($tipo_consola != '*') {
-				$sql .= " AND p.tipo_consola =$tipo_consola[0]";
+				$sql .= " AND p.tipo_consola = '$tipo_consola[0]'";
 			}
 			if ($modelo_consola != '*'){
 				$sql .= " AND p.modelo_consola = '$modelo_consola[0]'";
 			}
 			if ($ciudad != '*'){
-				$sql .= " AND c.nom_ciudad LIKE '%$ciudad[0]%'";
+				$sql .= " AND p.ciudad = '$ciudad[0]'";
 			}
 
 			$sql.= " GROUP BY p.id_producto";

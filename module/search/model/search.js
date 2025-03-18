@@ -1,8 +1,7 @@
 function load_tipo_consola() {
-    //FILTROS DINAMICOS
     ajaxPromise('module/search/controller/controller_search.php?op=select_tipo_consola', 'GET', 'JSON')
         .then(function (data) {
-            console.log(data);
+            // console.log(data);
             $('<option>Tipo consola</option>').attr('selected', true).attr('disabled', true).appendTo('.search_tipo_consola');
             
             for (row in data) {
@@ -69,16 +68,6 @@ function load_search() {
 function autocomplete() {
     $("#search_ubicacion").on("keyup", function () {
         let sdata = $(this).val();
-        // console.log(sdata);
-        // if (($('.search_tipo_consola').val() != 0)) {
-        //     sdata.brand = $('.search_tipo_consola').val();
-        //     if (($('.search_tipo_consola').val() != 0) && ($('.search_modelo_consola').val() != 0)) {
-        //         sdata.category = $('.search_modelo_consola').val();
-        //     }
-        // }
-        // if (($('.search_tipo_consola').val() == undefined) && ($('.search_modelo_consola').val() != 0)) {
-        //     sdata.category = $('.search_modelo_consola').val();
-        // }
         ajaxPromise('module/search/controller/controller_search.php?op=autocomplete', 'POST', 'JSON', {'autocomplete': sdata})
             .then(function (data) {
                 // console.log(data.length);
@@ -87,8 +76,11 @@ function autocomplete() {
 
                 if(data.length > 0) {
                     for (row in data) {
-                        $('<div></div>').attr({ 'class': 'searchElement', 'id': data[row].nom_ciudad }).html(data[row].nom_ciudad).appendTo('#search_autocomplete');
+                        $('<div></div>').attr({ 'class': 'searchElement', 'id': data[row].id_ciudad , 'value': data[row].nom_ciudad }).html(data[row].nom_ciudad).appendTo('#search_autocomplete');
                     }
+                    //Añadimos campo hidden para guardar la id del autocompletado
+                    $('<input type="hidden" id="hidden_ciudad_id"></input>').appendTo('#search_autocomplete');
+                    
                     $('#search_autocomplete').css({
                         'left': $('#search_ubicacion').offset().left - $('.div_search').offset().left,
                         'width': $('#search_ubicacion').outerWidth(),
@@ -111,7 +103,8 @@ function autocomplete() {
 
     //Seleccionar elemento
     $(document).on('click', '.searchElement', function () {
-        $('#search_ubicacion').val(this.getAttribute('id'));
+        $('#search_ubicacion').val(this.getAttribute('value')); //Guardar nombre
+        $('#hidden_ciudad_id').val(this.getAttribute('id')); //Guardar id
         $('#search_autocomplete').fadeOut(300);
     });
 }
@@ -135,8 +128,8 @@ function click_search() {
         }
 
         // Filtro ciudad
-        if ($('#search_ubicacion').val().length > 0) {
-            filter.push({ "ciudad": [$('#search_ubicacion').val()] });
+        if (($('#hidden_ciudad_id').val() != undefined) && ($('#hidden_ciudad_id').val().length > 0)) {
+            filter.push({ "ciudad": [$('#hidden_ciudad_id').val(),$('#search_ubicacion').val()] });
         } else {
             filter.push({ "ciudad": "*" });
         }

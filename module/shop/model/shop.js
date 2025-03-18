@@ -293,7 +293,7 @@ function filter_remove(){
     location.reload();
 };
 
-function highlight() {
+function highlight_filters() {
     // console.log('Highlight');
     var filter_shop = JSON.parse(localStorage.getItem('filter_shop')) || false;
     var filter_home = JSON.parse(localStorage.getItem('filter_home')) || false;
@@ -442,8 +442,59 @@ function highlight() {
         document.getElementById('filterToggle').style.setProperty('--number', `"${count_filters}"`);
     }
 
-    // if (filter_search){
-    // }
+    if (filter_search){
+        // console.log("Estos son los filtros a remarcar:");
+        // console.log(filter_search);
+        var count_filters = 0;
+
+        //Tipo_consola
+        if (filter_search[0].tipo_consola != '*') {
+            document.getElementById('filter_tipo_consola').value = filter_search[0].tipo_consola[0];
+            count_filters += 1;
+        }
+
+        //Modelo consola
+        if (filter_search[1].modelo_consola != '*') {
+            document.getElementById('filter_modelo_consola').value = filter_search[1].modelo_consola[0];
+            count_filters += 1;
+        }
+
+        //Ciudad
+        if (filter_search[2].ciudad != '*') {
+            document.getElementById('filter_ciudad').value = filter_search[2].ciudad[0];
+            count_filters += 1;
+        }
+
+        // console.log(count_filters);
+        document.getElementById('filterToggle').style.setProperty('--number', `"${count_filters}"`);
+
+    }
+}
+
+function highlight_search() {
+    var highlight_search = JSON.parse(localStorage.getItem('filter_search')) || false;
+    var ciudadHidden = document.getElementById('hidden_ciudad_id');
+
+    if (highlight_search){
+        console.log("Estos son los filtros a remarcar:");
+        console.log(highlight_search);
+
+        //Tipo_consola
+        if (highlight_search[0].tipo_consola != '*') {
+            document.getElementById('search_tipo_consola').value = highlight_search[0].tipo_consola[0];
+        }
+
+        //Modelo consola
+        if (highlight_search[1].modelo_consola != '*') {
+            document.getElementById('search_modelo_consola').value = highlight_search[1].modelo_consola[0];
+        }
+
+        //Ciudad
+        if (highlight_search[2].ciudad != '*') {
+            document.getElementById('search_ubicacion').value = highlight_search[2].ciudad[1];
+        }
+
+    }
 }
 
 function modal_filters() {
@@ -972,7 +1023,8 @@ $(document).ready(function () {
     clicks();
     load_filters().then(function() {
         modal_filters();
-        highlight();
+        highlight_filters();
+        highlight_search();
         update_count_products();
         count_products();
         radar_filter_update();

@@ -935,6 +935,15 @@ function load_map_details(data) {
 function load_markers(data) {
     // console.log(data);
     var position = [parseFloat(data.lat), parseFloat(data.long)];
+
+    //Creamos los iconos del marcador
+    var marker_icon = L.icon({
+        iconUrl: 'view/assets/img/marker.png',
+    iconSize: [64, 64],       // Tamaño de visualización (1/8 del original)
+    shadowSize: [0, 0],       // Desactivar sombra
+    iconAnchor: [32, 64],     // Punto de anclaje (centro inferior)
+    popupAnchor: [0, -70]    // Posición del popup
+    });
     
     //Creamos el elemento del carrusel popup
     var carouselContainer = $(`<div id='carousel_popup-${data.id_producto}' class='img_container_popup'></div>`);
@@ -947,7 +956,7 @@ function load_markers(data) {
     }
     
     //Creamos el marcador con el popup bindeado, e insertamos el carrousel ya montado
-    var marker = L.marker(position).addTo(map).bindPopup(
+    var marker = L.marker(position, {icon: marker_icon}).addTo(map).bindPopup(
         `<div class='more_info_popup more_info_button' id='${data.id_producto}'>
             ${carouselContainer.prop('outerHTML')}
             <h4><b>${data.nom_producto}</b></h4>
@@ -978,7 +987,18 @@ function load_markers_details(data) {
     var position = [parseFloat(data[0].lat),  parseFloat(data[0].long)];
     // console.log(data);
     // console.log(data[1][0]);
-    L.marker(position).addTo(map_details).bindPopup(data[0].nom_producto);
+
+    //Creamos los iconos del marcador
+    var marker_icon = L.icon({
+        iconUrl: 'view/assets/img/marker.png',
+        iconSize: [64, 64],       // Tamaño de visualización (1/8 del original)
+        shadowSize: [0, 0],       // Desactivar sombra
+        iconAnchor: [32, 64],     // Punto de anclaje (centro inferior)
+        popupAnchor: [0, -70]    // Posición del popup
+    });
+
+    L.marker(position, {icon: marker_icon}).addTo(map_details).bindPopup(data[0].nom_producto);
+
 }
 
 /* ============================================================================================ */

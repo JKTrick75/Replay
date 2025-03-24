@@ -1,3 +1,4 @@
+//Tarjetas categorias
 function loadCategories() {
     ajaxPromise('module/home/controller/controller_homepage.php?op=get_categories', 'GET', 'JSON')
         .then(function (data) {
@@ -24,6 +25,7 @@ function loadCategories() {
         });
 }
 
+//Carrousel productos nuevos
 function carrousel_Productos_New() {
     ajaxPromise('module/home/controller/controller_homepage.php?op=Carrousel_Productos', 'GET', 'JSON')
         .then(function (data) {
@@ -52,6 +54,7 @@ function carrousel_Productos_New() {
         });
 }
 
+//Tarjetas marcas
 function loadMarcas() {
     ajaxPromise('module/home/controller/controller_homepage.php?op=get_marcas', 'GET', 'JSON')
         .then(function (data) {
@@ -77,6 +80,7 @@ function loadMarcas() {
         });
 }
 
+//Tarjetas tipo_consola
 function loadTipoConsola() {
     ajaxPromise('module/home/controller/controller_homepage.php?op=get_tipo_consola', 'GET', 'JSON')
         .then(function (data) {
@@ -102,6 +106,7 @@ function loadTipoConsola() {
         });
 }
 
+//Carrousel ciudades
 function carrousel_Ciudades() {
     ajaxPromise('module/home/controller/controller_homepage.php?op=Carrousel_Ciudades', 'GET', 'JSON')
         .then(function (data) {
@@ -132,6 +137,7 @@ function carrousel_Ciudades() {
         });
 }
 
+//Tarjetas estado
 function loadEstado() {
     ajaxPromise('module/home/controller/controller_homepage.php?op=get_estado', 'GET', 'JSON')
         .then(function (data) {
@@ -157,6 +163,7 @@ function loadEstado() {
         });
 }
 
+//Tarjetas tipo_venta
 function loadTipoVenta() {
     ajaxPromise('module/home/controller/controller_homepage.php?op=get_tipo_venta', 'GET', 'JSON')
         .then(function (data) {
@@ -182,6 +189,7 @@ function loadTipoVenta() {
         });
 }
 
+//Salto del home al shop, capturamos click, guardamos id, y saltamos al home
 function clicks(){
     $(document).on("click",'div.filter_categoria', function (){
         // console.log("pulsaste en categorias");

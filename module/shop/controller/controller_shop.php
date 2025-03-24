@@ -22,7 +22,6 @@ switch ($_GET['op']) {
     case 'get_all_products';
         try {
             $daoshop = new DAOShop();
-            // $Products = $daoshop->select_products();
             $Products = $daoshop->select_products_carousel();
 
         } catch (Exception $e) {
@@ -87,6 +86,7 @@ switch ($_GET['op']) {
         }
         break;
 
+    //Recogemos todos los datos necesarios para el details (datos del producto, imágenes y tipos de venta)
     case 'get_details';
         try {
             $daoshop = new DAOShop();
@@ -118,8 +118,8 @@ switch ($_GET['op']) {
         }
         break;
 
+    //Recogemos todos los datos de los filtros dinámicos
     case 'get_filters';
-    
         try {
             $daoshop = new DAOShop();
             $filter_categoria = $daoshop->filter_categoria();
@@ -190,6 +190,7 @@ switch ($_GET['op']) {
             echo json_encode("error");
         }
 
+        //Ordenamos los datos de salida
         if (!empty($filter_ciudad || $filter_categoria || $filter_estado || $filter_marca || $filter_tipo_consola || $filter_modelo_consola || $filter_tipo_accesorio || $filter_tipo_merchandising || $filter_tipo_venta || $filter_precio)) {
             $rdo = array();
             $rdo[0][] = $filter_categoria;
@@ -209,9 +210,12 @@ switch ($_GET['op']) {
         break;
 
     case 'count_products';
-        
-        $daoshop = new DAOShop();
-        $count = $daoshop -> count_products();
+        try{
+            $daoshop = new DAOShop();
+            $count = $daoshop -> count_products();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
         
         if (!empty($count)) {
             echo json_encode($count);

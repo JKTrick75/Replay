@@ -1,3 +1,4 @@
+//Cargamos select tipo_consola
 function load_tipo_consola() {
     ajaxPromise('module/search/controller/controller_search.php?op=select_tipo_consola', 'GET', 'JSON')
         .then(function (data) {
@@ -14,9 +15,11 @@ function load_tipo_consola() {
         });
 }
 
+//Cargamos select modelo_consola, dinámico si se selecciona un tipo_consola
 function load_modelo_consola(tipo_consola) {
     $('.search_modelo_consola').empty();
 
+    //Por defecto, si no tiene nada seleccionado, selecciona todos los modelo_consola
     if (tipo_consola == undefined) {
         ajaxPromise('module/search/controller/controller_search.php?op=select_modelo_consola_null', 'GET', 'JSON')
             .then(function (data) {
@@ -30,7 +33,7 @@ function load_modelo_consola(tipo_consola) {
             }).catch(function () {
                 console.error("Error cargando el select modelo_consola_null search");
             });
-    }
+    } //Si se selecciona un tipo_consola, cargamos los modelos de ese tipo
     else {
         ajaxPromise('module/search/controller/controller_search.php?op=select_modelo_consola', 'POST', 'JSON', {'tipo_consola': tipo_consola})
             .then(function (data) {
@@ -46,31 +49,32 @@ function load_modelo_consola(tipo_consola) {
     }
 }
 
+//CONTROLADOR SELECTS, cargamos los selects primero, y actualiza el select del modelo_consola si se selecciona algun tipo_consola
 function load_search() {
     load_tipo_consola();
     load_modelo_consola();
-    $(document).on('change', '.search_tipo_consola', function () {
+    $(document).on('change', '.search_tipo_consola', function () { //Si detecta cambio
         let tipo_consola = $(this).val();
         if (tipo_consola === 0) {
             load_modelo_consola();
         } else {
             load_modelo_consola(tipo_consola);
         }
-        // Actualizar el tooltip cuando cambia la selección
+        //Actualizar el valor visual cuando cambia la selección (el "tooltip")
         $(this).attr('title', $(this).find('option:selected').text());
     });
-    // Actualizar el tooltip cuando cambia la selección en el segundo select
+    //Actualizar el valor visual cuando cambia la selección en el segundo select (el "tooltip")
     $(document).on('change', '.search_modelo_consola', function () {
         $(this).attr('title', $(this).find('option:selected').text());
     });
 }
 
+//Cuadro autocomplete, se actualiza cada vez que se escribe en el input
 function autocomplete() {
     $("#search_ubicacion").on("keyup", function () {
         let sdata = $(this).val();
         ajaxPromise('module/search/controller/controller_search.php?op=autocomplete', 'POST', 'JSON', {'autocomplete': sdata})
             .then(function (data) {
-                // console.log(data.length);
                 // console.log(data);
                 $('#search_autocomplete').empty();
 
@@ -101,7 +105,7 @@ function autocomplete() {
         }
     });
 
-    //Seleccionar elemento
+    //Guardamos datos al seleccionar un elemento
     $(document).on('click', '.searchElement', function () {
         $('#search_ubicacion').val(this.getAttribute('value')); //Guardar nombre
         $('#hidden_ciudad_id').val(this.getAttribute('id')); //Guardar id
@@ -109,6 +113,7 @@ function autocomplete() {
     });
 }
 
+//Click search, guardamos en localStorage los valores del search, y saltamos al shop
 function click_search() {
     $('#search_btn').on('click', function () {
         var filter = [];

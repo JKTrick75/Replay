@@ -123,15 +123,9 @@
 		}
 
 		function filter_home() {
-			// error_log('Ejecutamos filtros home, datos recogidos:');
-			// error_log($_POST['filter'][0][0]);
-			// error_log($_POST['filter'][0][1]);
-			// return $_POST;
 			//Recogemos valores filtro_home
 			$filter_field = $_POST['filter'][0][0];
 			$filter_value = $_POST['filter'][0][1];
-
-			//Solo viene 1 valor desde el home, vemos cual es con if y añadimos el and correspondiente
 
 			//Montamos query dinámica
 			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, p.lat, p.long,
@@ -166,7 +160,6 @@
 				$sql .= " AND tvp.id_tipo_venta = '$filter_value'";
 			}
 
-
 			$sql.= " GROUP BY p.id_producto";
 
 			error_log("Consulta SQL:");
@@ -200,8 +193,6 @@
 			$tipo_consola = $filter[0]['tipo_consola'];
 			$modelo_consola = $filter[1]['modelo_consola'];
 			$ciudad = $filter[2]['ciudad'];
-
-			//Solo viene 1 valor desde el home, vemos cual es con if y añadimos el and correspondiente
 
 			//Montamos query dinámica
 			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, p.lat, p.long,
@@ -487,7 +478,7 @@
 			return $count;
 		}
 
-
+		//Función ejecutar consultas sql
 		function execute_query($sql)
 		{
 			$conexion = connect::con();
@@ -504,6 +495,4 @@
 			return $array;
 		}
 
-		
-		
 	}

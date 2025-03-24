@@ -5,81 +5,71 @@
 function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
     ajaxPromise(url, 'POST', 'JSON', { 'total_prod': total_prod, 'items_page': items_page, 'filter': filter })
         .then(function (data) {
-            console.log(data); //Mostrar productos listados
+            // console.log(data); //Mostrar productos listados
 
-            window.scrollTo(0, 0); //Mover la pantalla arriba del todo
+            //Vaciamos contenido del catálogo y del details, antes de volver a llenar con los productos buscados
             $('.content_shop_products').empty();
             $('.detalles_producto' && '.imagen_producto' && 'details_product_shop').empty();
 
-            //Si no hay resultados con los filters
-            if (data == "error") {
-                $('<div></div>').appendTo('.content_shop_products')
+            //Añadir contador productos
+            $('<div></div>').attr({ 'class': 'list_content_shop' }).appendTo('.content_shop_products')
+                .html(
+                    "<div class='count_products'></div>"
+                )
+            //Cargar Mapa
+            load_map_shop();
+            //Generar tarjetas productos
+            for (row in data) {
+                // console.log(data[row]);
+                $('<div></div>').attr({ 'id': data[row].id_producto, 'class': 'list_content_shop' }).appendTo('.content_shop_products')
                     .html(
-                        '<h3>¡No se encuentarn productos con los filters aplicados!</h3>'
-                    )
-            } else {
-                //Añadir contador productos
-                $('<div></div>').attr({ 'class': 'list_content_shop' }).appendTo('.content_shop_products')
-                        .html(
-                            "<div class='count_products'></div>"
-                        )
-                //Cargar Mapa
-                load_map_shop();
-                //Generar tarjetas productos
-                for (row in data) {
-                    // console.log(data[row]);
-                    $('<div></div>').attr({ 'id': data[row].id_producto, 'class': 'list_content_shop' }).appendTo('.content_shop_products')
-                        .html(
-                            "<div class='list_product more_info_button' id='" + data[row].id_producto + "'>" +
-                                "<div id='carousel_list_product-"+data[row].id_producto+"' class='img-container'></div>" + //Aquí va el carousel de las fotos list
-                                "<div class='product-info'>" +
-                                    "<div class='product-content'>" +
-                                        "<h1><b>" + data[row].nom_producto + " (" + data[row].precio + '€)' +
-                                            "<a class='list__heart' id='" + data[row].id_producto + "'>" +
-                                            "<a class='list__heart' id='" + data[row].id_producto + "'><i id=" + data[row].id_producto + " class='fa-solid fa-heart fa-lg'></i></a>" +
-                                            "</a>" +
-                                        "</b></h1>" +
-                                        "<ul>" +
-                                            "<li> <i id='col-ico' class='fa-solid fa-palette fa-xl'></i>Color: " + data[row].color + "</li>" +
-                                            "<li> <i id='col-ico' class='fa-solid fa-certificate fa-xl'></i>Estado: " + data[row].nom_estado + "</li>" +
-                                            "<li> <i id='col-ico' class='fa-solid fa-map-location-dot fa-xl'></i>Ciudad: " + data[row].nom_ciudad + "</li>" +
-                                        "</ul>" +
-                                        "<div class='buttons'>" +
-                                            // "<button id='" + data[row].id_producto + "' class='more_info_button button add'>Detalles</button>" +
-                                            "<button class='button buy'>Comprar</button>" +
-                                        "</div>" +
+                        "<div class='list_product more_info_button' id='" + data[row].id_producto + "'>" +
+                            "<div id='carousel_list_product-"+data[row].id_producto+"' class='img-container'></div>" + //Aquí va el carousel de las fotos list
+                            "<div class='product-info'>" +
+                                "<div class='product-content'>" +
+                                    "<h1><b>" + data[row].nom_producto + " (" + data[row].precio + '€)' +
+                                        "<a class='list__heart' id='" + data[row].id_producto + "'>" +
+                                        "<a class='list__heart' id='" + data[row].id_producto + "'><i id=" + data[row].id_producto + " class='fa-solid fa-heart fa-lg'></i></a>" +
+                                        "</a>" +
+                                    "</b></h1>" +
+                                    "<ul>" +
+                                        "<li> <i id='col-ico' class='fa-solid fa-palette fa-xl'></i>Color: " + data[row].color + "</li>" +
+                                        "<li> <i id='col-ico' class='fa-solid fa-certificate fa-xl'></i>Estado: " + data[row].nom_estado + "</li>" +
+                                        "<li> <i id='col-ico' class='fa-solid fa-map-location-dot fa-xl'></i>Ciudad: " + data[row].nom_ciudad + "</li>" +
+                                    "</ul>" +
+                                    "<div class='buttons'>" +
+                                        // "<button id='" + data[row].id_producto + "' class='more_info_button button add'>Detalles</button>" +
+                                        "<button class='button buy'>Comprar</button>" +
                                     "</div>" +
                                 "</div>" +
-                            "</div>"
-                        )
+                            "</div>" +
+                        "</div>"
+                    )
 
-                        for (img in data[row].img_producto) {
-                            // console.log(data[row].img_producto);
-                            $('<div></div>').attr('id', data[row].img_producto[img]).appendTo(`#carousel_list_product-${data[row].id_producto}`)
-                                .html(
-                                    "<img src= '" + data[row].img_producto[img] + "'" + "</img>"
-                                );
-                        }
-        
-                        $(`#carousel_list_product-${data[row].id_producto}`).slick({
-                            infinite: true,
-                            speed: 300,
-                            slidesToShow: 1,
-                            adaptiveHeight: true,
-                            arrows: true
-                        });
-        
-                        //Aquí añadimos los marcadores al mapa
-                        load_markers(data[row]);
+                //Generamos los div de las imágenes de los productos, y lo convertimos en carousel (cada producto tiene una id dinámica para sus fotos)
+                for (img in data[row].img_producto) {
+                    // console.log(data[row].img_producto);
+                    $('<div></div>').attr('id', data[row].img_producto[img]).appendTo(`#carousel_list_product-${data[row].id_producto}`)
+                        .html(
+                            "<img src= '" + data[row].img_producto[img] + "'" + "</img>"
+                        );
                 }
+                $(`#carousel_list_product-${data[row].id_producto}`).slick({
+                    infinite: true,
+                    speed: 300,
+                    slidesToShow: 1,
+                    adaptiveHeight: true,
+                    arrows: true
+                });
 
+                //Cargamos los marcadores al mapa por cada producto
+                load_markers(data[row]);
             }
         }).catch(function () {
             console.log('Error en el ajaxPromise de listar productos / No hay productos para estos filtros');
             $(".content_shop_products").empty();
             $('<div></div>').appendTo('.content_shop_products').html('<img src="view/assets/img/sad-gaming.gif" class="gif_no_stock image_gif">');
             $('<div></div>').appendTo('.content_shop_products').html('<h1>No hay productos con estos filtros</h1>');
-            // window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Function ajxForSearch SHOP";
         });
 }
 
@@ -87,6 +77,7 @@ function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
 /*                                            FILTROS                                           */
 /* ============================================================================================ */
 
+//CONTROLADOR FILTROS
 function loadProducts(total_prod = 0, items_page = 4) {
     var filter_shop = JSON.parse(localStorage.getItem('filter_shop')) || false;
     var filter_home = JSON.parse(localStorage.getItem('filter_home')) || false;
@@ -109,6 +100,7 @@ function loadProducts(total_prod = 0, items_page = 4) {
     }
 }
 
+//Cargamos filtros dinámicos
 function load_filters() {
     $('<div class="div-filters"></div>').appendTo('.filters_shop')
         .html(
@@ -268,6 +260,7 @@ function load_filters() {
             });
 }
 
+//Capturamos click de filtrar, guardamos filtros en localStorage y recargamos la página para ir al controlador
 function filter_click(total_prod = 0, items_page) {
     guardar_filtros_storage("set_filters_count");
 
@@ -284,8 +277,8 @@ function filter_click(total_prod = 0, items_page) {
     }, 1500);
 }
 
+//Capturamos click de borrar filtros, y borramos todos los posibles filtros de localStorage, luego recargamos para mostrar todos los productos
 function filter_remove(){
-    //Quitamos todos los posibles filtros
     localStorage.removeItem('filter_shop');
     localStorage.removeItem('filter_home');
     localStorage.removeItem('filter_search');
@@ -293,14 +286,15 @@ function filter_remove(){
     location.reload();
 };
 
+//Marcamos los filtros activos en el panel de filtros
 function highlight_filters() {
     // console.log('Highlight');
     var filter_shop = JSON.parse(localStorage.getItem('filter_shop')) || false;
     var filter_home = JSON.parse(localStorage.getItem('filter_home')) || false;
     var filter_search = JSON.parse(localStorage.getItem('filter_search')) || false;
 
+    //Si los filtros vienen del shop:
     if (filter_shop) {
-        // console.log("Estos son los filtros a remarcar:");
         // console.log(filter_shop);
         var count_filters = 0;
 
@@ -395,8 +389,8 @@ function highlight_filters() {
         document.getElementById('filterToggle').style.setProperty('--number', `"${count_filters}"`);
     }
 
+    //Si los filtros vienen del home:
     if (filter_home) {
-        // console.log("Estos son los filtros a remarcar:");
         // console.log(filter_home);
         var count_filters = 0;
         var highlight_field = filter_home[0][0];
@@ -442,8 +436,8 @@ function highlight_filters() {
         document.getElementById('filterToggle').style.setProperty('--number', `"${count_filters}"`);
     }
 
+    //Si los filtros vienen del search:
     if (filter_search){
-        // console.log("Estos son los filtros a remarcar:");
         // console.log(filter_search);
         var count_filters = 0;
 
@@ -467,13 +461,12 @@ function highlight_filters() {
 
         // console.log(count_filters);
         document.getElementById('filterToggle').style.setProperty('--number', `"${count_filters}"`);
-
     }
 }
 
+//Marcamos los filtros activos del search
 function highlight_search() {
     var highlight_search = JSON.parse(localStorage.getItem('filter_search')) || false;
-    var ciudadHidden = document.getElementById('hidden_ciudad_id');
 
     if (highlight_search){
         console.log("Estos son los filtros a remarcar:");
@@ -497,6 +490,7 @@ function highlight_search() {
     }
 }
 
+//Modal filtros
 function modal_filters() {
     document.getElementById('filterToggle').addEventListener('click', function() {
         const filters = document.querySelector('.filters_shop');
@@ -508,8 +502,8 @@ function modal_filters() {
       });
 }
 
+//Contamos los productos que se han filtrado
 function count_products(){
-    // var filters = JSON.parse(localStorage.getItem('filter_shop')) || false;
     var filters = JSON.parse(localStorage.getItem('filter_shop_update')) || false;
 
     ajaxPromise('module/shop/controller/controller_shop.php?op=count_products', 'POST', 'JSON', { 'filter': filters })
@@ -523,6 +517,7 @@ function count_products(){
         });
 }
 
+//Contamos cuantos productos se filtrarán al pulsar botón filtrar
 function update_count_products(){
     guardar_filtros_storage("update_filters_count");
 
@@ -531,7 +526,6 @@ function update_count_products(){
     ajaxPromise('module/shop/controller/controller_shop.php?op=count_products', 'POST', 'JSON', { 'filter': filters })
         .then(function(data) {
             // console.log(data);
-            //Mostrando X resultados
             $('.div-filters .results').remove();
             $(`<p class="results">"Mostrar ${data[0]["cantidad"]} resultados"</p>`).appendTo('.div-filters');
             
@@ -540,6 +534,7 @@ function update_count_products(){
         });
 }
 
+//Detectamos cambios en los filtros para actualizar el contador de productos
 function radar_filter_update() {
     //Recogemos y tenemos en cuenta todos los elementos del filtro
     var filterElements = [
@@ -570,6 +565,7 @@ function radar_filter_update() {
     }
 }
 
+//Recogemos valores de los filtros y guardamos en localStorage, dependiendo del parámetro de entrada guardaremos con un nombre u otro
 function guardar_filtros_storage(modo_guardado){
     var filter = [];
     var categoria = [];
@@ -720,18 +716,10 @@ function guardar_filtros_storage(modo_guardado){
 
     if (modo_guardado == "set_filters_count"){
         localStorage.removeItem('filter_shop');
-
-        // Guardamos en localStorage los filtros
-        if (filter.length != 0) {
-            localStorage.setItem('filter_shop', JSON.stringify(filter));
-        }
+        localStorage.setItem('filter_shop', JSON.stringify(filter));
     }else if (modo_guardado == "update_filters_count"){
         localStorage.removeItem('filter_shop_update');
-
-        // Guardamos en localStorage los filtros
-        if (filter.length != 0) {
-            localStorage.setItem('filter_shop_update', JSON.stringify(filter));
-        }
+        localStorage.setItem('filter_shop_update', JSON.stringify(filter));
     }
 }
 
@@ -739,12 +727,11 @@ function guardar_filtros_storage(modo_guardado){
 /*                                            DETAILS                                           */
 /* ============================================================================================ */
 
+//Cargamos detalles del producto
 function loadDetails(id_producto) {
-
     ajaxPromise('module/shop/controller/controller_shop.php?op=get_details&id=' + id_producto, 'GET', 'JSON')
         .then(function (data) {
             // console.log(data);
-
             window.scrollTo(0, 0); //Mover la pantalla arriba del todo
 
             $('.list_product_shop').empty();
@@ -763,44 +750,43 @@ function loadDetails(id_producto) {
                     )
             }
 
-            // Apartado detalles producto
+            //Apartado detalles producto
             $('<div></div>').attr({ 'id': data[0].id_producto, class: 'detalles_producto_dentro' }).appendTo('.detalles_producto')
             .html(
             "<div class='list_product_details'>" +
                 "<div class='product-info_details'>" +
                 "<div class='product-content_details'>" +
-                    // Encabezado con título y botón heart
                     "<div class='header-details'>" +
-                    "<h1><b>" + data[0].nom_producto + "</b></h1>" +
-                    "<a class='details__heart' id='" + data[0].id_producto + "'>" +
-                        "<i id='" + data[0].id_producto + "' class='fa-solid fa-heart fa-lg'></i>" +
-                    "</a>" +
+                        "<h1><b>" + data[0].nom_producto + "</b></h1>" +
+                        "<a class='details__heart' id='" + data[0].id_producto + "'>" +
+                            "<i id='" + data[0].id_producto + "' class='fa-solid fa-heart fa-lg'></i>" +
+                        "</a>" +
                     "</div>" +
                     "<hr class='hr-shop'>" +
                     "<h3>Especificaciones generales:</h3>" +
                     "<table id='table-shop'>" +
-                    "<tr>" +
-                        "<td> <i id='col-ico' class='fa-solid fa-sack-dollar fa-2xl'></i> &nbsp; Precio inicial: " + data[0].precio + "€</td>" +
-                        "<td> <i id='col-ico' class='fa-solid fa-palette fa-2xl'></i> &nbsp; Color: " + data[0].color + "</td>" +
-                    "</tr>" +
-                    "<tr>" +
-                        "<td> <i id='col-ico' class='fa-solid fa-box fa-2xl'></i> &nbsp; Capacidad: " + (data[0].capacidad ? data[0].capacidad : "N/A") + "</td>" +
-                        "<td> <i id='col-ico' class='fa-brands fa-bandcamp fa-2xl'></i> &nbsp; Marca: " + data[0].nom_marca + "</td>" +
-                    "</tr>" +
-                    "<tr>" +
-                        "<td> <i id='col-ico' class='fa-solid fa-certificate fa-2xl'></i> &nbsp; Estado: " + data[0].nom_estado + "</td>" +
-                        "<td> <i id='col-ico' class='fa-solid fa-map-location-dot fa-2xl'></i> &nbsp; Ciudad: " + data[0].nom_ciudad + "</td>" +
-                    "</tr>" +
+                        "<tr>" +
+                            "<td> <i id='col-ico' class='fa-solid fa-sack-dollar fa-2xl'></i> &nbsp; Precio inicial: " + data[0].precio + "€</td>" +
+                            "<td> <i id='col-ico' class='fa-solid fa-palette fa-2xl'></i> &nbsp; Color: " + data[0].color + "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td> <i id='col-ico' class='fa-solid fa-box fa-2xl'></i> &nbsp; Capacidad: " + (data[0].capacidad ? data[0].capacidad : "N/A") + "</td>" +
+                            "<td> <i id='col-ico' class='fa-brands fa-bandcamp fa-2xl'></i> &nbsp; Marca: " + data[0].nom_marca + "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td> <i id='col-ico' class='fa-solid fa-certificate fa-2xl'></i> &nbsp; Estado: " + data[0].nom_estado + "</td>" +
+                            "<td> <i id='col-ico' class='fa-solid fa-map-location-dot fa-2xl'></i> &nbsp; Ciudad: " + data[0].nom_ciudad + "</td>" +
+                        "</tr>" +
                     "</table>" +
-                    "<hr class='hr-shop'>" +
-                    "<h3>Fechas:</h3>" +
-                    "<table id='table-shop'>" +
-                    "<tr>" +
-                        "<td> <i id='col-ico' class='fa-solid fa-calendar-days fa-2xl'></i> &nbsp; Fecha publicación: " + data[0].fecha_publicacion + "</td>" +
-                    "</tr>" +
-                    "<tr>" +
-                        "<td> <i id='col-ico' class='fa-solid fa-calendar-days fa-2xl'></i> &nbsp; Última modificación: " + data[0].fecha_ult_mod + "</td>" +
-                    "</tr>" +
+                        "<hr class='hr-shop'>" +
+                        "<h3>Fechas:</h3>" +
+                        "<table id='table-shop'>" +
+                        "<tr>" +
+                            "<td> <i id='col-ico' class='fa-solid fa-calendar-days fa-2xl'></i> &nbsp; Fecha publicación: " + data[0].fecha_publicacion + "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td> <i id='col-ico' class='fa-solid fa-calendar-days fa-2xl'></i> &nbsp; Última modificación: " + data[0].fecha_ult_mod + "</td>" +
+                        "</tr>" +
                     "</table>" +
                     "<hr class='hr-shop'>" +
                     "<h3>Observaciones:</h3>" +
@@ -809,7 +795,6 @@ function loadDetails(id_producto) {
                 "</div>" +
             "</div>"
             );
-
 
             //Apartado detalles extra
             $('<div></div>').attr({ 'id': data[0].id_producto, class: 'detalles_producto_dentro' }).appendTo('.detalles_extra')
@@ -859,6 +844,7 @@ function loadDetails(id_producto) {
                 "<div class='purchase-options'></div>"
             );
 
+            //Cargamos las opciones de compra
             for (var row in data[2][0]) {
                 $('<div></div>').attr({ class: 'purchase-item' }).appendTo('.purchase-options')
                 .html(
@@ -868,6 +854,7 @@ function loadDetails(id_producto) {
                 );
             }
 
+            //Cargamos carrousel de imágenes
             $('.imagen_producto').slick({
                 infinite: true,
                 speed: 300,
@@ -878,6 +865,7 @@ function loadDetails(id_producto) {
                 autoplaySpeed: 3000
             });
 
+            //Cargamos el mapa con el marcador del producto
             load_map_details(data);
             load_markers_details(data);
 
@@ -894,7 +882,6 @@ function loadDetails(id_producto) {
 
         }).catch(function (data) {
             console.log('Error en el ajaxPromise de detalles producto');
-            // window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Load_Details SHOP";
         });
 }
 
@@ -902,9 +889,11 @@ function loadDetails(id_producto) {
 /*                                            MAPS                                              */
 /* ============================================================================================ */
 
+//Iniciamos variables globales del mapa
 var map;
 var map_details;
 
+//Cargamos mapa del shop
 function load_map_shop() {
     map = L.map('container_map').setView([40.41587070194395, -3.685132043276392], 6);
     L.tileLayer('https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.{ext}', {
@@ -915,6 +904,7 @@ function load_map_shop() {
     }).addTo(map);
 }
 
+//Cargamos mapa del details
 function load_map_details(data) {
     //Recogemos datos
     var position = [parseFloat(data[0].lat),  parseFloat(data[0].long)];
@@ -927,22 +917,23 @@ function load_map_details(data) {
         attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         ext: 'png'
     }).addTo(map_details);
-    //Añadimos mejoras, como la escala
+    //Añadimos escala
     map_details.zoomControl.setPosition('topright');
     L.control.scale().addTo(map_details);
 }
 
+//Cargamos marcadores del shop
 function load_markers(data) {
     // console.log(data);
     var position = [parseFloat(data.lat), parseFloat(data.long)];
 
-    //Creamos los iconos del marcador
+    //Creamos el icono del marcador
     var marker_icon = L.icon({
         iconUrl: 'view/assets/img/marker.png',
-    iconSize: [64, 64],       // Tamaño de visualización (1/8 del original)
-    shadowSize: [0, 0],       // Desactivar sombra
-    iconAnchor: [32, 64],     // Punto de anclaje (centro inferior)
-    popupAnchor: [0, -70]    // Posición del popup
+        iconSize: [64, 64],
+        shadowSize: [0, 0],
+        iconAnchor: [32, 64],
+        popupAnchor: [0, -70]
     });
     
     //Creamos el elemento del carrusel popup
@@ -983,10 +974,10 @@ function load_markers(data) {
     });
 }
 
+//Cargamos marcador details
 function load_markers_details(data) {
     var position = [parseFloat(data[0].lat),  parseFloat(data[0].long)];
     // console.log(data);
-    // console.log(data[1][0]);
 
     //Creamos los iconos del marcador
     var marker_icon = L.icon({
@@ -998,13 +989,13 @@ function load_markers_details(data) {
     });
 
     L.marker(position, {icon: marker_icon}).addTo(map_details).bindPopup(data[0].nom_producto);
-
 }
 
 /* ============================================================================================ */
 /*                                            CLICKS                                            */
 /* ============================================================================================ */
 
+//Capturamos clicks (details, volver atrás al shop, filtrar y borrar filtros)
 function clicks() {
     // console.log("Cargamos clicks");
     $(document).on("click", ".more_info_button", function (e) {
@@ -1033,6 +1024,7 @@ function clicks() {
 
 }
 
+//Ocultamos elementos
 function ocultar_elementos() {
     $('#details_product_shop').addClass('hidden'); //Ocultamos los detalles_producto
     document.getElementById('overlay').style.display = 'none'; //Ocultamos el spinner

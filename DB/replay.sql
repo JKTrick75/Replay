@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `categoria` (
 
 INSERT INTO `categoria` (`id_categoria`, `nom_categoria`, `img_categoria`) VALUES
 (1, 'Consola', 'view/assets/img/categories/consola.jpg'),
-(2, 'Accesorio', 'view/assets/img/categories/accesorio.jpeg'),
+(2, 'Accesorios', 'view/assets/img/categories/accesorio.jpeg'),
 (3, 'Merchandising', 'view/assets/img/categories/merchandising.webp');
 
 -- --------------------------------------------------------

@@ -2,10 +2,10 @@
 /*                                          LISTAR PRODUCTOS                                    */
 /* ============================================================================================ */
 
-function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
+function ajaxForSearch(url, total_prod, items_page, filter = undefined) {
     ajaxPromise(url, 'POST', 'JSON', { 'total_prod': total_prod, 'items_page': items_page, 'filter': filter })
         .then(function (data) {
-            // console.log(data); //Mostrar productos listados
+            console.log(data); //Mostrar productos listados
 
             //Vaciamos contenido del catálogo y del details, antes de volver a llenar con los productos buscados
             $('.content_shop_products').empty();
@@ -16,8 +16,7 @@ function ajaxForSearch(url, total_prod = 0, items_page, filter = undefined) {
                 .html(
                     "<div class='count_products'></div>"
                 )
-            //Cargar Mapa
-            load_map_shop();
+            
             //Generar tarjetas productos
             for (row in data) {
                 // console.log(data[row]);
@@ -83,7 +82,9 @@ function loadProducts(total_prod = 0, items_page = 4) {
     var filter_home = JSON.parse(localStorage.getItem('filter_home')) || false;
     var filter_search = JSON.parse(localStorage.getItem('filter_search')) || false;
     
-    // console.log(filter);
+    // console.log("Pagination");
+    // console.log(total_prod);
+    // console.log(items_page);
 
     window.scrollTo(0, 0); //Mover la pantalla arriba del todo
 
@@ -95,7 +96,7 @@ function loadProducts(total_prod = 0, items_page = 4) {
         // console.log('hay filtros');
         ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_shop', total_prod, items_page, filter_shop);
     } else {
-        // console.log('sin filtros');
+        console.log('sin filtros');
         ajaxForSearch('module/shop/controller/controller_shop.php?op=get_all_products', total_prod, items_page);
     }
 }
@@ -261,7 +262,7 @@ function load_filters() {
 }
 
 //Capturamos click de filtrar, guardamos filtros en localStorage y recargamos la página para ir al controlador
-function filter_click(total_prod = 0, items_page) {
+function filter_click() {
     guardar_filtros_storage("set_filters_count");
 
     // Mostrar spinner
@@ -724,6 +725,199 @@ function guardar_filtros_storage(modo_guardado){
 }
 
 /* ============================================================================================ */
+/*                                       PAGINATION                                             */
+/* ============================================================================================ */
+
+function count_pagination() {
+    var filter_shop = JSON.parse(localStorage.getItem('filter_shop')) || false;
+    var filter_home = JSON.parse(localStorage.getItem('filter_home')) || false;
+    var filter_search = JSON.parse(localStorage.getItem('filter_search')) || false;
+    var filter;
+    var url;
+
+    localStorage.removeItem('total_products');
+
+    if(filter_search){
+        url = 'module/shop/controller/controller_shop.php?op=pagination_search';
+        filter = filter_search;
+    }else if(filter_home){
+        url = 'module/shop/controller/controller_shop.php?op=pagination_home';
+        filter = filter_home;
+    }else if (filter_shop) {
+        url = 'module/shop/controller/controller_shop.php?op=pagination_shop';
+        filter = filter_shop;
+    } else {
+        url = 'module/shop/controller/controller_shop.php?op=pagination_all_products';
+    }
+
+    ajaxPromise(url, 'POST', 'JSON', { 'filter': filter })
+        .then(function(data) {
+            // console.log(data[0]["cantidad"]);
+            var total_products = data[0]["cantidad"];
+            localStorage.setItem('total_products', total_products);
+            load_pagination();
+        }).catch(function() {
+            console.log('Fail pagination');
+        });
+}
+
+function load_pagination(){
+    var total_prod = localStorage.getItem('total_products');
+    var total_pages;
+
+    if (total_prod >= 4) {
+        total_pages = Math.ceil(total_prod / 4);
+    } else {
+        total_pages = 1;
+    }
+    // console.log(total_pages);
+
+    //Borramos la paginación anterior
+    $('.pagination_list').empty();
+    //bucle montar paginación
+    for (let i = 1; i <= total_pages; i++) {
+        $('<li class="page_item" id='+i+'>' + i + '</li>').appendTo('.pagination_list');
+    }
+
+    //Clicks en paginación
+    $('.page_item').on('click', function() {
+        //Quitar clase active al anterior
+        $('.page_item').removeClass('active');
+        //Añadir clase active al clickado
+        $(this).addClass('active');
+
+        //Obtener número de página
+        var pageID = this.getAttribute('id');
+
+        console.log(pageID);
+
+        // Aquí tu lógica para cambiar de página
+        offsetCalculator(pageID); //EN OBRAS
+    });
+
+    //Activar la página 1 por defecto
+    $(`.page_item[id="1"]`).addClass('active');
+}
+
+function offsetCalculator(pageNumber) {
+    //Calcular offset
+    var total_prod = 4 * (pageNumber - 1);
+    // console.log(total_prod);
+
+    //Cargar productos
+    loadProducts(total_prod, 4);
+    window.scrollTo(0, 0);
+}
+
+/* ============================================================================================ */
+/*                                            MAPS                                              */
+/* ============================================================================================ */
+
+//Iniciamos variables globales del mapa
+function iniciar_map(){
+    var map;
+    var map_details;
+}
+
+//Cargamos mapa del shop
+function load_map_shop() {
+    map = L.map('container_map').setView([40.41587070194395, -3.685132043276392], 6);
+    L.tileLayer('https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.{ext}', {
+        minZoom: 0,
+        maxZoom: 20,
+        attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        ext: 'png'
+    }).addTo(map);
+}
+
+//Cargamos mapa del details
+function load_map_details(data) {
+    //Recogemos datos
+    var position = [parseFloat(data[0].lat),  parseFloat(data[0].long)];
+    //Inicializamos mapa
+    map_details = L.map('container_map_details').setView(position, 16);
+    //Le añadimos la capa/skin visual
+    L.tileLayer('https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.{ext}', {
+        minZoom: 0,
+        maxZoom: 20,
+        attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        ext: 'png'
+    }).addTo(map_details);
+    //Añadimos escala
+    map_details.zoomControl.setPosition('topright');
+    L.control.scale().addTo(map_details);
+}
+
+//Cargamos marcadores del shop
+function load_markers(data) {
+    // console.log(data);
+    var position = [parseFloat(data.lat), parseFloat(data.long)];
+
+    //Creamos el icono del marcador
+    var marker_icon = L.icon({
+        iconUrl: 'view/assets/img/marker.png',
+        iconSize: [64, 64],
+        shadowSize: [0, 0],
+        iconAnchor: [32, 64],
+        popupAnchor: [0, -70]
+    });
+    
+    //Creamos el elemento del carrusel popup
+    var carouselContainer = $(`<div id='carousel_popup-${data.id_producto}' class='img_container_popup'></div>`);
+    
+    //Añadimos las imágenes al carrousel
+    for (img in data.img_producto) {
+        carouselContainer.append(
+            `<div><img src="${data.img_producto[img]}" class="img-popup-slide"></div>`
+        );
+    }
+    
+    //Creamos el marcador con el popup bindeado, e insertamos el carrousel ya montado
+    var marker = L.marker(position, {icon: marker_icon}).addTo(map).bindPopup(
+        `<div class='more_info_popup more_info_button' id='${data.id_producto}'>
+            ${carouselContainer.prop('outerHTML')}
+            <h4><b>${data.nom_producto}</b></h4>
+            <table id='table_popup'>
+                <tr>
+                    <td><i class='fa-solid fa-location-dot fa-xl'></i>&nbsp;${data.nom_ciudad}</td>
+                    <td><i class='fa-solid fa-palette fa-xl'></i>&nbsp;${data.color}</td>
+                    <td><i class='fa-solid fa-coins fa-xl'></i>&nbsp;${data.precio} €</td>
+                </tr>
+            </table>
+        </div>`
+    );
+
+    //Inicializamos carrousel cuando se abre el popup
+    marker.on('popupopen', function() {
+        $(`#carousel_popup-${data.id_producto}`).slick({
+            infinite: true,
+            speed: 300,
+            slidesToShow: 1,
+            adaptiveHeight: false,
+            arrows: true,
+            dots: true
+        });
+    });
+}
+
+//Cargamos marcador details
+function load_markers_details(data) {
+    var position = [parseFloat(data[0].lat),  parseFloat(data[0].long)];
+    // console.log(data);
+
+    //Creamos los iconos del marcador
+    var marker_icon = L.icon({
+        iconUrl: 'view/assets/img/marker.png',
+        iconSize: [64, 64],       // Tamaño de visualización (1/8 del original)
+        shadowSize: [0, 0],       // Desactivar sombra
+        iconAnchor: [32, 64],     // Punto de anclaje (centro inferior)
+        popupAnchor: [0, -70]    // Posición del popup
+    });
+
+    L.marker(position, {icon: marker_icon}).addTo(map_details).bindPopup(data[0].nom_producto);
+}
+
+/* ============================================================================================ */
 /*                                            DETAILS                                           */
 /* ============================================================================================ */
 
@@ -886,112 +1080,6 @@ function loadDetails(id_producto) {
 }
 
 /* ============================================================================================ */
-/*                                            MAPS                                              */
-/* ============================================================================================ */
-
-//Iniciamos variables globales del mapa
-var map;
-var map_details;
-
-//Cargamos mapa del shop
-function load_map_shop() {
-    map = L.map('container_map').setView([40.41587070194395, -3.685132043276392], 6);
-    L.tileLayer('https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.{ext}', {
-        minZoom: 0,
-        maxZoom: 20,
-        attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        ext: 'png'
-    }).addTo(map);
-}
-
-//Cargamos mapa del details
-function load_map_details(data) {
-    //Recogemos datos
-    var position = [parseFloat(data[0].lat),  parseFloat(data[0].long)];
-    //Inicializamos mapa
-    map_details = L.map('container_map_details').setView(position, 16);
-    //Le añadimos la capa/skin visual
-    L.tileLayer('https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.{ext}', {
-        minZoom: 0,
-        maxZoom: 20,
-        attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        ext: 'png'
-    }).addTo(map_details);
-    //Añadimos escala
-    map_details.zoomControl.setPosition('topright');
-    L.control.scale().addTo(map_details);
-}
-
-//Cargamos marcadores del shop
-function load_markers(data) {
-    // console.log(data);
-    var position = [parseFloat(data.lat), parseFloat(data.long)];
-
-    //Creamos el icono del marcador
-    var marker_icon = L.icon({
-        iconUrl: 'view/assets/img/marker.png',
-        iconSize: [64, 64],
-        shadowSize: [0, 0],
-        iconAnchor: [32, 64],
-        popupAnchor: [0, -70]
-    });
-    
-    //Creamos el elemento del carrusel popup
-    var carouselContainer = $(`<div id='carousel_popup-${data.id_producto}' class='img_container_popup'></div>`);
-    
-    //Añadimos las imágenes al carrousel
-    for (img in data.img_producto) {
-        carouselContainer.append(
-            `<div><img src="${data.img_producto[img]}" class="img-popup-slide"></div>`
-        );
-    }
-    
-    //Creamos el marcador con el popup bindeado, e insertamos el carrousel ya montado
-    var marker = L.marker(position, {icon: marker_icon}).addTo(map).bindPopup(
-        `<div class='more_info_popup more_info_button' id='${data.id_producto}'>
-            ${carouselContainer.prop('outerHTML')}
-            <h4><b>${data.nom_producto}</b></h4>
-            <table id='table_popup'>
-                <tr>
-                    <td><i class='fa-solid fa-location-dot fa-xl'></i>&nbsp;${data.nom_ciudad}</td>
-                    <td><i class='fa-solid fa-palette fa-xl'></i>&nbsp;${data.color}</td>
-                    <td><i class='fa-solid fa-coins fa-xl'></i>&nbsp;${data.precio} €</td>
-                </tr>
-            </table>
-        </div>`
-    );
-
-    //Inicializamos carrousel cuando se abre el popup
-    marker.on('popupopen', function() {
-        $(`#carousel_popup-${data.id_producto}`).slick({
-            infinite: true,
-            speed: 300,
-            slidesToShow: 1,
-            adaptiveHeight: false,
-            arrows: true,
-            dots: true
-        });
-    });
-}
-
-//Cargamos marcador details
-function load_markers_details(data) {
-    var position = [parseFloat(data[0].lat),  parseFloat(data[0].long)];
-    // console.log(data);
-
-    //Creamos los iconos del marcador
-    var marker_icon = L.icon({
-        iconUrl: 'view/assets/img/marker.png',
-        iconSize: [64, 64],       // Tamaño de visualización (1/8 del original)
-        shadowSize: [0, 0],       // Desactivar sombra
-        iconAnchor: [32, 64],     // Punto de anclaje (centro inferior)
-        popupAnchor: [0, -70]    // Posición del popup
-    });
-
-    L.marker(position, {icon: marker_icon}).addTo(map_details).bindPopup(data[0].nom_producto);
-}
-
-/* ============================================================================================ */
 /*                                            CLICKS                                            */
 /* ============================================================================================ */
 
@@ -1031,6 +1119,8 @@ function ocultar_elementos() {
 }
 
 $(document).ready(function () {
+    iniciar_map();
+    load_map_shop();
     loadProducts();
     clicks();
     load_filters().then(function() {
@@ -1040,10 +1130,10 @@ $(document).ready(function () {
         update_count_products();
         count_products();
         radar_filter_update();
+        ocultar_elementos();
+        count_pagination();
     }).catch(function(error) {
         console.error("Error:", error);
     });
-    ocultar_elementos();
-
     // console.log("Bienvenido al Catálogo");
 });

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------- */
-/* ============================  CARDS  =============================== */
+/* ============================  CARDS HOME  ========================== */
 /* -------------------------------------------------------------------- */
 /* Cards Categories */
 .categoria-inner {
@@ -231,28 +231,83 @@
 .list_product_shop {
   display: flex;
   width: 100%;
-  align-items: flex-start;
   padding-bottom: 100px;
   position: relative;
   min-height: 1400px;
+}
+
+.content_shop {
+  width: 40%;
+  margin-left: 150px;
+  transition: all 0.3s ease-in-out;
 }
 
 /* ------------------------------------------------------------------ */
 /* ======================== CONTENIDO PRINCIPAL ===================== */
 /* ------------------------------------------------------------------ */
 .content_shop_products {
-  width: 40%;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-bottom: 20px;
-  margin-left: 150px; /* Espacio para filtros cuando están activos */
-  transition: all 0.3s ease-in-out;
+  width: 100%;
+  padding: 0 20px 20px 20px;
 }
 
 /* Si los filtros estan ocultos, mover los productos a la izquierda */
 /* .filters_shop:not(.active) + .content_shop_products {
   margin-left: 0;
 } */
+
+/* ------------------------------------------------------------------ */
+/* =========================== PAGINATION =========================== */
+/* ------------------------------------------------------------------ */
+/* .pagination_list{
+  width:100%;
+} */
+
+/* ESTILOS PAGINACIÓN */
+.pagination {
+  margin: 30px 0;
+  width: 100%;
+}
+
+.pagination_list {
+  display: flex;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.pagination_list::-webkit-scrollbar {
+  display: none;
+}
+
+.page_item {
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  color: #666;
+  background: #fff;
+  min-width: 40px;
+  text-align: center;
+  user-select: none;
+}
+
+.page_item:hover {
+  border-color: #007bff;
+  color: #007bff;
+  transform: translateY(-2px);
+}
+
+.page_item.active {
+  background: #007bff;
+  border-color: #007bff;
+  color: #fff;
+  font-weight: 600;
+}
 
 /* ------------------------------------------------------------------ */
 /* =========================== GOOGLE MAPS ========================== */
@@ -388,6 +443,7 @@
 /* ===================== BOTÓN TOGGLE ===================== */
 .filter-toggle {
   position: absolute;
+  height: 50px;
   left: 20px;
   top: 0;
   z-index: 101;
@@ -445,7 +501,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   padding: 15px;
 }
 

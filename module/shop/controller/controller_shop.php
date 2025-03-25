@@ -85,6 +85,70 @@ switch ($_GET['op']) {
             echo "error";
         }
         break;
+    
+    case 'pagination_all_products';
+        try {
+            $daoshop = new DAOShop();
+            $Products = $daoshop->pagination_all_products();
+
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+
+        if (!empty($Products)) {
+            echo json_encode($Products);
+        } else {
+            echo json_encode("error");
+        }
+        break;
+
+    case 'pagination_shop';
+        try{
+            $daoshop = new DAOShop();
+            $Products = $daoshop -> pagination_shop();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+
+        if (!empty($Products)) {
+            echo json_encode($Products);
+        }
+        else {
+            echo "error";
+        }
+        break;
+
+    case 'pagination_home';
+        try{
+            $daoshop = new DAOShop();
+            $Products = $daoshop -> pagination_home();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+        
+        if (!empty($Products)) {
+            echo json_encode($Products);
+        }
+        else {
+            echo "error";
+        }
+        break;
+
+    case 'pagination_search';
+        try{
+            $daoshop = new DAOShop();
+            $Products = $daoshop -> pagination_search();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+        
+        if (!empty($Products)) {
+            echo json_encode($Products);
+        }
+        else {
+            echo "error";
+        }
+        break;
 
     //Recogemos todos los datos necesarios para el details (datos del producto, imágenes y tipos de venta)
     case 'get_details';

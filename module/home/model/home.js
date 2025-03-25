@@ -220,7 +220,7 @@ function clicks(){
         setTimeout(function(){ 
             window.location.href = 'index.php?page=controller_shop&op=list';
         }, 200);  
-    }); 
+    });
     
     $(document).on("click",'div.filter_marca', function (){
         var filters = [];

@@ -10,6 +10,8 @@ function ajaxForSearch(url, total_prod, items_page, filter = undefined) {
             //Vaciamos contenido del catálogo y del details, antes de volver a llenar con los productos buscados
             $('.content_shop_products').empty();
             $('.detalles_producto' && '.imagen_producto' && 'details_product_shop').empty();
+            // Vaciar marcadores anteriores
+            markersInventory.clearLayers();
 
             //Añadir contador productos
             $('<div></div>').attr({ 'class': 'list_content_shop' }).appendTo('.content_shop_products')
@@ -735,8 +737,6 @@ function count_pagination() {
     var filter;
     var url;
 
-    localStorage.removeItem('total_products');
-
     if(filter_search){
         url = 'module/shop/controller/controller_shop.php?op=pagination_search';
         filter = filter_search;
@@ -781,32 +781,61 @@ function load_pagination(){
 
     //Clicks en paginación
     $('.page_item').on('click', function() {
-        //Quitar clase active al anterior
-        $('.page_item').removeClass('active');
-        //Añadir clase active al clickado
-        $(this).addClass('active');
-
         //Obtener número de página
         var pageID = this.getAttribute('id');
-
-        console.log(pageID);
-
-        // Aquí tu lógica para cambiar de página
-        offsetCalculator(pageID); //EN OBRAS
+        //Cambiamos clase active al nuevo
+        $('.page_item').removeClass('active');
+        $(this).addClass('active');
+        //Vamos a la función de clicks
+        click_page_pagination(pageID);
     });
 
-    //Activar la página 1 por defecto
+    //Clicks flechas
+    click_flechas_pagination(total_pages);
+
+    //Reseteamos la current_page a 1 cuando recargamos página
+    localStorage.setItem('current_page', 1);
     $(`.page_item[id="1"]`).addClass('active');
+    //Actualizamos flechas
+    update_arrow_states(1, total_pages);
 }
 
-function offsetCalculator(pageNumber) {
-    //Calcular offset
-    var total_prod = 4 * (pageNumber - 1);
+//Clicks números de paginación
+function click_page_pagination(pageID){
+    //Actualizamos la page de localStorage
+    localStorage.setItem('current_page', pageID);
+
+    //Calculamos offset
+    var total_prod = 4 * (pageID - 1);
+    // console.log(pageID);
     // console.log(total_prod);
 
     //Cargar productos
     loadProducts(total_prod, 4);
     window.scrollTo(0, 0);
+    //Actualizamos flechas
+    update_arrow_states(pageID, Math.ceil(localStorage.getItem('total_products') / 4));
+}
+
+//Clicks flechas
+function click_flechas_pagination(total_pages){
+    $('.pagination_arrow').off('click').on('click', function() {
+        var currentPage = parseInt(localStorage.getItem('current_page')) || 1;
+        var isNext = $(this).hasClass('next');
+        var newPage = isNext ? currentPage + 1 : currentPage - 1;
+
+        if (newPage >= 1 && newPage <= total_pages) {
+            $(`.page_item[id="${currentPage}"]`).removeClass('active');
+            $(`.page_item[id="${newPage}"]`).addClass('active');
+            click_page_pagination(newPage);
+        }
+    });
+}
+
+//Actualizar flechas
+function update_arrow_states(currentPage, total_pages) {
+    $('.prev').prop('disabled', currentPage <= 1);
+    $('.next').prop('disabled', currentPage >= total_pages);
 }
 
 /* ============================================================================================ */
@@ -817,10 +846,12 @@ function offsetCalculator(pageNumber) {
 function iniciar_map(){
     var map;
     var map_details;
+    var markersInventory;
 }
 
 //Cargamos mapa del shop
 function load_map_shop() {
+    //Inicializamos mapa
     map = L.map('container_map').setView([40.41587070194395, -3.685132043276392], 6);
     L.tileLayer('https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.{ext}', {
         minZoom: 0,
@@ -828,6 +859,9 @@ function load_map_shop() {
         attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         ext: 'png'
     }).addTo(map);
+
+    //Añadimos grupo de marcadores al mapa, a este grupo es donde añadimos los marcadores, que estará linkeado al mapa
+    markersInventory = L.layerGroup().addTo(map);
 }
 
 //Cargamos mapa del details
@@ -872,8 +906,8 @@ function load_markers(data) {
         );
     }
     
-    //Creamos el marcador con el popup bindeado, e insertamos el carrousel ya montado
-    var marker = L.marker(position, {icon: marker_icon}).addTo(map).bindPopup(
+    //Creamos el marcador con el popup bindeado, e insertamos el carrousel ya montado //Añadimos el marcador a nuestro markersInventory
+    var marker = L.marker(position, {icon: marker_icon}).addTo(markersInventory).bindPopup(
         `<div class='more_info_popup more_info_button' id='${data.id_producto}'>
             ${carouselContainer.prop('outerHTML')}
             <h4><b>${data.nom_producto}</b></h4>

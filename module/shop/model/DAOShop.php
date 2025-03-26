@@ -10,6 +10,7 @@
 		/* ============================================================================================ */
 
 		function select_products_carousel() {
+			//Recogemos limit y offset
 			$offset = $_POST['total_prod'];
 			$limit = $_POST['items_page'];
 
@@ -45,6 +46,7 @@
 		}
 
 		function filter_shop() {
+			//Recogemos limit y offset
 			$offset = $_POST['total_prod'];
 			$limit = $_POST['items_page'];
 			//Recogemos valores filtro_shop
@@ -134,6 +136,7 @@
 		}
 
 		function filter_home() {
+			//Recogemos limit y offset
 			$offset = $_POST['total_prod'];
 			$limit = $_POST['items_page'];
 			//Recogemos valores filtro_home
@@ -202,6 +205,7 @@
 		}
 
 		function filter_search() {
+			//Recogemos limit y offset
 			$offset = $_POST['total_prod'];
 			$limit = $_POST['items_page'];
 			//Recogemos valores filter_search

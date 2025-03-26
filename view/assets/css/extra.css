@@ -258,12 +258,10 @@
 /* ------------------------------------------------------------------ */
 /* =========================== PAGINATION =========================== */
 /* ------------------------------------------------------------------ */
-/* .pagination_list{
-  width:100%;
-} */
-
-/* ESTILOS PAGINACIÓN */
 .pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 30px 0;
   width: 100%;
 }
@@ -276,10 +274,7 @@
   margin: 0;
   overflow-x: auto;
   scrollbar-width: none;
-}
-
-.pagination_list::-webkit-scrollbar {
-  display: none;
+  justify-content: center;
 }
 
 .page_item {
@@ -294,19 +289,44 @@
   min-width: 40px;
   text-align: center;
   user-select: none;
+  flex-shrink: 0;
 }
 
 .page_item:hover {
   border-color: #007bff;
   color: #007bff;
-  transform: translateY(-2px);
 }
 
+/* Page activa */
 .page_item.active {
   background: #007bff;
   border-color: #007bff;
   color: #fff;
   font-weight: 600;
+}
+
+/* Flechas de paginación */
+.pagination_arrow {
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 25px;
+  background: #fff;
+  color: #007bff;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  margin: 0 5px;
+}
+
+.pagination_arrow:hover:not(:disabled) {
+  background: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.pagination_arrow:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* ------------------------------------------------------------------ */

@@ -7,10 +7,9 @@ function ajaxForSearch(url, total_prod, items_page, filter = undefined) {
         .then(function (data) {
             console.log(data); //Mostrar productos listados
 
-            //Vaciamos contenido del catálogo y del details, antes de volver a llenar con los productos buscados
+            //Vaciamos contenido del list-shop, details y marcadores, antes de volver a llenar con los productos buscados
             $('.content_shop_products').empty();
             $('.detalles_producto' && '.imagen_producto' && 'details_product_shop').empty();
-            // Vaciar marcadores anteriores
             markersInventory.clearLayers();
 
             //Añadir contador productos
@@ -47,31 +46,31 @@ function ajaxForSearch(url, total_prod, items_page, filter = undefined) {
                         "</div>"
                     )
 
-                //Generamos los div de las imágenes de los productos, y lo convertimos en carousel (cada producto tiene una id dinámica para sus fotos)
-                for (img in data[row].img_producto) {
-                    // console.log(data[row].img_producto);
-                    $('<div></div>').attr('id', data[row].img_producto[img]).appendTo(`#carousel_list_product-${data[row].id_producto}`)
-                        .html(
-                            "<img src= '" + data[row].img_producto[img] + "'" + "</img>"
-                        );
-                }
-                $(`#carousel_list_product-${data[row].id_producto}`).slick({
-                    infinite: true,
-                    speed: 300,
-                    slidesToShow: 1,
-                    adaptiveHeight: true,
-                    arrows: true
-                });
-
-                //Cargamos los marcadores al mapa por cada producto
-                load_markers(data[row]);
+            //Generamos los div de las imágenes de los productos, y lo convertimos en carousel (cada producto tiene una id dinámica para sus fotos)
+            for (img in data[row].img_producto) {
+                // console.log(data[row].img_producto);
+                $('<div></div>').attr('id', data[row].img_producto[img]).appendTo(`#carousel_list_product-${data[row].id_producto}`)
+                    .html(
+                        "<img src= '" + data[row].img_producto[img] + "'" + "</img>"
+                    );
             }
-        }).catch(function () {
-            console.log('Error en el ajaxPromise de listar productos / No hay productos para estos filtros');
-            $(".content_shop_products").empty();
-            $('<div></div>').appendTo('.content_shop_products').html('<img src="view/assets/img/sad-gaming.gif" class="gif_no_stock image_gif">');
-            $('<div></div>').appendTo('.content_shop_products').html('<h1>No hay productos con estos filtros</h1>');
-        });
+            $(`#carousel_list_product-${data[row].id_producto}`).slick({
+                infinite: true,
+                speed: 300,
+                slidesToShow: 1,
+                adaptiveHeight: true,
+                arrows: true
+            });
+
+            //Cargamos los marcadores al mapa por cada producto
+            load_markers(data[row]);
+        }
+    }).catch(function () {
+        console.log('Error en el ajaxPromise de listar productos / No hay productos para estos filtros');
+        $(".content_shop_products").empty();
+        $('<div></div>').appendTo('.content_shop_products').html('<img src="view/assets/img/sad-gaming.gif" class="gif_no_stock image_gif">');
+        $('<div></div>').appendTo('.content_shop_products').html('<h1>No hay productos con estos filtros</h1>');
+    });
 }
 
 /* ============================================================================================ */
@@ -83,10 +82,6 @@ function loadProducts(total_prod = 0, items_page = 4) {
     var filter_shop = JSON.parse(localStorage.getItem('filter_shop')) || false;
     var filter_home = JSON.parse(localStorage.getItem('filter_home')) || false;
     var filter_search = JSON.parse(localStorage.getItem('filter_search')) || false;
-    
-    // console.log("Pagination");
-    // console.log(total_prod);
-    // console.log(items_page);
 
     window.scrollTo(0, 0); //Mover la pantalla arriba del todo
 
@@ -98,7 +93,7 @@ function loadProducts(total_prod = 0, items_page = 4) {
         // console.log('hay filtros');
         ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_shop', total_prod, items_page, filter_shop);
     } else {
-        console.log('sin filtros');
+        // console.log('sin filtros');
         ajaxForSearch('module/shop/controller/controller_shop.php?op=get_all_products', total_prod, items_page);
     }
 }
@@ -753,51 +748,36 @@ function count_pagination() {
     ajaxPromise(url, 'POST', 'JSON', { 'filter': filter })
         .then(function(data) {
             // console.log(data[0]["cantidad"]);
-            var total_products = data[0]["cantidad"];
-            localStorage.setItem('total_products', total_products);
+            localStorage.setItem('total_products', data[0]["cantidad"]);
             load_pagination();
         }).catch(function() {
             console.log('Fail pagination');
         });
 }
 
-function load_pagination(){
+function load_pagination() {
     var total_prod = localStorage.getItem('total_products');
-    var total_pages;
+    var total_pages = Math.ceil(total_prod / 4) || 1;
 
-    if (total_prod >= 4) {
-        total_pages = Math.ceil(total_prod / 4);
-    } else {
-        total_pages = 1;
-    }
-    // console.log(total_pages);
-
-    //Borramos la paginación anterior
     $('.pagination_list').empty();
-    //bucle montar paginación
+    
     for (let i = 1; i <= total_pages; i++) {
-        $('<li class="page_item" id='+i+'>' + i + '</li>').appendTo('.pagination_list');
+        $(`<li class="page_item" id="${i}">${i}</li>`).appendTo('.pagination_list');
     }
 
-    //Clicks en paginación
     $('.page_item').on('click', function() {
-        //Obtener número de página
-        var pageID = this.getAttribute('id');
-        //Cambiamos clase active al nuevo
-        $('.page_item').removeClass('active');
-        $(this).addClass('active');
-        //Vamos a la función de clicks
-        click_page_pagination(pageID);
+        click_page_pagination(this.getAttribute('id'));
     });
 
-    //Clicks flechas
-    click_flechas_pagination(total_pages);
+    click_flechas_pagination();
+    setActivePage(1);
+}
 
-    //Reseteamos la current_page a 1 cuando recargamos página
-    localStorage.setItem('current_page', 1);
-    $(`.page_item[id="1"]`).addClass('active');
-    //Actualizamos flechas
-    update_arrow_states(1, total_pages);
+function setActivePage(page) {
+    localStorage.setItem('current_page', page);
+    $('.page_item').removeClass('active');
+    $(`.page_item[id="${page}"]`).addClass('active');
+    update_arrow_states(page, Math.ceil(localStorage.getItem('total_products') / 4));
 }
 
 //Clicks números de paginación
@@ -817,18 +797,25 @@ function click_page_pagination(pageID){
     update_arrow_states(pageID, Math.ceil(localStorage.getItem('total_products') / 4));
 }
 
+function click_page_pagination(pageID) {
+    //Actualizamos la pagina activa
+    setActivePage(pageID);
+
+    //Calculamos offset
+    var total_prod = 4 * (pageID - 1);
+
+    //Cargar productos
+    loadProducts(total_prod, 4);
+    window.scrollTo(0, 0);
+}
+
 //Clicks flechas
-function click_flechas_pagination(total_pages){
+function click_flechas_pagination() {
     $('.pagination_arrow').off('click').on('click', function() {
         var currentPage = parseInt(localStorage.getItem('current_page')) || 1;
-        var isNext = $(this).hasClass('next');
-        var newPage = isNext ? currentPage + 1 : currentPage - 1;
-
-        if (newPage >= 1 && newPage <= total_pages) {
-            $(`.page_item[id="${currentPage}"]`).removeClass('active');
-            $(`.page_item[id="${newPage}"]`).addClass('active');
-            click_page_pagination(newPage);
-        }
+        var newPage = $(this).hasClass('next') ? currentPage + 1 : currentPage - 1;
+        //Vamos a la función del click pagination
+        click_page_pagination(newPage);
     });
 }
 

@@ -751,13 +751,13 @@
 /* -------------------------------------------------------------------- */
 .container__shop{
   position: relative;
-  min-height: 2000px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 150px;
 }
 /* Contenedor general: cuatro filas */
 #details_product_shop {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   display: grid;
   grid-template-rows: auto auto auto auto auto;
@@ -767,9 +767,9 @@
   background: #f8f8f8;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  z-index: 950; /* Mayor que los filtros (que tienen z-index: 100) */
-  min-height: 100%;
-  padding-bottom: 150px; /* Espacio para el footer */
+  z-index: 950;
+  padding-bottom: 150px;
+  flex: 1;
 }
 
 /* ---------------------- */

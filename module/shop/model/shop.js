@@ -10,6 +10,7 @@ function ajaxForSearch(url, total_prod, items_page, filter = undefined) {
             //Vaciamos contenido del list-shop, details y marcadores, antes de volver a llenar con los productos buscados
             $('.content_shop_products').empty();
             $('.detalles_producto' && '.imagen_producto' && 'details_product_shop').empty();
+            $('#details_product_shop').hide();
             markersInventory.clearLayers();
 
             //Añadir contador productos
@@ -952,7 +953,8 @@ function loadDetails(id_producto) {
             $('.list_product_shop').empty();
             $('.imagen_producto_dentro').empty();
             $('.detalles_producto_dentro').empty();
-            $('#details_product_shop').removeClass('hidden'); //Mostramos los detalles_producto
+            $('#details_product_shop').show();
+            $('.list_product_shop').hide();
 
             //Apartado imágenes producto
             for (row in data[1][0]) {
@@ -1121,7 +1123,6 @@ function clicks() {
     });
     $(document).on("click", ".back_list", function () {
         // console.log("Volvemos al list");
-        $('#details_product_shop').addClass('hidden'); //Ocultamos los detalles_producto
         window.location.href = "index.php?page=controller_shop&op=list";
     });
     $(document).on('click', '.filter_button', function () {
@@ -1135,7 +1136,6 @@ function clicks() {
 
 //Ocultamos elementos
 function ocultar_elementos() {
-    $('#details_product_shop').addClass('hidden'); //Ocultamos los detalles_producto
     document.getElementById('overlay').style.display = 'none'; //Ocultamos el spinner
 }
 

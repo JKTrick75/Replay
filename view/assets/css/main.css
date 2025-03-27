@@ -482,6 +482,12 @@ h6 {
   z-index: 1000;
 }
 
+.footer {
+  position: relative;
+  /* Mantén el z-index si es necesario */
+  margin-top: auto; /* Empuja el footer hacia abajo */
+}
+
 .footer .footer-newsletter {
   background-color: color-mix(in srgb, var(--default-color), transparent 95%);
   padding: 50px 0;

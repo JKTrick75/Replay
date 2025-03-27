@@ -182,6 +182,40 @@ switch ($_GET['op']) {
         }
         break;
 
+    //Contamos el máximo de productos relacionados que podemos cargar
+    case 'count_related';
+        try{
+            $daoshop = new DAOShop();
+            $count = $daoshop -> count_related();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+        
+        if (!empty($count)) {
+            echo json_encode($count);
+        }
+        else {
+            echo "error";
+        }
+        break;
+
+    //Contamos el máximo de productos relacionados que podemos cargar
+    case 'load_related';
+        try{
+            $daoshop = new DAOShop();
+            $count = $daoshop -> load_related();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+        
+        if (!empty($count)) {
+            echo json_encode($count);
+        }
+        else {
+            echo "error";
+        }
+        break;
+
     //Recogemos todos los datos de los filtros dinámicos
     case 'get_filters';
         try {
@@ -288,7 +322,6 @@ switch ($_GET['op']) {
             echo "error";
         }
         break;
-
 
     default;
         include("view/inc/error404.html");

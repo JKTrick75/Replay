@@ -468,8 +468,8 @@ function highlight_search() {
     var highlight_search = JSON.parse(localStorage.getItem('filter_search')) || false;
 
     if (highlight_search){
-        console.log("Estos son los filtros a remarcar:");
-        console.log(highlight_search);
+        // console.log("Estos son los filtros a remarcar:");
+        // console.log(highlight_search);
 
         //Tipo_consola
         if (highlight_search[0].tipo_consola != '*') {
@@ -757,20 +757,23 @@ function count_pagination() {
 }
 
 function load_pagination() {
+    //Recogemos el total de productos y calculamos el total de páginas
     var total_prod = localStorage.getItem('total_products');
     var total_pages = Math.ceil(total_prod / 4) || 1;
-
-    $('.pagination_list').empty();
     
+    //Cargamos la paginación
     for (let i = 1; i <= total_pages; i++) {
         $(`<li class="page_item" id="${i}">${i}</li>`).appendTo('.pagination_list');
     }
 
+    //Clicks paginación y flechas
     $('.page_item').on('click', function() {
         click_page_pagination(this.getAttribute('id'));
     });
 
     click_flechas_pagination();
+
+    //Activamos pag 1 por defecto
     setActivePage(1);
 }
 
@@ -782,22 +785,6 @@ function setActivePage(page) {
 }
 
 //Clicks números de paginación
-function click_page_pagination(pageID){
-    //Actualizamos la page de localStorage
-    localStorage.setItem('current_page', pageID);
-
-    //Calculamos offset
-    var total_prod = 4 * (pageID - 1);
-    // console.log(pageID);
-    // console.log(total_prod);
-
-    //Cargar productos
-    loadProducts(total_prod, 4);
-    window.scrollTo(0, 0);
-    //Actualizamos flechas
-    update_arrow_states(pageID, Math.ceil(localStorage.getItem('total_products') / 4));
-}
-
 function click_page_pagination(pageID) {
     //Actualizamos la pagina activa
     setActivePage(pageID);
@@ -820,7 +807,7 @@ function click_flechas_pagination() {
     });
 }
 
-//Actualizar flechas
+//Actualizar flechas (si se está en los extremos, desactiva esa flecha)
 function update_arrow_states(currentPage, total_pages) {
     $('.prev').prop('disabled', currentPage <= 1);
     $('.next').prop('disabled', currentPage >= total_pages);
@@ -831,11 +818,9 @@ function update_arrow_states(currentPage, total_pages) {
 /* ============================================================================================ */
 
 //Iniciamos variables globales del mapa
-function iniciar_map(){
-    var map;
-    var map_details;
-    var markersInventory;
-}
+var map;
+var map_details;
+var markersInventory;
 
 //Cargamos mapa del shop
 function load_map_shop() {
@@ -854,10 +839,19 @@ function load_map_shop() {
 
 //Cargamos mapa del details
 function load_map_details(data) {
+    //Destruir mapa details si existe
+    if(typeof map_details !== 'undefined' && map_details !== null){
+        map_details.remove();
+        map_details = null;
+    }
+    $('#container_map_details').empty();
+
     //Recogemos datos
     var position = [parseFloat(data[0].lat),  parseFloat(data[0].long)];
+
     //Inicializamos mapa
     map_details = L.map('container_map_details').setView(position, 16);
+
     //Le añadimos la capa/skin visual
     L.tileLayer('https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.{ext}', {
         minZoom: 0,
@@ -865,9 +859,10 @@ function load_map_details(data) {
         attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         ext: 'png'
     }).addTo(map_details);
-    //Añadimos escala
-    map_details.zoomControl.setPosition('topright');
+
+    //Añadimos escala y otras mejoras
     L.control.scale().addTo(map_details);
+    map_details.zoomControl.setPosition('topright');
 }
 
 //Cargamos marcadores del shop
@@ -1086,6 +1081,13 @@ function loadDetails(id_producto) {
             load_map_details(data);
             load_markers_details(data);
 
+            //Apartado productos relacionados
+            related_products(data[0].id_producto,
+                            data[0].marca,
+                            data[0].tipo_consola,
+                            data[0].modelo_consola,
+                            data[0].ciudad);
+
             // console.log(data[0].id_producto);
             // console.log(data[0].nom_marca);
             // console.log(data[0].nom_modelo_consola);
@@ -1102,6 +1104,63 @@ function loadDetails(id_producto) {
         });
 }
 
+function load_related_products(offset, total_products, id, marca, tipo_consola, modelo_consola, ciudad) {
+    let limit = 3;
+
+    ajaxPromise('module/shop/controller/controller_shop.php?op=load_related', 'POST', 'JSON', 
+        { 'offset': offset, 'limit': limit, 'id': id, 'marca': marca, 'tipo_consola': tipo_consola, 'modelo_consola': modelo_consola, 'ciudad': ciudad })
+        .then(function(data) {
+            for (row in data) {
+                $('<div></div>').attr({ 'id': data[row].id_producto, 'class': 'more_info_button' }).appendTo('.lista_relacionados')
+                    .html(
+                        "<li class='portfolio-item'>" +
+                            "<div class='item-main'>" +
+                                "<div class='portfolio-image'>" +
+                                    // "<img src = " + data[row].img_car + " alt='imagen car' </img> " +
+                                "</div>" +
+                                "<h5>" + data[row].nom_producto + "  " + data[row].precio + "€</h5>" +
+                            "</div>" +
+                        "</li>"
+                    )
+            }
+
+            //Calcular productos restantes
+            offset += limit;
+            var productos_restantes = total_products - offset;
+            // console.log(productos_restantes);
+
+            //Mostrar botón si quedan más de 3 productos restantes
+            if (productos_restantes >= 3) {
+                $('.more_car__button').empty();
+                $('<div></div>').attr({ 'id': 'more_car__button', 'class': 'more_car__button' }).appendTo('.lista_relacionados')
+                    .html(
+                        '<button class="load_more_button" id="load_more_button">Cargar más</button>'
+                    )
+            }
+        }).catch(function() {
+            console.log("error load_related_products");
+        });
+}
+
+function related_products(id, marca, tipo_consola, modelo_consola, ciudad) {
+    var offset = 0;
+    ajaxPromise('module/shop/controller/controller_shop.php?op=count_related', 'POST', 'JSON', 
+                { 'id': id, 'marca': marca, 'tipo_consola': tipo_consola, 'modelo_consola': modelo_consola, 'ciudad': ciudad })
+        .then(function(data) {
+            var total_products = data[0].cantidad;
+            // console.log(total_products);
+            load_related_products(0, total_products, id, marca, tipo_consola, modelo_consola, ciudad);
+            //Cargamos más productos relacionados (eliminamos antes el botón y lo volvemos a cargar)
+            $(document).off('click', '.load_more_button').on("click", '.load_more_button', function() {
+                offset += 3;
+                $('.more_car__button').empty();
+                load_related_products(offset, total_products, id, marca, tipo_consola, modelo_consola, ciudad);
+            });
+        }).catch(function() {
+            console.log('error related_products');
+        });
+}
+
 /* ============================================================================================ */
 /*                                            CLICKS                                            */
 /* ============================================================================================ */
@@ -1110,12 +1169,25 @@ function loadDetails(id_producto) {
 function clicks() {
     // console.log("Cargamos clicks");
     $(document).on("click", ".more_info_button", function (e) {
+        $(document).off('click', '.load_more_button');
         // Elementos a excluir (carousel, corazón y botón comprar)
         var excludedElements = '.slick-arrow, .slick-dots, .buy, .list__heart, .fa-heart';
         //Si el elemento pulsado es uno de los de la lista, paramos el evento del click
         if ($(e.target).closest(excludedElements).length > 0) {
             return;
         }
+
+        //Reiniciamos details
+        if($('.imagen_producto').hasClass('slick-initialized')){
+            $('.imagen_producto').slick('unslick');
+        }
+        $('.imagen_producto').empty();
+        $('.detalles_producto').empty();
+        $('.compra_producto').empty();
+        $('.detalles_extra').empty();
+        $('#container_map_details').empty();
+        $('.lista_relacionados').empty();
+        $('.container_valoraciones').empty();
 
         var id_producto = this.getAttribute('id');
         // console.log("Pillamos el id: " + id_producto);
@@ -1140,7 +1212,6 @@ function ocultar_elementos() {
 }
 
 $(document).ready(function () {
-    iniciar_map();
     load_map_shop();
     loadProducts();
     clicks();

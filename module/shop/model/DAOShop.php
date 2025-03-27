@@ -110,8 +110,8 @@
 			$sql.= " GROUP BY p.id_producto
 					LIMIT $offset, $limit";
 
-			error_log("Consulta SQL:");
-			error_log($sql);
+			// error_log("Consulta SQL:");
+			// error_log($sql);
 
 			$conexion = connect::con();
 			$res = mysqli_query($conexion, $sql);
@@ -179,8 +179,8 @@
 			$sql.= " GROUP BY p.id_producto
 					LIMIT $offset, $limit";
 
-			error_log("Consulta SQL:");
-			error_log($sql);
+			// error_log("Consulta SQL:");
+			// error_log($sql);
 
 			$conexion = connect::con();
 			$res = mysqli_query($conexion, $sql);
@@ -236,8 +236,8 @@
 			$sql.= " GROUP BY p.id_producto
 					LIMIT $offset, $limit";
 
-			error_log("Consulta SQL:");
-			error_log($sql);
+			// error_log("Consulta SQL:");
+			// error_log($sql);
 
 			$conexion = connect::con();
 			$res = mysqli_query($conexion, $sql);
@@ -334,8 +334,8 @@
 				$sql .= " AND p.precio BETWEEN $precioMin[0] AND $precioMax[0]";
 			}
 
-			error_log("Consulta SQL:");
-			error_log($sql);
+			// error_log("Consulta SQL:");
+			// error_log($sql);
 
 			$count = $this->execute_query($sql);
 
@@ -379,8 +379,8 @@
 				$sql .= " AND tvp.id_tipo_venta = '$filter_value'";
 			}
 
-			error_log("Consulta SQL:");
-			error_log($sql);
+			// error_log("Consulta SQL:");
+			// error_log($sql);
 
 			$count = $this->execute_query($sql);
 
@@ -412,8 +412,8 @@
 				$sql .= " AND p.ciudad = '$ciudad[0]'";
 			}
 
-			error_log("Consulta SQL:");
-			error_log($sql);
+			// error_log("Consulta SQL:");
+			// error_log($sql);
 
 			$count = $this->execute_query($sql);
 
@@ -445,7 +445,11 @@
 						tm.nom_tipo_merchandising, 
 						ta.nom_tipo_accesorio,
 						p.lat,
-						p.long
+						p.long,
+						p.marca,
+						p.tipo_consola,
+						p.modelo_consola,
+						p.ciudad
 					FROM producto p
 					INNER JOIN marca m ON p.marca = m.id_marca
 					INNER JOIN estado e ON p.estado = e.id_estado
@@ -498,6 +502,82 @@
 				}
 			}
 			return $salesArray;
+		}
+
+		function count_related() {
+			//Recogemos valores
+			$id = $_POST['id'];
+			$marca = $_POST['marca'];
+			$tipo_consola = $_POST['tipo_consola'];
+			$modelo_consola = $_POST['modelo_consola'];
+			$ciudad = $_POST['ciudad'];
+
+			//Montamos query
+			$sql= "SELECT COUNT(DISTINCT p.id_producto) as cantidad
+					FROM producto p 
+					WHERE ((p.marca = '$marca') 
+						OR (p.tipo_consola = '$tipo_consola') 
+						OR (p.modelo_consola = '$modelo_consola') 
+						OR (p.ciudad = '$ciudad'))
+					AND p.id_producto != '$id'";
+
+			error_log("Consulta SQL:");
+			error_log($sql);
+
+			$count = $this->execute_query($sql);
+
+			return $count;
+		}
+
+		function load_related() {
+			//Recogemos valores
+			$id = $_POST['id'];
+			$marca = $_POST['marca'];
+			$tipo_consola = $_POST['tipo_consola'];
+			$modelo_consola = $_POST['modelo_consola'];
+			$ciudad = $_POST['ciudad'];
+			//Recogemos limit y offset
+			$offset = $_POST['offset'];
+			$limit = $_POST['limit'];
+
+			//Montamos query
+			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, p.lat, p.long,
+						  GROUP_CONCAT(i.img_producto SEPARATOR ':') AS img_producto
+					FROM producto p 
+					INNER JOIN img_producto i ON p.id_producto = i.id_producto
+					INNER JOIN estado e ON p.estado = e.id_estado
+					INNER JOIN ciudad c ON p.ciudad = c.id_ciudad
+					WHERE ((p.marca = '$marca') 
+						OR (p.tipo_consola = '$tipo_consola') 
+						OR (p.modelo_consola = '$modelo_consola') 
+						OR (p.ciudad = '$ciudad'))
+					AND p.id_producto != '$id'
+					GROUP BY p.id_producto
+					LIMIT $offset, $limit";
+
+			error_log("Consulta SQL:");
+			error_log($sql);
+
+			$conexion = connect::con();
+			$res = mysqli_query($conexion, $sql);
+			connect::close($conexion);
+
+			if (mysqli_num_rows($res) > 0) {
+				while ($row = mysqli_fetch_assoc($res)) {
+					$retrArray[] = array(
+						"id_producto" => $row["id_producto"],
+						"nom_producto" => $row["nom_producto"],
+						"precio" => $row["precio"],
+						"color" => $row["color"],
+						"nom_estado" => $row["nom_estado"],
+						"nom_ciudad" => $row["nom_ciudad"],
+						"img_producto" => explode(":", $row['img_producto']),
+						"lat" => $row["lat"],
+						"long" => $row["long"]
+					);
+				}
+			}
+			return $retrArray;
 		}
 
 		/* ============================================================================================ */

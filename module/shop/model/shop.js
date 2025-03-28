@@ -1115,10 +1115,8 @@ function load_related_products(offset, total_products, id, marca, tipo_consola, 
                     .html(
                         "<li class='portfolio-item'>" +
                             "<div class='item-main'>" +
-                                "<div class='portfolio-image'>" +
-                                    // "<img src = " + data[row].img_car + " alt='imagen car' </img> " +
-                                "</div>" +
-                                "<h5>" + data[row].nom_producto + "  " + data[row].precio + "€</h5>" +
+                                "<img src= '" + data[row].img_producto[0] + "'>" + "</img>" +
+                                "<h5>" + data[row].nom_producto + " | " + data[row].precio + "€</h5>" +
                             "</div>" +
                         "</li>"
                     )

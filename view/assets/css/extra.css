@@ -912,7 +912,108 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* PRODUCTOS RELACIONADOS */
+.productos_relacionados {
+  padding: 2rem 0;
+  margin-top: 2rem;
+}
+
+.productos_relacionados h3 {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  border-bottom: 3px solid #e96b56;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.lista_relacionados {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.portfolio-item {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.portfolio-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.item-main {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.portfolio-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.portfolio-item:hover img {
+  transform: scale(1.03);
+}
+
+.item-main h5 {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  margin: 0.5rem 0;
+  font-weight: 600;
+}
+
+.item-main h5:last-child {
+  color: #e96b56;
+  font-size: 1.3rem;
+  margin-top: 0.5rem;
+}
+
+/* BOTÓN LOAD MORE */
+.more_car__button {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.load_more_button {
+  background: #e96b56;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 6px rgba(233, 107, 86, 0.2);
+}
+
+.load_more_button:hover {
+  background: #d15a4a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(233, 107, 86, 0.3);
+}
+
+.load_more_button:active {
+  transform: translateY(0);
+}
+
+/* ----------------------------------- */
 /* Estilos de títulos */
+/* ----------------------------------- */
 .product-content_details h1 {
   font-size: 1.8rem;
   font-weight: bold;

@@ -2,10 +2,10 @@
 /*                                          LISTAR PRODUCTOS                                    */
 /* ============================================================================================ */
 
-function ajaxForSearch(url, total_prod, items_page, filter = undefined) {
-    ajaxPromise(url, 'POST', 'JSON', { 'total_prod': total_prod, 'items_page': items_page, 'filter': filter })
+function ajaxForSearch(url, total_prod, items_page, filter = undefined, orderby) {
+    ajaxPromise(url, 'POST', 'JSON', { 'total_prod': total_prod, 'items_page': items_page, 'filter': filter, 'orderby': orderby })
         .then(function (data) {
-            console.log(data); //Mostrar productos listados
+            // console.log(data); //Mostrar productos listados
 
             //Vaciamos contenido del list-shop, details y marcadores, antes de volver a llenar con los productos buscados
             $('.content_shop_products').empty();
@@ -13,11 +13,23 @@ function ajaxForSearch(url, total_prod, items_page, filter = undefined) {
             $('#details_product_shop').hide();
             markersInventory.clearLayers();
 
+            //Añadir contenedor cabezera list
+            $('<div></div>').attr({ 'class': 'encabezado_list' }).appendTo('.content_shop_products');
+
             //Añadir contador productos
-            $('<div></div>').attr({ 'class': 'list_content_shop' }).appendTo('.content_shop_products')
-                .html(
-                    "<div class='count_products'></div>"
-                )
+            $('<div></div>').attr({ 'class': 'count_products' }).appendTo('.encabezado_list');
+            
+            //Añadir contenedor order_by
+            $('<div></div>').attr({ 'class': 'order_products' }).appendTo('.encabezado_list')
+            .html(
+                '<select id="orderby">' +
+                    '<option value = "*">-- Ordenar por --</option>' +
+                    '<option value="priceASC">Precio menor a mayor</option>' +
+                    '<option value="priceDESC">Precio mayor a menor</option>' +
+                    '<option value="popularidad">Popularidad</option>' +
+                '</select>' +
+                '<input type="button" value="Ordenar" id="order_button" class="order_button"/>'
+            )
             
             //Generar tarjetas productos
             for (row in data) {
@@ -55,6 +67,7 @@ function ajaxForSearch(url, total_prod, items_page, filter = undefined) {
                         "<img src= '" + data[row].img_producto[img] + "'" + "</img>"
                     );
             }
+            //Iniciamos carrousel
             $(`#carousel_list_product-${data[row].id_producto}`).slick({
                 infinite: true,
                 speed: 300,
@@ -83,19 +96,20 @@ function loadProducts(total_prod = 0, items_page = 4) {
     var filter_shop = JSON.parse(localStorage.getItem('filter_shop')) || false;
     var filter_home = JSON.parse(localStorage.getItem('filter_home')) || false;
     var filter_search = JSON.parse(localStorage.getItem('filter_search')) || false;
+    var orderby = JSON.parse(localStorage.getItem('orderby')) || false;
 
     window.scrollTo(0, 0); //Mover la pantalla arriba del todo
 
     if(filter_search){
-        ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_search', total_prod, items_page, filter_search);
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_search', total_prod, items_page, filter_search, orderby);
     }else if(filter_home){
-        ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_home', total_prod, items_page, filter_home);
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_home', total_prod, items_page, filter_home, orderby);
     }else if (filter_shop) {
         // console.log('hay filtros');
-        ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_shop', total_prod, items_page, filter_shop);
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_shop', total_prod, items_page, filter_shop, orderby);
     } else {
         // console.log('sin filtros');
-        ajaxForSearch('module/shop/controller/controller_shop.php?op=get_all_products', total_prod, items_page);
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=get_all_products', total_prod, items_page, undefined, orderby);
     }
 }
 
@@ -269,6 +283,7 @@ function filter_click() {
     //Borramos los demás posibles filtros
     localStorage.removeItem('filter_home');
     localStorage.removeItem('filter_search');
+    localStorage.removeItem('orderby');
 
     //Cooldown para ver el spinner antes de recargar
     setTimeout(function() {
@@ -281,6 +296,7 @@ function filter_remove(){
     localStorage.removeItem('filter_shop');
     localStorage.removeItem('filter_home');
     localStorage.removeItem('filter_search');
+    localStorage.removeItem('orderby');
     //Recargamos página
     location.reload();
 };
@@ -486,6 +502,13 @@ function highlight_search() {
             document.getElementById('search_ubicacion').value = highlight_search[2].ciudad[1];
         }
 
+    }
+}
+
+function highlight_orderby(){
+    var order = JSON.parse(localStorage.getItem('orderby')) || false;
+    if (order) {
+        document.getElementById('orderby').value = order[0].orderby;
     }
 }
 
@@ -722,6 +745,18 @@ function guardar_filtros_storage(modo_guardado){
     }
 }
 
+//Capturamos click de ordenar, guardamos valor en localStorage y recargamos la página para ir al controlador
+function order_click() {
+    var orderby = [];
+
+    orderby.push({ "orderby": $('#orderby').val() });
+
+    //Guardamos order en localStorage y recargamos la página
+    localStorage.setItem('orderby', JSON.stringify(orderby));
+    //Recargamos página
+    location.reload();
+}
+
 /* ============================================================================================ */
 /*                                       PAGINATION                                             */
 /* ============================================================================================ */
@@ -795,6 +830,10 @@ function click_page_pagination(pageID) {
     //Cargar productos
     loadProducts(total_prod, 4);
     window.scrollTo(0, 0);
+    setTimeout(function() {
+        count_products();
+        highlight_orderby();
+    }, 200);
 }
 
 //Clicks flechas
@@ -1159,6 +1198,11 @@ function related_products(id, marca, tipo_consola, modelo_consola, ciudad) {
         });
 }
 
+function countPopularity(id_producto){
+    ajaxPromise('module/shop/controller/controller_shop.php?op=count_popularity', 'POST', 'JSON', { 'id_producto': id_producto })
+        .then(function(data) {}).catch(function() {});
+}
+
 /* ============================================================================================ */
 /*                                            CLICKS                                            */
 /* ============================================================================================ */
@@ -1167,7 +1211,9 @@ function related_products(id, marca, tipo_consola, modelo_consola, ciudad) {
 function clicks() {
     // console.log("Cargamos clicks");
     $(document).on("click", ".more_info_button", function (e) {
+        //Arreglamos posibles errores de clicks en cargar más
         $(document).off('click', '.load_more_button');
+
         // Elementos a excluir (carousel, corazón y botón comprar)
         var excludedElements = '.slick-arrow, .slick-dots, .buy, .list__heart, .fa-heart';
         //Si el elemento pulsado es uno de los de la lista, paramos el evento del click
@@ -1189,19 +1235,26 @@ function clicks() {
 
         var id_producto = this.getAttribute('id');
         // console.log("Pillamos el id: " + id_producto);
+        countPopularity(id_producto);
         loadDetails(id_producto);
     });
+
     $(document).on("click", ".back_list", function () {
         // console.log("Volvemos al list");
         window.location.href = "index.php?page=controller_shop&op=list";
     });
+
     $(document).on('click', '.filter_button', function () {
         filter_click();
     });
+
     $(document).on('click', '.filter_remove', function() {
         filter_remove();
     });
 
+    $(document).on('click', '.order_button', function () {
+        order_click();
+    });
 }
 
 //Ocultamos elementos
@@ -1217,6 +1270,7 @@ $(document).ready(function () {
         modal_filters();
         highlight_filters();
         highlight_search();
+        highlight_orderby();
         update_count_products();
         count_products();
         radar_filter_update();

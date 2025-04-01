@@ -143,6 +143,7 @@ function click_search() {
         localStorage.removeItem('filter_shop');
         localStorage.removeItem('filter_home');
         localStorage.removeItem('filter_search');
+        localStorage.removeItem('orderby');
 
         // Guardamos en localStorage los filtros
         if (filter.length != 0) {

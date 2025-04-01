@@ -9,7 +9,9 @@
 		/*                                      GET PRODUCTS                                            */
 		/* ============================================================================================ */
 
-		function select_products_carousel() {
+		function select_all_products() {
+			//Recogemos orderby
+			$orderby = isset($_POST['orderby'][0]['orderby']) ? $_POST['orderby'][0]['orderby'] : false;
 			//Recogemos limit y offset
 			$offset = $_POST['total_prod'];
 			$limit = $_POST['items_page'];
@@ -20,8 +22,19 @@
 					INNER JOIN img_producto i ON p.id_producto = i.id_producto
 					INNER JOIN estado e ON p.estado = e.id_estado
 					INNER JOIN ciudad c ON p.ciudad = c.id_ciudad
-					GROUP BY p.id_producto
-					LIMIT $offset, $limit";
+					GROUP BY p.id_producto";
+			
+			if($orderby == 'priceASC'){
+				$sql .= " ORDER BY p.precio ASC";
+			}else if($orderby == 'priceDESC'){
+				$sql .= " ORDER BY p.precio DESC";
+			}else if($orderby == 'popularidad'){
+				$sql .= " ORDER BY p.popularidad DESC";
+			}else{ //Order por defecto, los más relevantes primero
+				$sql .= " ORDER BY p.popularidad DESC";
+			}
+
+			$sql .= " LIMIT $offset, $limit";
 
 			$conexion = connect::con();
 			$res = mysqli_query($conexion, $sql);
@@ -46,9 +59,6 @@
 		}
 
 		function filter_shop() {
-			//Recogemos limit y offset
-			$offset = $_POST['total_prod'];
-			$limit = $_POST['items_page'];
 			//Recogemos valores filtro_shop
 			$filter = $_POST['filter'];
 			$categoria = $filter[0]['categoria'];
@@ -62,6 +72,11 @@
 			$tipo_venta = $filter[8]['tipo_venta'];
 			$precioMin = $filter[9]['precio_min'];
 			$precioMax = $filter[10]['precio_max'];
+			//Recogemos orderby
+			$orderby = isset($_POST['orderby'][0]['orderby']) ? $_POST['orderby'][0]['orderby'] : false;
+			//Recogemos limit y offset
+			$offset = $_POST['total_prod'];
+			$limit = $_POST['items_page'];
 
 			//Montamos query dinámica
 			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, p.lat, p.long,
@@ -107,8 +122,19 @@
 				$sql .= " AND p.precio BETWEEN $precioMin[0] AND $precioMax[0]";
 			}
 
-			$sql.= " GROUP BY p.id_producto
-					LIMIT $offset, $limit";
+			$sql.= " GROUP BY p.id_producto";
+
+			if($orderby == 'priceASC'){
+				$sql .= " ORDER BY p.precio ASC";
+			}else if($orderby == 'priceDESC'){
+				$sql .= " ORDER BY p.precio DESC";
+			}else if($orderby == 'popularidad'){
+				$sql .= " ORDER BY p.popularidad DESC";
+			}else{ //Order por defecto, los más relevantes primero
+				$sql .= " ORDER BY p.popularidad DESC";
+			}
+
+			$sql .= " LIMIT $offset, $limit";
 
 			// error_log("Consulta SQL:");
 			// error_log($sql);
@@ -136,12 +162,14 @@
 		}
 
 		function filter_home() {
-			//Recogemos limit y offset
-			$offset = $_POST['total_prod'];
-			$limit = $_POST['items_page'];
 			//Recogemos valores filtro_home
 			$filter_field = $_POST['filter'][0][0];
 			$filter_value = $_POST['filter'][0][1];
+			//Recogemos orderby
+			$orderby = isset($_POST['orderby'][0]['orderby']) ? $_POST['orderby'][0]['orderby'] : false;
+			//Recogemos limit y offset
+			$offset = $_POST['total_prod'];
+			$limit = $_POST['items_page'];
 
 			//Montamos query dinámica
 			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, p.lat, p.long,
@@ -176,8 +204,19 @@
 				$sql .= " AND tvp.id_tipo_venta = '$filter_value'";
 			}
 
-			$sql.= " GROUP BY p.id_producto
-					LIMIT $offset, $limit";
+			$sql.= " GROUP BY p.id_producto";
+
+			if($orderby == 'priceASC'){
+				$sql .= " ORDER BY p.precio ASC";
+			}else if($orderby == 'priceDESC'){
+				$sql .= " ORDER BY p.precio DESC";
+			}else if($orderby == 'popularidad'){
+				$sql .= " ORDER BY p.popularidad DESC";
+			}else{ //Order por defecto, los más relevantes primero
+				$sql .= " ORDER BY p.popularidad DESC";
+			}
+
+			$sql .= " LIMIT $offset, $limit";
 
 			// error_log("Consulta SQL:");
 			// error_log($sql);
@@ -205,14 +244,16 @@
 		}
 
 		function filter_search() {
-			//Recogemos limit y offset
-			$offset = $_POST['total_prod'];
-			$limit = $_POST['items_page'];
 			//Recogemos valores filter_search
 			$filter = $_POST['filter'];
 			$tipo_consola = $filter[0]['tipo_consola'];
 			$modelo_consola = $filter[1]['modelo_consola'];
 			$ciudad = $filter[2]['ciudad'];
+			//Recogemos orderby
+			$orderby = isset($_POST['orderby'][0]['orderby']) ? $_POST['orderby'][0]['orderby'] : false;
+			//Recogemos limit y offset
+			$offset = $_POST['total_prod'];
+			$limit = $_POST['items_page'];
 
 			//Montamos query dinámica
 			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, p.lat, p.long,
@@ -233,8 +274,19 @@
 				$sql .= " AND p.ciudad = '$ciudad[0]'";
 			}
 
-			$sql.= " GROUP BY p.id_producto
-					LIMIT $offset, $limit";
+			$sql.= " GROUP BY p.id_producto";
+
+			if($orderby == 'priceASC'){
+				$sql .= " ORDER BY p.precio ASC";
+			}else if($orderby == 'priceDESC'){
+				$sql .= " ORDER BY p.precio DESC";
+			}else if($orderby == 'popularidad'){
+				$sql .= " ORDER BY p.popularidad DESC";
+			}else{ //Order por defecto, los más relevantes primero
+				$sql .= " ORDER BY p.popularidad DESC";
+			}
+
+			$sql .= " LIMIT $offset, $limit";
 
 			// error_log("Consulta SQL:");
 			// error_log($sql);
@@ -578,6 +630,16 @@
 				}
 			}
 			return $retrArray;
+		}
+
+		function count_popularity($id){
+			$sql = "UPDATE producto
+					SET popularidad = popularidad + 1
+					WHERE id_producto = '$id'";
+	
+			$conexion = connect::con();
+			$res = mysqli_query($conexion, $sql);
+			connect::close($conexion);
 		}
 
 		/* ============================================================================================ */

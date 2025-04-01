@@ -200,6 +200,7 @@ function clicks(){
         localStorage.removeItem('filter_shop');
         localStorage.removeItem('filter_home');
         localStorage.removeItem('filter_search');
+        localStorage.removeItem('orderby');
         //Añadimos el que nos interesa filtrar ahora
         localStorage.setItem('filter_home', JSON.stringify(filters)); 
         setTimeout(function(){ 
@@ -215,6 +216,7 @@ function clicks(){
         localStorage.removeItem('filter_shop');
         localStorage.removeItem('filter_home');
         localStorage.removeItem('filter_search');
+        localStorage.removeItem('orderby');
         //Añadimos el que nos interesa filtrar ahora
         localStorage.setItem('filter_home', JSON.stringify(filters)); 
         setTimeout(function(){ 
@@ -230,6 +232,7 @@ function clicks(){
         localStorage.removeItem('filter_shop');
         localStorage.removeItem('filter_home');
         localStorage.removeItem('filter_search');
+        localStorage.removeItem('orderby');
         //Añadimos el que nos interesa filtrar ahora
         localStorage.setItem('filter_home', JSON.stringify(filters)); 
         setTimeout(function(){ 
@@ -245,6 +248,7 @@ function clicks(){
         localStorage.removeItem('filter_shop');
         localStorage.removeItem('filter_home');
         localStorage.removeItem('filter_search');
+        localStorage.removeItem('orderby');
         //Añadimos el que nos interesa filtrar ahora
         localStorage.setItem('filter_home', JSON.stringify(filters)); 
         setTimeout(function(){ 
@@ -260,6 +264,7 @@ function clicks(){
         localStorage.removeItem('filter_shop');
         localStorage.removeItem('filter_home');
         localStorage.removeItem('filter_search');
+        localStorage.removeItem('orderby');
         //Añadimos el que nos interesa filtrar ahora
         localStorage.setItem('filter_home', JSON.stringify(filters)); 
         setTimeout(function(){ 
@@ -275,6 +280,7 @@ function clicks(){
         localStorage.removeItem('filter_shop');
         localStorage.removeItem('filter_home');
         localStorage.removeItem('filter_search');
+        localStorage.removeItem('orderby');
         //Añadimos el que nos interesa filtrar ahora
         localStorage.setItem('filter_home', JSON.stringify(filters)); 
         setTimeout(function(){ 
@@ -290,13 +296,13 @@ function clicks(){
         localStorage.removeItem('filter_shop');
         localStorage.removeItem('filter_home');
         localStorage.removeItem('filter_search');
+        localStorage.removeItem('orderby');
         //Añadimos el que nos interesa filtrar ahora
         localStorage.setItem('filter_home', JSON.stringify(filters)); 
         setTimeout(function(){ 
             window.location.href = 'index.php?page=controller_shop&op=list';
         }, 200);  
-    }); 
-
+    });
 }
 
 $(document).ready(function () {

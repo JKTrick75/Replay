@@ -22,7 +22,7 @@ switch ($_GET['op']) {
     case 'get_all_products';
         try {
             $daoshop = new DAOShop();
-            $Products = $daoshop->select_products_carousel();
+            $Products = $daoshop->select_all_products();
 
         } catch (Exception $e) {
             echo json_encode("error");
@@ -213,6 +213,16 @@ switch ($_GET['op']) {
         }
         else {
             echo "error";
+        }
+        break;
+
+    //Aumentamos el contador de popularidad
+    case 'count_popularity';
+        try{
+            $daoshop = new DAOShop();
+            $count = $daoshop -> count_popularity($_POST['id_producto']);
+        } catch (Exception $e) {
+            echo json_encode("error");
         }
         break;
 

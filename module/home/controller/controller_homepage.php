@@ -124,10 +124,25 @@ switch ($_GET['op']) {
         }
         break;
 
-    case 'Carrousel_Productos';
+    case 'Carrousel_Productos_New';
         try {
             $daohome = new DAOHome();
-            $Ciudad = $daohome->select_CarouselProductos();
+            $Ciudad = $daohome->select_CarouselProductosNew();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+
+        if (!empty($Ciudad)) {
+            echo json_encode($Ciudad);
+        } else {
+            echo json_encode("error");
+        }
+        break;
+    
+    case 'Carrousel_Populares';
+        try {
+            $daohome = new DAOHome();
+            $Ciudad = $daohome->select_CarouselPopulares();
         } catch (Exception $e) {
             echo json_encode("error");
         }

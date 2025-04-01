@@ -21,19 +21,20 @@ function loadCategories() {
             // Añadir las tarjetas al contenedor
             $("#categories").html(categories);
         }).catch(function () {
-            window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Type_Categories HOME";
+            // window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Type_Categories HOME";
+            console.log('Error tarjetas categorias');
         });
 }
 
 //Carrousel productos nuevos
 function carrousel_Productos_New() {
-    ajaxPromise('module/home/controller/controller_homepage.php?op=Carrousel_Productos', 'GET', 'JSON')
+    ajaxPromise('module/home/controller/controller_homepage.php?op=Carrousel_Productos_New', 'GET', 'JSON')
         .then(function (data) {
             for (row in data) {
                 $('<div></div>').attr('class', "carousel__elements").attr('id', data[row].nom_producto).appendTo(".carousel__new__productos")
                     .html(
                         "<div class='col-sm-4 carousel__productos'>" +
-                            "<div class='carousel__productos-inner text-center filter_new_product' id='" + data[row].id_producto + "'>" +
+                            "<div class='carousel__productos-inner text-center filter_home_product' id='" + data[row].id_producto + "'>" +
                                 "<img class='carousel__img' src='" + data[row].img_producto + "' alt=''><br>" 
                                 + data[row].nom_producto +
                             "</div>" +
@@ -50,7 +51,7 @@ function carrousel_Productos_New() {
               });
         })
         .catch(function () {
-            // window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Carrusel_Brands HOME";
+            console.log('Error carrousel productos New');
         });
 }
 
@@ -76,7 +77,8 @@ function loadMarcas() {
             // Añadir las tarjetas al contenedor
             $("#marcas").html(marcas);
         }).catch(function () {
-            window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Type_Marcas HOME";
+            // window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Type_Marcas HOME";
+            console.log('Error tarjetas marcas');
         });
 }
 
@@ -102,7 +104,38 @@ function loadTipoConsola() {
             // Añadir las tarjetas al contenedor
             $("#tipo_consola").html(tipo_consola);
         }).catch(function () {
-            window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Type_tipo_consola HOME";
+            // window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Type_tipo_consola HOME";
+            console.log('Error tarjetas tipo_consola');
+        });
+}
+
+//Carrousel productos más populares
+function carrousel_Productos_Populares() {
+    ajaxPromise('module/home/controller/controller_homepage.php?op=Carrousel_Populares', 'GET', 'JSON')
+        .then(function (data) {
+            // console.log(data);
+            for (row in data) {
+                $('<div></div>').attr('class', "carousel__elements").attr('id', data[row].nom_producto).appendTo(".carousel__popular__productos")
+                    .html(
+                        "<div class='col-sm-4 carousel__productos'>" +
+                            "<div class='carousel__productos-inner text-center filter_home_product' id='" + data[row].id_producto + "'>" +
+                                "<img class='carousel__img' src='" + data[row].img_producto + "' alt=''><br>" 
+                                + data[row].nom_producto +
+                            "</div>" +
+                        "</div>"
+                    )
+            }
+            $('.carousel__popular__productos').slick({
+                centerMode: true,
+                centerPadding: '60px',
+                slidesToShow: 4,
+                dots:true,
+                autoplay: true,
+                autoplaySpeed: 1500
+              });
+        })
+        .catch(function () {
+            console.log('Error carrousel productos populares');
         });
 }
 
@@ -134,6 +167,7 @@ function carrousel_Ciudades() {
         })
         .catch(function () {
             // window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Carrusel_Brands HOME";
+            console.log('Error carrousel ciudades');
         });
 }
 
@@ -159,7 +193,8 @@ function loadEstado() {
             // Añadir las tarjetas al contenedor
             $("#estado").html(estado);
         }).catch(function () {
-            window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Type_estado HOME";
+            // window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Type_estado HOME";
+            console.log('Error tarjetas estado');
         });
 }
 
@@ -185,7 +220,8 @@ function loadTipoVenta() {
             // Añadir las tarjetas al contenedor
             $("#tipo_venta").html(tipo_venta);
         }).catch(function () {
-            window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Type_tipo_venta HOME";
+            // window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Type_tipo_venta HOME";
+            console.log('Error tarjetas tipo venta');
         });
 }
 
@@ -208,7 +244,7 @@ function clicks(){
         }, 200);  
     }); 
 
-    $(document).on("click",'div.filter_new_product', function (){
+    $(document).on("click",'div.filter_home_product', function (){
         var filters = [];
         //Pillamos la id de la tarjeta pulsada
         filters.push(["id_producto",this.getAttribute('id')]);
@@ -310,6 +346,7 @@ $(document).ready(function () {
     carrousel_Productos_New();
     loadMarcas();
     loadTipoConsola();
+    carrousel_Productos_Populares();
     carrousel_Ciudades();
     loadEstado();
     loadTipoVenta();

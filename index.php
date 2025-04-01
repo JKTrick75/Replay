@@ -1,6 +1,8 @@
 <?php
 	if ((isset($_GET['page'])) && ($_GET['page']==="controller_shop")){
-		include("view/inc/top_page_shop.html");
+		include("view/inc/top_page_shop.html");	
+	}else if ((isset($_GET['page'])) && ($_GET['page']==="controller_auth")){
+			include("view/inc/top_page_auth.html");
 	}else{
 		include("view/inc/top_page.html");
 	}

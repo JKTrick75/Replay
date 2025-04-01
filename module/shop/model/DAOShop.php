@@ -1,6 +1,6 @@
 <?php
     // include("model/connect.php");
-	$path = $_SERVER['DOCUMENT_ROOT'] . '/REPLAY/9_REPLAY V2 (CARROUSEL)/';
+	$path = $_SERVER['DOCUMENT_ROOT'] . '/REPLAY/9_REPLAY V3 (LOGIN)/';
     include($path . "model/connect.php");
     
 	class DAOShop{

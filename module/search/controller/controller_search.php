@@ -2,7 +2,7 @@
 // $data = 'hola crtl search';
 // die('<script>console.log('.json_encode( $data ) .');</script>');
 
-$path = $_SERVER['DOCUMENT_ROOT'] . '/REPLAY/9_REPLAY V2 (CARROUSEL)/';
+$path = $_SERVER['DOCUMENT_ROOT'] . '/REPLAY/9_REPLAY V3 (LOGIN)/';
 include($path . "module/search/model/DAOSearch.php");
 // session_start();
 

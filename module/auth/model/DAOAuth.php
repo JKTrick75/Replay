@@ -3,148 +3,46 @@
 	$path = $_SERVER['DOCUMENT_ROOT'] . '/REPLAY/9_REPLAY V3 (LOGIN)/';
     include($path . "model/connect.php");
     
-	class DAOHome{
+	class DAOAuth{
 
-		function select_categories() {
-			$sql= "SELECT * FROM categoria";
+        function select_username(){
+			$username = $_POST['username_reg'];
 
+			$sql = "SELECT * FROM users WHERE username='$username'";
 			$conexion = connect::con();
-			$res = mysqli_query($conexion, $sql);
-			connect::close($conexion);
+            $res = mysqli_query($conexion, $sql)->fetch_object();
+            connect::close($conexion);
+            return $res;
+        }
 
-			$retrArray = array();
-			if (mysqli_num_rows($res) > 0) {
-				while ($row = mysqli_fetch_assoc($res)) {
-					$retrArray[] = $row;
-				}
-			}
-			return $retrArray;
+		function select_email(){
+			$email = $_POST['email_reg'];
+
+			$sql = "SELECT * FROM users WHERE email='$email'";
+			$conexion = connect::con();
+            $res = mysqli_query($conexion, $sql)->fetch_object();
+            connect::close($conexion);
+            return $res;
 		}
 
-		function select_marcas() {
-			$sql= "SELECT * FROM marca";
+		function insert_user(){
+			//Recibimos datos del formulario de registro
+			$username = $_POST['username_reg'];
+			$email = $_POST['email_reg'];
+			$password = $_POST['passwd1_reg'];
 
-			$conexion = connect::con();
-			$res = mysqli_query($conexion, $sql);
-			connect::close($conexion);
+            $hashed_pass = password_hash($password, PASSWORD_DEFAULT, ['cost' => 12]);
+            $hashavatar = md5(strtolower(trim($username))); 
+            $avatar = "https://api.dicebear.com/9.x/pixel-art/svg?seed=$hashavatar";
 
-			$retrArray = array();
-			if (mysqli_num_rows($res) > 0) {
-				while ($row = mysqli_fetch_assoc($res)) {
-					$retrArray[] = $row;
-				}
-			}
-			return $retrArray;
-		}
+			//Insertamos usuario, por defecto tipo client, y un avatar random por defecto
+            $sql ="   INSERT INTO `users`(`username`, `password`, `email`, `type_user`, `avatar`) 
+            VALUES ('$username','$hashed_pass','$email','client','$avatar')";
 
-		function select_tipo_consola() {
-			$sql= "SELECT * FROM tipo_consola";
-
-			$conexion = connect::con();
-			$res = mysqli_query($conexion, $sql);
-			connect::close($conexion);
-
-			$retrArray = array();
-			if (mysqli_num_rows($res) > 0) {
-				while ($row = mysqli_fetch_assoc($res)) {
-					$retrArray[] = $row;
-				}
-			}
-			return $retrArray;
-		}
-
-		function select_ciudad() {
-			$sql= "SELECT * FROM ciudad";
-
-			$conexion = connect::con();
-			$res = mysqli_query($conexion, $sql);
-			connect::close($conexion);
-
-			$retrArray = array();
-			if (mysqli_num_rows($res) > 0) {
-				while ($row = mysqli_fetch_assoc($res)) {
-					$retrArray[] = $row;
-				}
-			}
-			return $retrArray;
-		}
-
-		function select_estado() {
-			$sql= "SELECT * FROM estado";
-
-			$conexion = connect::con();
-			$res = mysqli_query($conexion, $sql);
-			connect::close($conexion);
-
-			$retrArray = array();
-			if (mysqli_num_rows($res) > 0) {
-				while ($row = mysqli_fetch_assoc($res)) {
-					$retrArray[] = $row;
-				}
-			}
-			return $retrArray;
-		}
-
-		function select_tipo_venta() {
-			$sql= "SELECT * FROM tipo_venta";
-
-			$conexion = connect::con();
-			$res = mysqli_query($conexion, $sql);
-			connect::close($conexion);
-
-			$retrArray = array();
-			if (mysqli_num_rows($res) > 0) {
-				while ($row = mysqli_fetch_assoc($res)) {
-					$retrArray[] = $row;
-				}
-			}
-			return $retrArray;
-		}
-
-		function select_CarouselProductosNew() {
-			$sql= "SELECT p.nom_producto, i.img_producto, p.id_producto
-				FROM producto p INNER JOIN img_producto i 
-				ON p.id_producto = i.id_producto
-				WHERE i.id_img = (SELECT MIN(i2.id_img) 
-                  				  FROM img_producto i2 
-                  				  WHERE i2.id_producto = p.id_producto)
-				ORDER BY p.id_producto DESC
-				LIMIT 8;";
-
-			$conexion = connect::con();
-			$res = mysqli_query($conexion, $sql);
-			connect::close($conexion);
-
-			$retrArray = array();
-			if (mysqli_num_rows($res) > 0) {
-				while ($row = mysqli_fetch_assoc($res)) {
-					$retrArray[] = $row;
-				}
-			}
-			return $retrArray;
-		}
-
-		function select_CarouselPopulares() {
-			$sql= "SELECT p.nom_producto, i.img_producto, p.id_producto
-				FROM producto p INNER JOIN img_producto i 
-				ON p.id_producto = i.id_producto
-				WHERE i.id_img = (SELECT MIN(i2.id_img) 
-                  				  FROM img_producto i2 
-                  				  WHERE i2.id_producto = p.id_producto)
-				ORDER BY p.popularidad DESC
-				LIMIT 8;";
-
-			$conexion = connect::con();
-			$res = mysqli_query($conexion, $sql);
-			connect::close($conexion);
-
-			$retrArray = array();
-			if (mysqli_num_rows($res) > 0) {
-				while ($row = mysqli_fetch_assoc($res)) {
-					$retrArray[] = $row;
-				}
-			}
-			return $retrArray;
-		}
+            $conexion = connect::con();
+            $res = mysqli_query($conexion, $sql);
+            connect::close($conexion);
+            return $res;
+        }
 		
 	}

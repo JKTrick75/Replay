@@ -61,6 +61,33 @@ switch ($_GET['op']) {
 
         break;
 
+    case 'login':
+        try {
+            $daoLog = new DAOAuth();
+            $rdo = $daoLog->search_user();
+
+            if ($rdo == "error_user") {
+                echo json_encode("error_user");
+                exit;
+            } else {
+                if (password_verify($_POST['passwd_log'], $rdo['password'])) {
+                    // $token= create_token($rdo["username"]);
+                    // $_SESSION['username'] = $rdo['username']; //Guardamos el usario 
+                    // $_SESSION['tiempo'] = time(); //Guardamos el tiempo que se logea
+                    // echo json_encode($token);
+                    echo json_encode($rdo);
+                    exit;
+                } else {
+                    echo json_encode("error_passwd");
+                    exit;
+                }
+            }
+        } catch (Exception $e) {
+            echo json_encode("error");
+            exit;
+        }
+        break;
+
     default;
         include("view/inc/error404.html");
         break;

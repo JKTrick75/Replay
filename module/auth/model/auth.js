@@ -5,20 +5,20 @@
 function validate_login() {
     var error = false;
 
-    if (document.getElementById('username_log').value.length === 0) {
-        document.getElementById('error_username_log').innerHTML = "Tienes que escribir el usuario";
+    if (document.getElementById('user_log').value.length === 0) {
+        document.getElementById('error_user_log').innerHTML = "Escribe tu nombre de usuario o email";
         error = true;
     } else {
-        if (document.getElementById('username_log').value.length < 6) {
-            document.getElementById('error_username_log').innerHTML = "El usuario tiene que tener 6 caracteres como mínimo";
+        if (document.getElementById('user_log').value.length < 6) {
+            document.getElementById('error_user_log').innerHTML = "El usuario tiene que tener 6 caracteres como mínimo";
             error = true;
         } else {
-            document.getElementById('error_username_log').innerHTML = "";
+            document.getElementById('error_user_log').innerHTML = "";
         }
     }
 
     if (document.getElementById('passwd_log').value.length === 0) {
-        document.getElementById('error_passwd_log').innerHTML = "Tienes que escribir la contraseña";
+        document.getElementById('error_passwd_log').innerHTML = "Escribe tu contraseña";
         error = true;
     } else {
         document.getElementById('error_passwd_log').innerHTML = "";
@@ -32,29 +32,39 @@ function validate_login() {
 function login() {
     if (validate_login() != 0) {
         var data = $('#login__form').serialize();
-        console.log(data);
+        // console.log(data);
 
-        // ajaxPromise('module/login/ctrl/ctrl_login.php?op=login', 'POST', 'JSON', data)
-        //     .then(function(result) {
-        //         if (result == "error_user") {
-        //             document.getElementById('error_username_log').innerHTML = "El usario no existe,asegurase de que lo a escrito correctamente"
-        //         } else if (result == "error_passwd") {
-        //             document.getElementById('error_passwd_log').innerHTML = "La contraseña es incorrecta"
-        //         } else {
-        //             localStorage.setItem("token", result);
-        //             toastr.success("Loged succesfully");
+        ajaxPromise('module/auth/controller/controller_auth.php?op=login', 'POST', 'JSON', data)
+            .then(function(result) {
+                console.log(result);
+                if (result == "error_user") {
+                    document.getElementById('error_user_log').innerHTML = "El username o correo no existe, asegúrate de que lo has escrito correctamente"
+                } else if (result == "error_passwd") {
+                    document.getElementById('error_passwd_log').innerHTML = "La contraseña es incorrecta"
+                } else {
+                    //Guardamos la sesión en localStorage
+                    localStorage.setItem("sesion", JSON.stringify(result));
+                    
+                    //Registro completado
+                    Swal.fire("Has iniciado sesión!").then((result) => {
+                        if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop) {
+                            window.location.href = 'index.php?page=controller_home&op=list';
+                        }
+                    });
 
-        //             if (localStorage.getItem('redirect_like')) {
-        //                 setTimeout(' window.location.href = "index.php?module=ctrl_shop&op=list"; ', 1000);
-        //             } else {
-        //                 setTimeout(' window.location.href = "index.php?module=ctrl_home&op=list"; ', 1000);
-        //             }
-        //         }
-        //     }).catch(function(textStatus) {
-        //         if (console && console.log) {
-        //             console.log("La solicitud ha fallado: " + textStatus);
-        //         }
-        //     });
+                    // localStorage.setItem("token", result);
+                    // toastr.success("Loged succesfully");
+                    // if (localStorage.getItem('redirect_like')) {
+                    //     setTimeout(' window.location.href = "index.php?module=ctrl_shop&op=list"; ', 1000);
+                    // } else {
+                    //     setTimeout(' window.location.href = "index.php?module=ctrl_home&op=list"; ', 1000);
+                    // }
+                }
+            }).catch(function(textStatus) {
+                if (console && console.log) {
+                    console.log("La solicitud ha fallado: " + textStatus);
+                }
+            });
     }
 }
 
@@ -161,7 +171,7 @@ function register() {
                     Swal.fire("Ha ocurrido un error en el registro, inténtelo de nuevo", "", "info");
                 } else {
                     //Registro completado
-                    Swal.fire("Se ha registrado correctamente!", "success").then((result) => {
+                    Swal.fire("Se ha registrado correctamente!").then((result) => {
                         if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop) {
                             window.location.href = 'index.php?page=controller_auth&op=list';
                             $('.register_auth').hide();
@@ -196,10 +206,6 @@ function clicks_register(){
 /* ============================================================================================ */
 
 function clicks_auth() {
-    $('#auth_btn').on('click', function () {
-        window.location.href = 'index.php?page=controller_auth&op=list';
-        $('.register_auth').hide();
-    });
     $('.toggle_auth_login').on('click', function () {
         //Limpiar formulario
         $('#login__form')[0].reset();

@@ -31,11 +31,12 @@
 			$email = $_POST['email_reg'];
 			$password = $_POST['passwd1_reg'];
 
+			//Generamos los datos encriptados
             $hashed_pass = password_hash($password, PASSWORD_DEFAULT, ['cost' => 12]);
             $hashavatar = md5(strtolower(trim($username))); 
             $avatar = "https://api.dicebear.com/9.x/pixel-art/svg?seed=$hashavatar";
 
-			//Insertamos usuario, por defecto tipo client, y un avatar random por defecto
+			//Insertamos usuario, por defecto tipo client, y un avatar random
             $sql ="   INSERT INTO `users`(`username`, `password`, `email`, `type_user`, `avatar`) 
             VALUES ('$username','$hashed_pass','$email','client','$avatar')";
 
@@ -43,6 +44,27 @@
             $res = mysqli_query($conexion, $sql);
             connect::close($conexion);
             return $res;
+        }
+
+
+
+		function search_user(){
+			//Recibimos usuario del formulario el username/email
+			$username_email = $_POST['user_log'];
+
+			//Buscamos ese usuario
+			$sql = "SELECT * FROM users WHERE username='$username_email' or email='$username_email'";
+
+			$conexion = connect::con();
+            $res = mysqli_query($conexion, $sql)->fetch_object();
+            connect::close($conexion);
+
+            if ($res) {
+                $value = get_object_vars($res);
+                return $value;
+            }else {
+                return "error_user";
+            }
         }
 		
 	}

@@ -46,8 +46,6 @@
             return $res;
         }
 
-
-
 		function search_user(){
 			//Recibimos usuario del formulario el username/email
 			$username_email = $_POST['user_log'];
@@ -55,6 +53,20 @@
 			//Buscamos ese usuario
 			$sql = "SELECT * FROM users WHERE username='$username_email' or email='$username_email'";
 
+			$conexion = connect::con();
+            $res = mysqli_query($conexion, $sql)->fetch_object();
+            connect::close($conexion);
+
+            if ($res) {
+                $value = get_object_vars($res);
+                return $value;
+            }else {
+                return "error_user";
+            }
+        }
+
+        function select_data_user($username){
+			$sql = "SELECT * FROM users WHERE username='$username'";
 			$conexion = connect::con();
             $res = mysqli_query($conexion, $sql)->fetch_object();
             connect::close($conexion);

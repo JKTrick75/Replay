@@ -42,8 +42,9 @@ function login() {
                 } else if (result == "error_passwd") {
                     document.getElementById('error_passwd_log').innerHTML = "La contraseña es incorrecta"
                 } else {
-                    //Guardamos la sesión en localStorage
-                    localStorage.setItem("sesion", JSON.stringify(result));
+                    //Guardamos el token en localStorage
+                    // localStorage.setItem("sesion", JSON.stringify(result));
+                    localStorage.setItem("token", result);
                     
                     //Registro completado
                     Swal.fire("Has iniciado sesión!").then((result) => {
@@ -52,8 +53,6 @@ function login() {
                         }
                     });
 
-                    // localStorage.setItem("token", result);
-                    // toastr.success("Loged succesfully");
                     // if (localStorage.getItem('redirect_like')) {
                     //     setTimeout(' window.location.href = "index.php?module=ctrl_shop&op=list"; ', 1000);
                     // } else {

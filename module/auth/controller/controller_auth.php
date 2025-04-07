@@ -2,6 +2,7 @@
 
 $path = $_SERVER['DOCUMENT_ROOT'] . '/REPLAY/9_REPLAY V3 (LOGIN)/';
 include($path . "module/auth/model/DAOAuth.php");
+include($path . "/model/middleware_auth.php");
 
 // session_start();
 
@@ -14,7 +15,7 @@ switch ($_GET['op']) {
 
         break;
 
-    case 'register':
+    case 'register';
         //Comprobar que el username no exista
         try {
             $daoLog = new DAOAuth();
@@ -71,11 +72,11 @@ switch ($_GET['op']) {
                 exit;
             } else {
                 if (password_verify($_POST['passwd_log'], $rdo['password'])) {
-                    // $token= create_token($rdo["username"]);
+                    $token= create_token($rdo["username"]);
                     // $_SESSION['username'] = $rdo['username']; //Guardamos el usario 
                     // $_SESSION['tiempo'] = time(); //Guardamos el tiempo que se logea
-                    // echo json_encode($token);
-                    echo json_encode($rdo);
+                    echo json_encode($token);
+                    // echo json_encode($rdo);
                     exit;
                 } else {
                     echo json_encode("error_passwd");
@@ -86,6 +87,14 @@ switch ($_GET['op']) {
             echo json_encode("error");
             exit;
         }
+        break;
+
+    case 'data_user':
+        $json = decode_token($_POST['token']);
+        $daoLog = new DAOAuth();
+        $rdo = $daoLog->select_data_user($json['username']);
+        echo json_encode($rdo);
+        exit;
         break;
 
     default;

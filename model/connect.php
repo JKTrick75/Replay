@@ -1,12 +1,12 @@
 <?php
 	class connect{
 		public static function con(){
-			$host = '127.0.0.1';  
-    		$user = "root";                     
-    		$pass = "";                             
-    		$db = "replay";                      
-    		$port = 3306;                           
-    		// $tabla="course";
+			$db_replay = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/REPLAY/9_REPLAY V3 (LOGIN)/model/db.ini');
+    		$host = $db_replay['host'];
+			$user = $db_replay['user'];
+			$pass = $db_replay['password'];
+			$db = $db_replay['db'];
+			$port = $db_replay['port'];
     		
 			$conexion = mysqli_connect($host, $user, $pass, $db, $port)or die(mysqli_connect_error());
 			return $conexion;

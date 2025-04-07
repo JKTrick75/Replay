@@ -1,21 +1,27 @@
 function load_auth_button() {
-    var sesion = JSON.parse(localStorage.getItem('sesion'));
-    console.log(sesion);
+    // var sesion = JSON.parse(localStorage.getItem('sesion'));
+    var token = localStorage.getItem('token');
+    console.log(token);
 
     //Vaciamos elementos
     $('#auth_btn').empty().removeClass("click_login click_dropdown");
     $('.user-dropdown').remove();
     
-    if (sesion) {
-        //Vaciamos botón, quitamos classe click_login, y añadimos avatar + username
-        $('#auth_btn')
-        .addClass("click_dropdown")
-        .append(
-            $('<img></img>').attr({ src: sesion.avatar, alt: "Robot" }),
-            $('<span></span>').text(sesion.username),
-            $('<span class="caret">◂</span>')
-        );
-
+    if (token) {
+        ajaxPromise('module/auth/controller/controller_auth.php?op=data_user', 'POST', 'JSON', { 'token': token })
+            .then(function(data) {
+                console.log(data);
+                //Añadimos classe click_dropdown, y añadimos avatar + username
+                $('#auth_btn')
+                .addClass("click_dropdown")
+                .append(
+                    $('<img></img>').attr({ src: data.avatar, alt: "Robot" }),
+                    $('<span></span>').text(data.username),
+                    $('<span class="caret">◂</span>')
+                );
+            }).catch(function() {
+                console.log("Error al cargar los datos del user");
+            });
         //Creamos el dropdown menu
         $('#auth_btn').after(`
             <div class="user-dropdown">
@@ -24,7 +30,7 @@ function load_auth_button() {
             </div>
         `);
     } else {
-        //Vaciamos botón, añadimos classe click_login, y preparamos para el login
+        //Añadimos classe click_login, y preparamos para el login
         $('#auth_btn')
         .addClass("click_login")
         .append(
@@ -42,7 +48,7 @@ function auth_clicks() {
     });
     //Click logout
     $(document).on('click', '.click_logout', function() {
-        localStorage.removeItem('sesion');
+        localStorage.removeItem('token');
         Swal.fire("Has cerrado sesión!").then(() => {
             window.location.href = 'index.php?page=controller_home&op=list';
         });

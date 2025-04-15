@@ -1,7 +1,7 @@
 function load_auth_button() {
     // var sesion = JSON.parse(localStorage.getItem('sesion'));
     var token = localStorage.getItem('token');
-    console.log(token);
+    // console.log(token);
 
     //Vaciamos elementos
     $('#auth_btn').empty().removeClass("click_login click_dropdown");
@@ -40,20 +40,26 @@ function load_auth_button() {
     }
 }
 
+function logout(){
+    ajaxPromise('module/auth/controller/controller_auth.php?op=logout', 'POST', 'JSON')
+        .then(function(data) {
+            localStorage.removeItem('token');
+            Swal.fire("Has cerrado sesión!").then(() => {
+                window.location.href = 'index.php?page=controller_home&op=list';
+            });
+        }).catch(function() {
+            console.log('Error al cerrar sesión!');
+        });
+}
+
 function auth_clicks() {
-    //Click auth
+    //================ Click-Identificarse ================
     $('.click_login').on('click', function () {
         window.location.href = 'index.php?page=controller_auth&op=list';
         $('.register_auth').hide();
     });
-    //Click logout
-    $(document).on('click', '.click_logout', function() {
-        localStorage.removeItem('token');
-        Swal.fire("Has cerrado sesión!").then(() => {
-            window.location.href = 'index.php?page=controller_home&op=list';
-        });
-    });
-    //Click Drop-down
+
+    //================ Click Menu User Dropdown ================
     $(document).on('click', '.click_dropdown', function() {
         $('.user-dropdown').toggle();
         $('.caret').toggleClass('rotate');
@@ -65,6 +71,12 @@ function auth_clicks() {
             $('.caret').removeClass('rotate');
         }
     });
+
+    //================ LOG-OUT ================
+    $(document).on('click', '.click_logout', function() {
+        logout();
+    });
+
 }
 
 $(document).ready(function () {

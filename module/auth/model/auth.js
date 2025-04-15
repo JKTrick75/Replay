@@ -43,7 +43,6 @@ function login() {
                     document.getElementById('error_passwd_log').innerHTML = "La contraseña es incorrecta"
                 } else {
                     //Guardamos el token en localStorage
-                    // localStorage.setItem("sesion", JSON.stringify(result));
                     localStorage.setItem("token", result);
                     
                     //Registro completado

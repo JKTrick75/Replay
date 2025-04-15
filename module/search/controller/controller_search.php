@@ -4,7 +4,11 @@
 
 $path = $_SERVER['DOCUMENT_ROOT'] . '/REPLAY/9_REPLAY V3 (LOGIN)/';
 include($path . "module/search/model/DAOSearch.php");
-// session_start();
+//Sesion start
+@session_start();
+if (isset($_SESSION["tiempo"])) {  
+    $_SESSION["tiempo"] = time(); //Devuelve la fecha actual
+}
 
 switch ($_GET['op']) {
 

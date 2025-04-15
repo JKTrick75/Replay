@@ -4,11 +4,11 @@
 
 $path = $_SERVER['DOCUMENT_ROOT'] . '/REPLAY/9_REPLAY V3 (LOGIN)/';
 include($path . "module/home/model/DAOHomepage.php");
-
-// die('<script>console.log('.json_encode( $path . "module/course/model/DAOCourse.php" ) .');</script>');
-
-// include ("module/course/model/DAOCourse.php");
-// session_start();
+//Sesion start
+@session_start();
+if (isset($_SESSION["tiempo"])) {  
+    $_SESSION["tiempo"] = time(); //Devuelve la fecha actual
+}
 
 switch ($_GET['op']) {
     case 'list';

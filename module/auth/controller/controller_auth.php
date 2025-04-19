@@ -75,12 +75,19 @@ switch ($_GET['op']) {
                 exit;
             } else {
                 if (password_verify($_POST['passwd_log'], $rdo['password'])) {
+                    //Creamos access_token y refresh_token con el usuario
+                    $access_token= create_accesstoken($rdo['username']);
+                    $refresh_token= create_refreshtoken($rdo['username']);
+
+                    //Guardamos refresh_token en BBDD
+                    $daoLog->save_refresh_token($rdo['username'],$refresh_token);
+
                     //Creamos cookies (usuario y el timestamp)
                     $_SESSION['username'] = $rdo['username'];
                     $_SESSION['timestamp'] = time();
-                    //Creamos token con el usuario
-                    $token= create_accesstoken($rdo['username']);
-                    echo json_encode($token);
+                    
+                    //Devolvemos solamente el access_token para guardarlo en localStorage
+                    echo json_encode($access_token);
                     exit;
                 } else {
                     echo json_encode("error_passwd");
@@ -95,6 +102,12 @@ switch ($_GET['op']) {
     
     case 'logout':
         // error_log('Borramos correctamente la sesión:');
+        // error_log($_SESSION['username']);
+
+        //Borramos refresh_token en BBDD
+        $daoLog = new DAOAuth();
+        $daoLog->delete_refresh_token($_SESSION['username']);
+
         //Borramos cookies (usuario y el timestamp)
         unset($_SESSION['username']);
         unset($_SESSION['timestamp']);
@@ -131,22 +144,54 @@ switch ($_GET['op']) {
         break;
 
     case 'controluser':
-        $token_decoded = decode_token($_POST['token']);
+        //Decodificamos access_token
+        $acc_token_decoded = decode_token($_POST['token']);
 
-        error_log('Expiración token------------------------------------------------------');
-        error_log($token_decoded['exp']);
-        error_log(time());
-
-        if ($token_decoded['exp'] < time()) {
-            echo json_encode("Wrong_User");
-            exit();
-        }
-
-        if (isset($_SESSION['username']) && ($_SESSION['username']) == $token_decoded['username']) {
+        if (isset($_SESSION['username']) && ($_SESSION['username']) == $acc_token_decoded['username']) {
             echo json_encode("Correct_User");
             exit();
         } else {
             echo json_encode("Wrong_User");
+            exit();
+        }
+        break;
+
+    case 'controltimer':
+        //Decodificamos access_token
+        $acc_token_decoded = decode_token($_POST['token']);
+
+        // error_log('Expiración token------------------------------------------------------');
+        // error_log($acc_token_decoded['exp']);
+        // error_log('Tiempo actual-----------------------------------------------------');
+        // error_log(time());
+
+        if ($acc_token_decoded['exp'] < time()) {
+            //Consultar timer refresh_token en bbdd
+            $daoLog = new DAOAuth();
+            $rdo = $daoLog->select_refresh_token($acc_token_decoded['username']);
+
+            if (!$rdo) {
+                echo json_encode("Wrong_Timer");
+                exit();
+            }
+
+            //Decodificamos refresh_token
+            $ref_token_decoded = decode_token($rdo);
+
+            // error_log('Expiración access_token------------------------------------------------------');
+            // error_log($acc_token_decoded['exp']);
+            // error_log('Expiración refresh_token------------------------------------------------------');
+            // error_log($ref_token_decoded['exp']);
+
+            if (!$ref_token_decoded || $ref_token_decoded['exp'] < time()) { //Refresh_token expirado, cerramos sesión
+                echo json_encode("Wrong_Timer"); 
+                exit();
+            } else {
+                echo json_encode("Regenerar_access_token"); //Refresh_token vigente, regeneramos access_token
+                exit();
+            }
+        } else {
+            echo json_encode("Correct_Timer"); //Access_token vigente
             exit();
         }
         break;

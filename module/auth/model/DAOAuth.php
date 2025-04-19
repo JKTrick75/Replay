@@ -78,5 +78,45 @@
                 return "error_user";
             }
         }
+
+        function select_refresh_token($username){
+			$sql = "SELECT refresh_token FROM users WHERE username='$username'";
+			$conexion = connect::con();
+            $res = mysqli_query($conexion, $sql)->fetch_object();
+            connect::close($conexion);
+
+            if ($res) {
+                $value = get_object_vars($res);
+                return $value['refresh_token'];
+            }else {
+                return "error_user";
+            }
+        }
+
+        function save_refresh_token($username,$refresh_token){
+			//Guardamos refresh_token en el usuario
+			$sql = "UPDATE users SET refresh_token='$refresh_token' WHERE username='$username'";
+
+            // error_log('Mostramos query refresh token');
+            // error_log($sql);
+
+			$conexion = connect::con();
+            $res = mysqli_query($conexion, $sql);
+            connect::close($conexion);
+            return $res;
+        }
+
+        function delete_refresh_token($username){
+			//Guardamos refresh_token en el usuario
+			$sql = "UPDATE users SET refresh_token=NULL WHERE username='$username'";
+
+            // error_log('Mostramos query refresh token');
+            // error_log($sql);
+
+			$conexion = connect::con();
+            $res = mysqli_query($conexion, $sql);
+            connect::close($conexion);
+            return $res;
+        }
 		
 	}

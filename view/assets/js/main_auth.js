@@ -10,7 +10,7 @@ function load_auth_button() {
     if (token) {
         ajaxPromise('module/auth/controller/controller_auth.php?op=data_user', 'POST', 'JSON', { 'token': token })
             .then(function(data) {
-                console.log(data);
+                // console.log(data); //Datos login debug
                 //Añadimos classe click_dropdown, y añadimos avatar + username
                 $('#auth_btn')
                 .addClass("click_dropdown")

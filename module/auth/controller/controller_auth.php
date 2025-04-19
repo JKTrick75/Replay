@@ -105,8 +105,10 @@ switch ($_GET['op']) {
         // error_log($_SESSION['username']);
 
         //Borramos refresh_token en BBDD
-        $daoLog = new DAOAuth();
-        $daoLog->delete_refresh_token($_SESSION['username']);
+        if (isset($_SESSION['username'])) {
+            $daoLog = new DAOAuth();
+            $daoLog->delete_refresh_token($_SESSION['username']);
+        }
 
         //Borramos cookies (usuario y el timestamp)
         unset($_SESSION['username']);
@@ -160,20 +162,10 @@ switch ($_GET['op']) {
         //Decodificamos access_token
         $acc_token_decoded = decode_token($_POST['token']);
 
-        // error_log('Expiración token------------------------------------------------------');
-        // error_log($acc_token_decoded['exp']);
-        // error_log('Tiempo actual-----------------------------------------------------');
-        // error_log(time());
-
         if ($acc_token_decoded['exp'] < time()) {
-            //Consultar timer refresh_token en bbdd
+            //Obtenemos refresh_token de bbdd
             $daoLog = new DAOAuth();
             $rdo = $daoLog->select_refresh_token($acc_token_decoded['username']);
-
-            if (!$rdo) {
-                echo json_encode("Wrong_Timer");
-                exit();
-            }
 
             //Decodificamos refresh_token
             $ref_token_decoded = decode_token($rdo);
@@ -182,24 +174,21 @@ switch ($_GET['op']) {
             // error_log($acc_token_decoded['exp']);
             // error_log('Expiración refresh_token------------------------------------------------------');
             // error_log($ref_token_decoded['exp']);
+            // error_log('Tiempo actual-----------------------------------------------------');
+            // error_log(time());
 
             if (!$ref_token_decoded || $ref_token_decoded['exp'] < time()) { //Refresh_token expirado, cerramos sesión
                 echo json_encode("Wrong_Timer"); 
                 exit();
-            } else {
-                echo json_encode("Regenerar_access_token"); //Refresh_token vigente, regeneramos access_token
+            } else { //Refresh_token vigente, regeneramos access_token
+                $new_token = create_accesstoken($acc_token_decoded['username']);
+                echo json_encode($new_token); 
                 exit();
             }
         } else {
             echo json_encode("Correct_Timer"); //Access_token vigente
             exit();
         }
-        break;
-
-    case 'refresh_token':
-        $old_token = decode_token($_POST['token']);
-        $new_token = create_accesstoken($old_token['username']);
-        echo json_encode($new_token);
         break;
 
     case 'refresh_cookie':

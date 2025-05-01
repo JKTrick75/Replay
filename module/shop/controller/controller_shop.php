@@ -4,6 +4,7 @@
 
 $path = $_SERVER['DOCUMENT_ROOT'] . '/REPLAY/9_REPLAY V3 (LOGIN)/';
 include($path . "module/shop/model/DAOShop.php");
+include($path . "/model/middleware_auth.php");
 //Sesion start
 @session_start();
 if (isset($_SESSION["tiempo"])) {  
@@ -370,11 +371,11 @@ switch ($_GET['op']) {
         }
         break;
 
-    case 'load_likes_user';
+    case 'highlight_likes_user';
         try {
             $json = decode_token($_POST['token']);
             $dao = new DAOShop();
-            $rdo = $dao->select_load_likes($json['username']); //Buscamos la lista de likes del usuario
+            $rdo = $dao->search_user_likes($json['username']); //Buscamos la lista de likes del usuario
         } catch (Exception $e) {
             echo json_encode("error");
             exit;

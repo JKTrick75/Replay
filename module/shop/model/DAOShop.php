@@ -646,7 +646,7 @@
 		/*                                       LIKES                                                  */
 		/* ============================================================================================ */
 
-		function select_load_likes($username){
+		function search_user_likes($username){
 			$sql = "SELECT l.id_producto 
 					FROM likes l 
 					WHERE l.id_user = (SELECT u.id_user FROM users u WHERE u.username = '$username')";
@@ -687,7 +687,7 @@
 			$conexion = connect::con();
 			$res = mysqli_query($conexion, $sql);
 			connect::close($conexion);
-			
+
 			return $res;
 		}
 

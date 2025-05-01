@@ -76,6 +76,10 @@ function ajaxForSearch(url, total_prod, items_page, filter = undefined, orderby)
 
             //Cargamos los marcadores al mapa por cada producto
             load_markers(data[row]);
+
+            //Cargamos los likes
+            console.log("Hola");
+            highlight_likes_user();
         }
     }).catch(function () {
         console.log('Error en el ajaxPromise de listar productos / No hay productos para estos filtros');
@@ -91,10 +95,15 @@ function ajaxForSearch(url, total_prod, items_page, filter = undefined, orderby)
 
 //CONTROLADOR FILTROS
 function loadProducts(total_prod = 0, items_page = 4) {
+    //Filtros
     var filter_shop = JSON.parse(localStorage.getItem('filter_shop')) || false;
     var filter_home = JSON.parse(localStorage.getItem('filter_home')) || false;
     var filter_search = JSON.parse(localStorage.getItem('filter_search')) || false;
+    //Orderby
     var orderby = JSON.parse(localStorage.getItem('orderby')) || false;
+    //Likes
+    var redirect_like = localStorage.getItem('redirect_like') || false;
+    console.log(redirect_like);
 
     window.scrollTo(0, 0); //Mover la pantalla arriba del todo
 
@@ -105,6 +114,9 @@ function loadProducts(total_prod = 0, items_page = 4) {
     }else if (filter_shop) {
         // console.log('hay filtros');
         ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_shop', total_prod, items_page, filter_shop, orderby);
+    }else if (redirect_like != false) {
+        console.log("Entramos en el redirect");
+        redirect_login_like();
     } else {
         // console.log('sin filtros');
         ajaxForSearch('module/shop/controller/controller_shop.php?op=get_all_products', total_prod, items_page, undefined, orderby);
@@ -1125,6 +1137,9 @@ function loadDetails(id_producto) {
                             data[0].modelo_consola,
                             data[0].ciudad);
 
+            //Cargamos los likes
+            highlight_likes_user();
+
         }).catch(function (data) {
             console.log('Error en el ajaxPromise de detalles producto');
         });
@@ -1188,6 +1203,64 @@ function related_products(id, marca, tipo_consola, modelo_consola, ciudad) {
 function countPopularity(id_producto){
     ajaxPromise('module/shop/controller/controller_shop.php?op=count_popularity', 'POST', 'JSON', { 'id_producto': id_producto })
         .then(function(data) {}).catch(function() {});
+}
+
+/* ============================================================================================ */
+/*                                            LIKES                                             */
+/* ============================================================================================ */
+
+function click_like(id_producto, lugar) {
+    var token = localStorage.getItem('token');
+    if (token) { //Si está logeado -> Añadir/Quitar like
+        ajaxPromise("module/shop/controller/controller_shop.php?op=controller_likes", 'POST', 'JSON', { 'id_producto': id_producto, 'token': token })
+            .then(function(data) {
+                console.log(data);
+                $("#" + id_producto + ".fa-heart").toggleClass('like_red');
+            }).catch(function() {
+                console.log("Error click like");
+            });
+    } else { //Si no está loggeado, redirigimos al login
+        var redirect = [];
+        redirect.push(id_producto, lugar);
+
+        localStorage.setItem('redirect_like', redirect);
+        localStorage.setItem('id_producto', id_producto);
+
+        Swal.fire("Debes iniciar sesión antes de dar like a un producto!").then((result) => {
+            if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop) {
+                window.location.href = 'index.php?page=controller_auth&op=list';
+            }
+        });
+    }
+}
+
+function highlight_likes_user() {
+    var token = localStorage.getItem('token');
+    if (token) { //Si está loggejat
+        ajaxPromise("module/shop/controller/controller_shop.php?op=highlight_likes_user", 'POST', 'JSON', { 'token': token })
+            .then(function(data) {
+                for (row in data) {
+                    console.log(data);
+                    $("#" + data[row].id_producto + ".fa-heart").addClass('like_red');
+                }
+            }).catch(function() {
+                console.log("Error highlight like");
+            });
+    }
+}
+
+function redirect_login_like() {
+    var redirect = localStorage.getItem('redirect_like').split(",");
+    console.log("Este es el redirect");
+    console.log(redirect);
+    if (redirect[1] == "details") { //Si estaba en el details, volvemos al details de ese producto
+        loadDetails(redirect[0]);
+        localStorage.removeItem('redirect_like');
+        localStorage.removeItem('page');
+    } else if (redirect[1] == "list_all") { //Si estaba en el list, volvemos al shop-list
+        localStorage.removeItem('redirect_like');
+        loadProducts();
+    }
 }
 
 /* ============================================================================================ */

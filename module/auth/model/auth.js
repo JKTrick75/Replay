@@ -44,19 +44,20 @@ function login() {
                 } else {
                     //Guardamos el token en localStorage
                     localStorage.setItem("token", result);
+
+                    console.log("Hola");
                     
                     //Registro completado
-                    Swal.fire("Has iniciado sesión!").then((result) => {
+                    Swal.fire("AAAAAAAHas iniciado sesión!").then((result) => {
                         if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop) {
-                            window.location.href = 'index.php?page=controller_home&op=list';
+                            if (localStorage.getItem('redirect_like')) { //Si ha hecho login por like
+                                window.location.href = 'index.php?page=controller_shop&op=list';
+                            } else { //Si ha hecho login normal
+                                window.location.href = 'index.php?page=controller_home&op=list';
+                                console.log("Hola");
+                            }
                         }
                     });
-
-                    // if (localStorage.getItem('redirect_like')) {
-                    //     setTimeout(' window.location.href = "index.php?module=ctrl_shop&op=list"; ', 1000);
-                    // } else {
-                    //     setTimeout(' window.location.href = "index.php?module=ctrl_home&op=list"; ', 1000);
-                    // }
                 }
             }).catch(function(textStatus) {
                 if (console && console.log) {

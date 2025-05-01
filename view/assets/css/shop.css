@@ -518,16 +518,6 @@
   .product-content h1 b {
     font-weight: 600;
   }
-  .list__heart i {
-    color: #8d8c8c;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    margin-left: 10px;
-  }
-  .list__heart i:hover {
-    transform: scale(1.1);
-    color: #E96B56;
-  }
   .product-content ul {
     list-style: none;
     padding: 0;
@@ -580,6 +570,21 @@
   /* ------------ Elementos ocultos ------------- */
   .hidden {
     display: none !important; 
+  }
+
+  /* ------------ Like button shop-ist ------------- */
+  .list__heart i {
+    color: #8d8c8c;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    margin-left: 10px;
+  }
+  .list__heart i:hover {
+    transform: scale(1.1);
+    color: #E96B56;
+  }
+  .like_red {
+    color: #E96B56 !important;
   }
   
   /* -------------------------------------------------------------------- */
@@ -938,7 +943,9 @@
   .header-details h1 {
     margin: 0;
   }
-  /* Icono del corazón */
+  
+
+  /* ------------ Like button details ------------- */
   .details__heart {
     font-size: 1.5rem;
     color: #8d8c8c;
@@ -953,6 +960,7 @@
     transform: scale(1.1);
     color: #E96B56;
   }
+  
   
   /* Responsive: Ajustar a una sola columna en pantallas pequeñas */
   @media (max-width: 768px) {

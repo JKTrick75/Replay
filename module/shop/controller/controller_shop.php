@@ -333,6 +333,65 @@ switch ($_GET['op']) {
         }
         break;
 
+    /* ============================================================================================ */
+    /*                                       LIKES                                                  */
+    /* ============================================================================================ */
+
+    case 'controller_likes':
+        $token = $_POST['token'];
+        $id_producto = $_POST['id_producto'];
+
+        try {
+            $json = decode_token($token);
+            $dao = new DAOShop();
+            $rdo = $dao->select_likes($id_producto, $json['username']); //Buscamos si el usuario tiene like en ese producto
+        } catch (Exception $e) {
+            echo json_encode("error");
+            exit;
+        }
+
+        if (!$rdo) {
+            echo json_encode("error");
+            exit;
+        } else {
+            $array_likes = array();
+            foreach ($rdo as $row) {
+                array_push($array_likes, $row);
+            }
+            if (count($array_likes) === 0) { //Si no tiene like en ese producto, lo añadimos a la tabla likes
+                $dao = new DAOShop();
+                $rdo = $dao->like($id_producto, $json['username']);
+                echo json_encode("0");
+            } else { //Si ya tenía puesto like en ese producto, lo borramos de la tabla likes
+                $dao = new DAOShop();
+                $rdo = $dao->dislike($id_producto, $json['username']);
+                echo json_encode("1");
+            }
+        }
+        break;
+
+    case 'load_likes_user';
+        try {
+            $json = decode_token($_POST['token']);
+            $dao = new DAOShop();
+            $rdo = $dao->select_load_likes($json['username']); //Buscamos la lista de likes del usuario
+        } catch (Exception $e) {
+            echo json_encode("error");
+            exit;
+        }
+
+        if (!$rdo) {
+            echo json_encode("error");
+            exit;
+        } else {
+            $array_likes = array();
+            foreach ($rdo as $row) {
+                array_push($array_likes, $row);
+            }
+            echo json_encode($array_likes);
+        }
+        break;
+
     default;
         include("view/inc/error404.html");
         break;

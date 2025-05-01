@@ -510,7 +510,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id_user`, `username`, `password`, `email`, `type_user`, `avatar`, `refresh_token`) VALUES
 (1, 'prueba', '$2y$12$vM5kakwVC8emd8VDjpFTZOuECuV3JxAK3EPk8raIzLZelgqHHaEbW', 'prueba@gmail.com', 'client', 'https://api.dicebear.com/9.x/pixel-art/svg?seed=c893bad68927b457dbed39460e6afd62','');
-              -- `prueba123?`
+              -- `Prueba123?`
 --
 -- Indices de la tabla `users`
 --
@@ -524,6 +524,49 @@ ALTER TABLE `users`
 --
 ALTER TABLE `users`
   MODIFY `id_user` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `likes`
+--
+
+CREATE TABLE `likes` (
+  `id_like` int(11) NOT NULL,
+  `id_user` int(30) NOT NULL,
+  `id_producto` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `likes`
+--
+
+INSERT INTO `likes` (`id_like`, `id_user`, `id_producto`) VALUES
+(11, 1, 1),
+(12, 1, 2),
+(13, 1, 3),
+(14, 1, 4);
+
+--
+-- Indices de la tabla `likes`
+--
+ALTER TABLE `likes`
+  ADD PRIMARY KEY (`id_like`),
+  ADD KEY `id_producto` (`id_producto`),
+  ADD KEY `id_user` (`id_user`);
+
+--
+-- AUTO_INCREMENT de la tabla `likes`
+--
+ALTER TABLE `likes`
+  MODIFY `id_like` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- Filtros para la tabla `likes`
+--
+ALTER TABLE `likes`
+  ADD CONSTRAINT `FK_likes_product` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`),
+  ADD CONSTRAINT `FK_likes_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`);
 
 --
 -- Restricciones para tablas volcadas

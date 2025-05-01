@@ -41,9 +41,8 @@ function ajaxForSearch(url, total_prod, items_page, filter = undefined, orderby)
                             "<div class='product-info'>" +
                                 "<div class='product-content'>" +
                                     "<h1><b>" + data[row].nom_producto + " (" + data[row].precio + '€)' +
-                                        "<a class='list__heart' id='" + data[row].id_producto + "'>" +
+                                        //Botón like
                                         "<a class='list__heart' id='" + data[row].id_producto + "'><i id=" + data[row].id_producto + " class='fa-solid fa-heart fa-lg'></i></a>" +
-                                        "</a>" +
                                     "</b></h1>" +
                                     "<ul>" +
                                         "<li> <i id='col-ico' class='fa-solid fa-palette fa-xl'></i>Color: " + data[row].color + "</li>" +
@@ -51,7 +50,6 @@ function ajaxForSearch(url, total_prod, items_page, filter = undefined, orderby)
                                         "<li> <i id='col-ico' class='fa-solid fa-map-location-dot fa-xl'></i>Ciudad: " + data[row].nom_ciudad + "</li>" +
                                     "</ul>" +
                                     "<div class='buttons'>" +
-                                        // "<button id='" + data[row].id_producto + "' class='more_info_button button add'>Detalles</button>" +
                                         "<button class='button buy'>Comprar</button>" +
                                     "</div>" +
                                 "</div>" +
@@ -1127,17 +1125,6 @@ function loadDetails(id_producto) {
                             data[0].modelo_consola,
                             data[0].ciudad);
 
-            // console.log(data[0].id_producto);
-            // console.log(data[0].nom_marca);
-            // console.log(data[0].nom_modelo_consola);
-            // console.log(data[0].nom_producto);
-            // console.log(data[0].color);
-            // console.log(data[0].capacidad);
-            // console.log(data[0].nom_estado);
-            // console.log(data[0].nom_ciudad);
-            // console.log(data[0].precio);
-            // console.log(data[0].nom_estado);
-
         }).catch(function (data) {
             console.log('Error en el ajaxPromise de detalles producto');
         });
@@ -1254,6 +1241,16 @@ function clicks() {
 
     $(document).on('click', '.order_button', function () {
         order_click();
+    });
+
+    $(document).on("click", ".list__heart", function() {
+        var id_producto = this.getAttribute('id');
+        click_like(id_producto, "list_all");
+    });
+
+    $(document).on("click", ".details__heart", function() {
+        var id_producto = this.getAttribute('id');
+        click_like(id_producto, "details");
     });
 }
 

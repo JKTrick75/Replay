@@ -36,7 +36,6 @@ function login() {
 
         ajaxPromise('module/auth/controller/controller_auth.php?op=login', 'POST', 'JSON', data)
             .then(function(result) {
-                console.log(result);
                 if (result == "error_user") {
                     document.getElementById('error_user_log').innerHTML = "El username o correo no existe, asegúrate de que lo has escrito correctamente"
                 } else if (result == "error_passwd") {
@@ -44,17 +43,14 @@ function login() {
                 } else {
                     //Guardamos el token en localStorage
                     localStorage.setItem("token", result);
-
-                    console.log("Hola");
                     
                     //Registro completado
-                    Swal.fire("AAAAAAAHas iniciado sesión!").then((result) => {
+                    Swal.fire("Has iniciado sesión!").then((result) => {
                         if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop) {
                             if (localStorage.getItem('redirect_like')) { //Si ha hecho login por like
                                 window.location.href = 'index.php?page=controller_shop&op=list';
                             } else { //Si ha hecho login normal
                                 window.location.href = 'index.php?page=controller_home&op=list';
-                                console.log("Hola");
                             }
                         }
                     });

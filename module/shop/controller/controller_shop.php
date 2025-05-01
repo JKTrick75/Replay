@@ -341,6 +341,7 @@ switch ($_GET['op']) {
     case 'controller_likes':
         $token = $_POST['token'];
         $id_producto = $_POST['id_producto'];
+        $redirect = $_POST['redirect'] ?? false; 
 
         try {
             $json = decode_token($token);
@@ -364,9 +365,11 @@ switch ($_GET['op']) {
                 $rdo = $dao->like($id_producto, $json['username']);
                 echo json_encode("0");
             } else { //Si ya tenía puesto like en ese producto, lo borramos de la tabla likes
-                $dao = new DAOShop();
-                $rdo = $dao->dislike($id_producto, $json['username']);
-                echo json_encode("1");
+                if (!$redirect){
+                    $dao = new DAOShop();
+                    $rdo = $dao->dislike($id_producto, $json['username']);
+                    echo json_encode("1");
+                }
             }
         }
         break;

@@ -57,30 +57,28 @@ function ajaxForSearch(url, total_prod, items_page, filter = undefined, orderby)
                         "</div>"
                     )
 
-            //Generamos los div de las imágenes de los productos, y lo convertimos en carousel (cada producto tiene una id dinámica para sus fotos)
-            for (img in data[row].img_producto) {
-                // console.log(data[row].img_producto);
-                $('<div></div>').attr('id', data[row].img_producto[img]).appendTo(`#carousel_list_product-${data[row].id_producto}`)
-                    .html(
-                        "<img src= '" + data[row].img_producto[img] + "'" + "</img>"
-                    );
+                //Generamos los div de las imágenes de los productos, y lo convertimos en carousel (cada producto tiene una id dinámica para sus fotos)
+                for (img in data[row].img_producto) {
+                    // console.log(data[row].img_producto);
+                    $('<div></div>').attr('id', data[row].img_producto[img]).appendTo(`#carousel_list_product-${data[row].id_producto}`)
+                        .html(
+                            "<img src= '" + data[row].img_producto[img] + "'" + "</img>"
+                        );
+                }
+                //Iniciamos carrousel
+                $(`#carousel_list_product-${data[row].id_producto}`).slick({
+                    infinite: true,
+                    speed: 300,
+                    slidesToShow: 1,
+                    adaptiveHeight: true,
+                    arrows: true
+                });
+
+                //Cargamos los marcadores al mapa por cada producto
+                load_markers(data[row]);
             }
-            //Iniciamos carrousel
-            $(`#carousel_list_product-${data[row].id_producto}`).slick({
-                infinite: true,
-                speed: 300,
-                slidesToShow: 1,
-                adaptiveHeight: true,
-                arrows: true
-            });
-
-            //Cargamos los marcadores al mapa por cada producto
-            load_markers(data[row]);
-
             //Cargamos los likes
-            console.log("Hola");
             highlight_likes_user();
-        }
     }).catch(function () {
         console.log('Error en el ajaxPromise de listar productos / No hay productos para estos filtros');
         $(".content_shop_products").empty();
@@ -103,7 +101,6 @@ function loadProducts(total_prod = 0, items_page = 4) {
     var orderby = JSON.parse(localStorage.getItem('orderby')) || false;
     //Likes
     var redirect_like = localStorage.getItem('redirect_like') || false;
-    console.log(redirect_like);
 
     window.scrollTo(0, 0); //Mover la pantalla arriba del todo
 
@@ -115,7 +112,6 @@ function loadProducts(total_prod = 0, items_page = 4) {
         // console.log('hay filtros');
         ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_shop', total_prod, items_page, filter_shop, orderby);
     }else if (redirect_like != false) {
-        console.log("Entramos en el redirect");
         redirect_login_like();
     } else {
         // console.log('sin filtros');
@@ -1226,7 +1222,7 @@ function click_like(id_producto, lugar) {
         localStorage.setItem('redirect_like', redirect);
         localStorage.setItem('id_producto', id_producto);
 
-        Swal.fire("Debes iniciar sesión antes de dar like a un producto!").then((result) => {
+        Swal.fire("Inicia sesión antes de dar like!").then((result) => {
             if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop) {
                 window.location.href = 'index.php?page=controller_auth&op=list';
             }
@@ -1239,8 +1235,8 @@ function highlight_likes_user() {
     if (token) { //Si está loggejat
         ajaxPromise("module/shop/controller/controller_shop.php?op=highlight_likes_user", 'POST', 'JSON', { 'token': token })
             .then(function(data) {
+                // console.log(data);
                 for (row in data) {
-                    console.log(data);
                     $("#" + data[row].id_producto + ".fa-heart").addClass('like_red');
                 }
             }).catch(function() {
@@ -1250,9 +1246,18 @@ function highlight_likes_user() {
 }
 
 function redirect_login_like() {
+    //Guardamos like una vez hacemos login:
+    var token = localStorage.getItem('token');
+    var id_producto = localStorage.getItem('id_producto');
+
+    ajaxPromise("module/shop/controller/controller_shop.php?op=controller_likes", 'POST', 'JSON', { 'id_producto': id_producto, 'token': token, 'redirect': true })
+    .then(function(data) {
+        
+    }).catch(function() {
+        console.log("Error redirect like");
+    });
+
     var redirect = localStorage.getItem('redirect_like').split(",");
-    console.log("Este es el redirect");
-    console.log(redirect);
     if (redirect[1] == "details") { //Si estaba en el details, volvemos al details de ese producto
         loadDetails(redirect[0]);
         localStorage.removeItem('redirect_like');

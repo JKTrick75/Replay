@@ -75,8 +75,8 @@ $(document).ready(function() {
     setInterval(function() { control_activity() }, 600000); //600000=10min | 60000=1min
     //Control seguridad usuario
     control_user();
-    control_token_vigency();
     //Control seguridad vigencia tokens
+    control_token_vigency();
     setInterval(function() { control_token_vigency() }, 59000); // 59000=59sec
     //Refresh login user
     setInterval(function() { refresh_cookie() }, 600000);

@@ -15,7 +15,7 @@ function create_accesstoken($username){
     $jwt = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/REPLAY/9_REPLAY V3 (LOGIN)/model/jwt.ini');
     $header = $jwt['header'];
     $secret = $jwt['secret'];
-    $timer_token = $jwt['timer_accesstoken'];
+    $timer_token = $jwt['JWT_ACCESS_TOKEN_TIMER'];
     // error_log('----------------Timer----------------');
     // error_log($timer_token);
     $payload = '{"iat":"' . time() . '","exp":"' . time() + ($timer_token) . '","username":"' . $username . '"}';
@@ -29,7 +29,7 @@ function create_refreshtoken($username){
     $jwt = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/REPLAY/9_REPLAY V3 (LOGIN)/model/jwt.ini');
     $header = $jwt['header'];
     $secret = $jwt['secret'];
-    $timer_token = $jwt['timer_refreshtoken'];
+    $timer_token = $jwt['JWT_REFRESH_TOKEN_TIMER'];
     // error_log('----------------Timer----------------');
     // error_log($timer_token);
     $payload = '{"iat":"' . time() . '","exp":"' . time() + ($timer_token) . '","username":"' . $username . '"}';

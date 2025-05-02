@@ -104,17 +104,15 @@ function loadProducts(total_prod = 0, items_page = 4) {
 
     window.scrollTo(0, 0); //Mover la pantalla arriba del todo
 
-    if(filter_search){
+    if(redirect_like != false){
+        redirect_login_like();
+    }else if(filter_search){
         ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_search', total_prod, items_page, filter_search, orderby);
     }else if(filter_home){
         ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_home', total_prod, items_page, filter_home, orderby);
     }else if (filter_shop) {
-        // console.log('hay filtros');
         ajaxForSearch('module/shop/controller/controller_shop.php?op=filter_shop', total_prod, items_page, filter_shop, orderby);
-    }else if (redirect_like != false) {
-        redirect_login_like();
-    } else {
-        // console.log('sin filtros');
+    }else {
         ajaxForSearch('module/shop/controller/controller_shop.php?op=get_all_products', total_prod, items_page, undefined, orderby);
     }
 }
@@ -767,7 +765,7 @@ function order_click() {
 /*                                       PAGINATION                                             */
 /* ============================================================================================ */
 
-function count_pagination() {
+function start_pagination() {
     var filter_shop = JSON.parse(localStorage.getItem('filter_shop')) || false;
     var filter_home = JSON.parse(localStorage.getItem('filter_home')) || false;
     var filter_search = JSON.parse(localStorage.getItem('filter_search')) || false;
@@ -803,19 +801,47 @@ function load_pagination() {
     var total_pages = Math.ceil(total_prod / 4) || 1;
     
     //Cargamos la paginación
+    $('.pagination_list').empty(); //Limpiamos la paginación anterior
     for (let i = 1; i <= total_pages; i++) {
         $(`<li class="page_item" id="${i}">${i}</li>`).appendTo('.pagination_list');
     }
 
     //Clicks paginación y flechas
-    $('.page_item').on('click', function() {
+    $('.page_item').off('click').on('click', function() {
         click_page_pagination(this.getAttribute('id'));
     });
 
     click_flechas_pagination();
 
-    //Activamos pag 1 por defecto
+    //Pagina 1 por defecto
     setActivePage(1);
+
+    // // Determinar la página actual
+    // var redirect_like = localStorage.getItem('redirect_like') || false;
+    // var previous_page = parseInt(localStorage.getItem('current_page')) || 1; // Asegurar que sea número
+    // var currentPage;
+
+    // if (!redirect_like && !previous_page) {
+    //     currentPage = 1;
+    //     setActivePage(currentPage);
+    // } else {
+    //     currentPage = previous_page;
+    //     setActivePage(currentPage);
+    // }
+
+    // // Calcular offset y cargar productos de la página actual
+    // var offset = 4 * (currentPage - 1);
+    // loadProducts(offset, 4);
+    // window.scrollTo(0, 0);
+    // setTimeout(function() {
+    //     count_products();
+    //     highlight_orderby();
+    // }, 200);
+
+    // // Limpiar redirect_like después de usarlo
+    // if (redirect_like) {
+    //     localStorage.removeItem('redirect_like');
+    // }
 }
 
 function setActivePage(page) {
@@ -1232,7 +1258,7 @@ function click_like(id_producto, lugar) {
 
 function highlight_likes_user() {
     var token = localStorage.getItem('token');
-    if (token) { //Si está loggejat
+    if (token) { //Si hay login
         ajaxPromise("module/shop/controller/controller_shop.php?op=highlight_likes_user", 'POST', 'JSON', { 'token': token })
             .then(function(data) {
                 // console.log(data);
@@ -1251,17 +1277,15 @@ function redirect_login_like() {
     var id_producto = localStorage.getItem('id_producto');
 
     ajaxPromise("module/shop/controller/controller_shop.php?op=controller_likes", 'POST', 'JSON', { 'id_producto': id_producto, 'token': token, 'redirect': true })
-    .then(function(data) {
-        
-    }).catch(function() {
+    .then(function(data) {  })
+    .catch(function() {
         console.log("Error redirect like");
     });
 
     var redirect = localStorage.getItem('redirect_like').split(",");
     if (redirect[1] == "details") { //Si estaba en el details, volvemos al details de ese producto
-        loadDetails(redirect[0]);
         localStorage.removeItem('redirect_like');
-        localStorage.removeItem('page');
+        loadDetails(redirect[0]);
     } else if (redirect[1] == "list_all") { //Si estaba en el list, volvemos al shop-list
         localStorage.removeItem('redirect_like');
         loadProducts();
@@ -1350,7 +1374,7 @@ $(document).ready(function () {
         count_products();
         radar_filter_update();
         ocultar_elementos();
-        count_pagination();
+        start_pagination();
     }).catch(function(error) {
         console.error("Error:", error);
     });

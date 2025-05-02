@@ -815,33 +815,6 @@ function load_pagination() {
 
     //Pagina 1 por defecto
     setActivePage(1);
-
-    // // Determinar la página actual
-    // var redirect_like = localStorage.getItem('redirect_like') || false;
-    // var previous_page = parseInt(localStorage.getItem('current_page')) || 1; // Asegurar que sea número
-    // var currentPage;
-
-    // if (!redirect_like && !previous_page) {
-    //     currentPage = 1;
-    //     setActivePage(currentPage);
-    // } else {
-    //     currentPage = previous_page;
-    //     setActivePage(currentPage);
-    // }
-
-    // // Calcular offset y cargar productos de la página actual
-    // var offset = 4 * (currentPage - 1);
-    // loadProducts(offset, 4);
-    // window.scrollTo(0, 0);
-    // setTimeout(function() {
-    //     count_products();
-    //     highlight_orderby();
-    // }, 200);
-
-    // // Limpiar redirect_like después de usarlo
-    // if (redirect_like) {
-    //     localStorage.removeItem('redirect_like');
-    // }
 }
 
 function setActivePage(page) {

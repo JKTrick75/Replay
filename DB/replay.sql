@@ -272,6 +272,7 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `lat` varchar(50) NOT NULL,
   `long` varchar(50) NOT NULL,
   `popularidad` int NOT NULL,
+  `count_likes` int NOT NULL,
   PRIMARY KEY (`id_producto`),
   UNIQUE KEY `nom_producto` (`nom_producto`),
   KEY `modelo_consola` (`modelo_consola`),
@@ -287,23 +288,23 @@ CREATE TABLE IF NOT EXISTS `producto` (
 -- Volcado de datos para la tabla `producto`
 --
 
-INSERT INTO `producto` (`id_producto`, `nom_producto`, `precio`, `color`, `marca`, `tipo_consola`, `modelo_consola`, `tipo_accesorio`, `tipo_merchandising`, `estado`, `ciudad`, `fecha_publicacion`, `fecha_ult_mod`, `capacidad`, `incluye_mando`, `incluye_cargador`, `incluye_juegos`, `observaciones`, `lat`, `long`, `popularidad`) VALUES
-(1, 'PlayStation 5', 500, 'Blanco', 1, 1, 1, 1, NULL, 1, 1, '2022/04/01', '2022/04/05', '825GB', 'true', 'true', 'true', 'En perfecto estado! Lo he usado un par de veces pero me cansé enseguida. Precio regociable.','40.41727057356558','-3.683854299579285',0), 
-(2, 'Xbox Series X', 450, 'Negro', 2, 2, 2, 1, NULL, 2, 2, '2022/03/25', '2022/04/05', '1TB', 'true', 'true', 'false', 'En perfecto estado! Lo conservo en su envoltorio original. Precio regociable.','41.40271948807589','2.1731289602000596',0), 
-(3, 'Nintendo Switch', 300, 'Rojo/Azul', 3, 3, 3, 1, NULL, 1, 3, '2022/04/02', '2022/04/05', '32GB', 'true', 'true', 'true', 'Como nuevo, cualquier cosa no dudes en contactar.','39.47117193095414','-0.35663707468691064',0), 
-(4, 'PlayStation 4', 200, 'Negro', 1, 1, 4, 1, NULL, 2, 4, '2022/03/30', '2022/04/05', '500GB', 'true', 'true', 'false', 'En perfecto estado! Lo he usado un par de veces. Precio regociable.','37.39304954015504','-5.9647240117188485',0), 
-(5, 'Xbox One S', 250, 'Blanco', 2, 2, 5, 1, NULL, 1, 5, '2022/04/03', '2022/04/05', '1TB', 'true', 'true', 'true', 'Un pequeño rasguño pero nada más, funciona perfectamente.','43.257049363715275','-2.9292614260505956',0), 
-(6, 'Nintendo 3DS', 100, 'Negro', 3, 3, 6, 1, NULL, 2, 6, '2022/03/28', '2022/04/05', '4GB', 'true', 'true', 'false', 'Nunca lo he abierto.','41.64340725290045','-0.881798579820348',0), 
-(7, 'PlayStation 3', 80, 'Negro', 1, 1, 7, 1, NULL, 2, 7, '2022/03/27', '2022/04/05', '120GB', 'true', 'true', 'false', 'El precio se puede hablar','36.7132610962401','-4.443838892909804',0), 
-(8, 'Xbox 360', 70, 'Blanco', 2, 2, 8, 1, NULL, 2, 8, '2022/03/26', '2022/04/05', '250GB', 'true', 'true', 'false', 'Si quieres más fotos del producto avísame.','37.98574108778889','-1.125271082773813',0), 
-(9, 'Nintendo Wii', 50, 'Blanco', 3, 3, 9, 1, NULL, 2, 9, '2022/03/29', '2022/04/05', '512MB', 'true', 'true', 'false', 'El envío solo es dentro de la península.','38.35650172857275','-0.4821896091752586',0), 
-(10, 'PlayStation 2', 40, 'Negro', 1, 1, 10, 1, NULL, 2, 10, '2022/03/24', '2022/04/05', NULL, 'true', 'true', 'false', 'Ni la he sacado de la caja Hulio.','37.88777781021533','-4.771431762412151',0), 
-(11, 'Camisa Super Mario', 20, 'Azul', 3, NULL, NULL, NULL, 1, 2, 10, '2022/03/24', '2022/04/05', NULL, 'false', 'false', 'false', 'Me la he puesto un par de veces pero ya me viene pequeña.','37.88917067767973','-4.771265465449802',0), 
-(12, 'Pendientes Trifuerza Zelda', 15, 'Dorado/Negro', 3, NULL, NULL, NULL, 4, 1, 1, '2022/03/24', '2022/04/05', NULL, 'false', 'false', 'false', 'Ya no me gustan.','40.440507800804866','-3.692247276319813',0), 
-(13, 'Mando God of War', 75, 'Azul/Blanco', 1, NULL, NULL, 1, NULL, 2, 2, '2022/03/30', '2022/05/05', NULL, 'false', 'false', 'false', 'El mando funciona perfectamente, muy suave al tacto.','41.37951848145519','2.146449023271825',0), 
-(14, 'Pack PSP con juegos y accesorios', 150, 'Blanco', 1, 1, 11, NULL, NULL, 3, 2, '2023/03/24', '2023/04/05', '20GB', 'true', 'true', 'true', 'Usada durante muchos años, busca nuevo dueño.','41.38077033611688','2.1338561482494653',0), 
-(15, 'Pulseras minecraft', 15, 'Variocolor', 2, NULL, NULL, NULL, 4, 1, 4, '2024/03/24', '2024/04/05', NULL, 'false', 'false', 'false', 'Tengo demasiadas, alguien quiere alguna?','37.38874376406456','-5.9666806829716075',0), 
-(16, 'PS Vita', 100, 'Negro', 1, 1, 12, NULL, NULL, 3, 3, '2022/07/24', '2022/08/05', '32GB', 'false', 'true', 'false', 'Poco usada, pero se ralentiza un poco al encender, lo demás perfecto. Cargador incluido','39.460735667871035','-0.36889040064505413',0);
+INSERT INTO `producto` (`id_producto`, `nom_producto`, `precio`, `color`, `marca`, `tipo_consola`, `modelo_consola`, `tipo_accesorio`, `tipo_merchandising`, `estado`, `ciudad`, `fecha_publicacion`, `fecha_ult_mod`, `capacidad`, `incluye_mando`, `incluye_cargador`, `incluye_juegos`, `observaciones`, `lat`, `long`, `popularidad`, `count_likes`) VALUES
+(1, 'PlayStation 5', 500, 'Blanco', 1, 1, 1, 1, NULL, 1, 1, '2022/04/01', '2022/04/05', '825GB', 'true', 'true', 'true', 'En perfecto estado! Lo he usado un par de veces pero me cansé enseguida. Precio regociable.','40.41727057356558','-3.683854299579285',0,0), 
+(2, 'Xbox Series X', 450, 'Negro', 2, 2, 2, 1, NULL, 2, 2, '2022/03/25', '2022/04/05', '1TB', 'true', 'true', 'false', 'En perfecto estado! Lo conservo en su envoltorio original. Precio regociable.','41.40271948807589','2.1731289602000596',0,0), 
+(3, 'Nintendo Switch', 300, 'Rojo/Azul', 3, 3, 3, 1, NULL, 1, 3, '2022/04/02', '2022/04/05', '32GB', 'true', 'true', 'true', 'Como nuevo, cualquier cosa no dudes en contactar.','39.47117193095414','-0.35663707468691064',0,0), 
+(4, 'PlayStation 4', 200, 'Negro', 1, 1, 4, 1, NULL, 2, 4, '2022/03/30', '2022/04/05', '500GB', 'true', 'true', 'false', 'En perfecto estado! Lo he usado un par de veces. Precio regociable.','37.39304954015504','-5.9647240117188485',0,0), 
+(5, 'Xbox One S', 250, 'Blanco', 2, 2, 5, 1, NULL, 1, 5, '2022/04/03', '2022/04/05', '1TB', 'true', 'true', 'true', 'Un pequeño rasguño pero nada más, funciona perfectamente.','43.257049363715275','-2.9292614260505956',0,0), 
+(6, 'Nintendo 3DS', 100, 'Negro', 3, 3, 6, 1, NULL, 2, 6, '2022/03/28', '2022/04/05', '4GB', 'true', 'true', 'false', 'Nunca lo he abierto.','41.64340725290045','-0.881798579820348',0,0), 
+(7, 'PlayStation 3', 80, 'Negro', 1, 1, 7, 1, NULL, 2, 7, '2022/03/27', '2022/04/05', '120GB', 'true', 'true', 'false', 'El precio se puede hablar','36.7132610962401','-4.443838892909804',0,0), 
+(8, 'Xbox 360', 70, 'Blanco', 2, 2, 8, 1, NULL, 2, 8, '2022/03/26', '2022/04/05', '250GB', 'true', 'true', 'false', 'Si quieres más fotos del producto avísame.','37.98574108778889','-1.125271082773813',0,0), 
+(9, 'Nintendo Wii', 50, 'Blanco', 3, 3, 9, 1, NULL, 2, 9, '2022/03/29', '2022/04/05', '512MB', 'true', 'true', 'false', 'El envío solo es dentro de la península.','38.35650172857275','-0.4821896091752586',0,0), 
+(10, 'PlayStation 2', 40, 'Negro', 1, 1, 10, 1, NULL, 2, 10, '2022/03/24', '2022/04/05', NULL, 'true', 'true', 'false', 'Ni la he sacado de la caja Hulio.','37.88777781021533','-4.771431762412151',0,0), 
+(11, 'Camisa Super Mario', 20, 'Azul', 3, NULL, NULL, NULL, 1, 2, 10, '2022/03/24', '2022/04/05', NULL, 'false', 'false', 'false', 'Me la he puesto un par de veces pero ya me viene pequeña.','37.88917067767973','-4.771265465449802',0,0), 
+(12, 'Pendientes Trifuerza Zelda', 15, 'Dorado/Negro', 3, NULL, NULL, NULL, 4, 1, 1, '2022/03/24', '2022/04/05', NULL, 'false', 'false', 'false', 'Ya no me gustan.','40.440507800804866','-3.692247276319813',0,0), 
+(13, 'Mando God of War', 75, 'Azul/Blanco', 1, NULL, NULL, 1, NULL, 2, 2, '2022/03/30', '2022/05/05', NULL, 'false', 'false', 'false', 'El mando funciona perfectamente, muy suave al tacto.','41.37951848145519','2.146449023271825',0,0), 
+(14, 'Pack PSP con juegos y accesorios', 150, 'Blanco', 1, 1, 11, NULL, NULL, 3, 2, '2023/03/24', '2023/04/05', '20GB', 'true', 'true', 'true', 'Usada durante muchos años, busca nuevo dueño.','41.38077033611688','2.1338561482494653',0,0), 
+(15, 'Pulseras minecraft', 15, 'Variocolor', 2, NULL, NULL, NULL, 4, 1, 4, '2024/03/24', '2024/04/05', NULL, 'false', 'false', 'false', 'Tengo demasiadas, alguien quiere alguna?','37.38874376406456','-5.9666806829716075',0,0), 
+(16, 'PS Vita', 100, 'Negro', 1, 1, 12, NULL, NULL, 3, 3, '2022/07/24', '2022/08/05', '32GB', 'false', 'true', 'false', 'Poco usada, pero se ralentiza un poco al encender, lo demás perfecto. Cargador incluido','39.460735667871035','-0.36889040064505413',0,0);
 -- --------------------------------------------------------
 
 --
@@ -541,11 +542,11 @@ CREATE TABLE `likes` (
 -- Volcado de datos para la tabla `likes`
 --
 
-INSERT INTO `likes` (`id_like`, `id_user`, `id_producto`) VALUES
-(11, 1, 1),
-(12, 1, 2),
-(13, 1, 3),
-(14, 1, 4);
+-- INSERT INTO `likes` (`id_like`, `id_user`, `id_producto`) VALUES
+-- (11, 1, 1),
+-- (12, 1, 2),
+-- (13, 1, 3),
+-- (14, 1, 4);
 
 --
 -- Indices de la tabla `likes`
@@ -628,6 +629,63 @@ ALTER TABLE `tipo_venta_producto`
   ADD CONSTRAINT `FK_producto3` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`),
   ADD CONSTRAINT `FK_tipo_venta` FOREIGN KEY (`id_tipo_venta`) REFERENCES `tipo_venta` (`id_tipo_venta`);
 COMMIT;
+
+
+
+-- ---------------------------------------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------------------------------------
+
+DELIMITER $$
+--
+-- Procedimientos
+--
+
+-- DROP PROCEDURE IF EXISTS `update_like`$$
+-- CREATE PROCEDURE `update_like` (IN `idRealEstate` INT, IN `idUser` INT)
+-- BEGIN
+--   DECLARE userLike INT;
+    
+--   SELECT COUNT(l.id_realestate)
+--     FROM `real_estate` r LEFT JOIN `like` l ON r.id_realestate = l.id_realestate
+--     WHERE l.id_realestate = idRealEstate AND l.id_user = idUser INTO userLike;
+                
+--   IF userLike = 1 THEN
+--       DELETE FROM `like` l
+--         WHERE l.id_realestate = idRealEstate AND l.id_user = idUser;
+--       SELECT COUNT(l.id_realestate)
+-- 	FROM `real_estate` r LEFT JOIN `like` l ON r.id_realestate = l.id_realestate
+-- 	WHERE r.id_realestate = idRealEstate INTO countLike;
+--   ELSE IF userLike = 0 THEN
+--       INSERT INTO `like` VALUES(idRealEstate, idUser);
+--       SELECT COUNT(l.id_realestate)
+-- 	FROM `real_estate` r LEFT JOIN `like` l ON r.id_realestate = l.id_realestate
+-- 	WHERE r.id_realestate = idRealEstate INTO countLike;
+--   END IF;
+-- END$$
+
+--
+-- Triggers
+--
+
+DROP TRIGGER IF EXISTS `add_like_AI`$$
+CREATE TRIGGER `delete_like_AI` AFTER INSERT ON likes
+FOR EACH ROW
+BEGIN
+    UPDATE `producto`
+      SET count_likes = count_likes + 1
+      WHERE id_producto = NEW.id_producto;
+END$$
+
+DROP TRIGGER IF EXISTS `delete_like_AD`$$
+CREATE TRIGGER `delete_like_AD` AFTER DELETE ON likes
+FOR EACH ROW
+BEGIN
+    UPDATE `producto`
+      SET count_likes = count_likes - 1
+      WHERE id_producto = OLD.id_producto;
+END$$
+
+DELIMITER ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -40,9 +40,10 @@ function ajaxForSearch(url, total_prod, items_page, filter = undefined, orderby)
                             "<div id='carousel_list_product-"+data[row].id_producto+"' class='img-container'></div>" + //Aquí va el carousel de las fotos list
                             "<div class='product-info'>" +
                                 "<div class='product-content'>" +
-                                    "<h1><b>" + data[row].nom_producto + " (" + data[row].precio + '€)' +
+                                    "<h1><b>" + data[row].nom_producto + " (" + data[row].precio + "€)<br>" +
                                         //Botón like
                                         "<a class='list__heart' id='" + data[row].id_producto + "'><i id=" + data[row].id_producto + " class='fa-solid fa-heart fa-lg'></i></a>" +
+                                         "("+data[row].count_likes+")"+
                                     "</b></h1>" +
                                     "<ul>" +
                                         "<li> <i id='col-ico' class='fa-solid fa-palette fa-xl'></i>Color: " + data[row].color + "</li>" +
@@ -1014,9 +1015,11 @@ function loadDetails(id_producto) {
                 "<div class='product-content_details'>" +
                     "<div class='header-details'>" +
                         "<h1><b>" + data[0].nom_producto + "</b></h1>" +
-                        "<a class='details__heart' id='" + data[0].id_producto + "'>" +
+                        //Botón like
+                        "<p class='count_likes'><a class='details__heart' id='" + data[0].id_producto + "'>" +
                             "<i id='" + data[0].id_producto + "' class='fa-solid fa-heart fa-lg'></i>" +
-                        "</a>" +
+                        "</a>"+
+                        "("+data[0].count_likes+")</p>" +
                     "</div>" +
                     "<hr class='hr-shop'>" +
                     "<h3>Especificaciones generales:</h3>" +
@@ -1205,7 +1208,7 @@ function countPopularity(id_producto){
 /* ============================================================================================ */
 
 function click_like(id_producto, lugar) {
-    var token = localStorage.getItem('token');
+    var token = localStorage.getItem('access_token');
     if (token) { //Si está logeado -> Añadir/Quitar like
         ajaxPromise("module/shop/controller/controller_shop.php?op=controller_likes", 'POST', 'JSON', { 'id_producto': id_producto, 'token': token })
             .then(function(data) {
@@ -1230,7 +1233,7 @@ function click_like(id_producto, lugar) {
 }
 
 function highlight_likes_user() {
-    var token = localStorage.getItem('token');
+    var token = localStorage.getItem('access_token');
     if (token) { //Si hay login
         ajaxPromise("module/shop/controller/controller_shop.php?op=highlight_likes_user", 'POST', 'JSON', { 'token': token })
             .then(function(data) {
@@ -1246,7 +1249,7 @@ function highlight_likes_user() {
 
 function redirect_login_like() {
     //Guardamos like una vez hacemos login:
-    var token = localStorage.getItem('token');
+    var token = localStorage.getItem('access_token');
     var id_producto = localStorage.getItem('id_producto');
 
     ajaxPromise("module/shop/controller/controller_shop.php?op=controller_likes", 'POST', 'JSON', { 'id_producto': id_producto, 'token': token, 'redirect': true })

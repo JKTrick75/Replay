@@ -16,7 +16,7 @@
 			$offset = $_POST['total_prod'];
 			$limit = $_POST['items_page'];
 
-			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, p.lat, p.long,
+			$sql= "SELECT p.id_producto, p.nom_producto, p.precio, p.color, e.nom_estado, c.nom_ciudad, p.lat, p.long, p.count_likes,
 						  GROUP_CONCAT(i.img_producto SEPARATOR ':') AS img_producto
 					FROM producto p 
 					INNER JOIN img_producto i ON p.id_producto = i.id_producto
@@ -51,7 +51,8 @@
 						"nom_ciudad" => $row["nom_ciudad"],
 						"img_producto" => explode(":", $row['img_producto']),
 						"lat" => $row["lat"],
-						"long" => $row["long"]
+						"long" => $row["long"],
+						"count_likes" => $row["count_likes"]
 					);
 				}
 			}
@@ -501,7 +502,8 @@
 						p.marca,
 						p.tipo_consola,
 						p.modelo_consola,
-						p.ciudad
+						p.ciudad,
+						p.count_likes
 					FROM producto p
 					INNER JOIN marca m ON p.marca = m.id_marca
 					INNER JOIN estado e ON p.estado = e.id_estado

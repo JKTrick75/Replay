@@ -1,6 +1,6 @@
 function control_activity() {
     //Recogemos token de localStorage
-    var token = localStorage.getItem('token');
+    var token = localStorage.getItem('access_token');
     //Si logeado -> comprobamos tiempo inactividad:
     if (token) {
         ajaxPromise('module/auth/controller/controller_auth.php?op=check_actividad', 'POST', 'JSON')
@@ -18,7 +18,7 @@ function control_activity() {
 }
 
 function control_user() {
-    var token = localStorage.getItem('token');
+    var token = localStorage.getItem('access_token');
 
     if (!token) {
         console.log("control_user1 -> Sesión no iniciada");
@@ -39,7 +39,7 @@ function control_user() {
 }
 
 function control_token_vigency() {
-    var token = localStorage.getItem('token');
+    var token = localStorage.getItem('access_token');
 
     if (!token) {
         console.log("control_timer1 -> Sesión no iniciada");
@@ -52,7 +52,7 @@ function control_token_vigency() {
                 console.log("INCORRECTO--> Access_token y refresh_token sin vigencia, sesión expirada");
                 logout(); //main_auth.js -> Deslogueamos
             } else {
-                localStorage.setItem("token", data);
+                localStorage.setItem("access_token", data);
                 load_auth_button(); //main_auth.js -> Recargamos página y regeneramos botón auth
                 console.log("CORRECTO--> Refresh_token vigente -> Regeneramos access_token");
             }
@@ -78,6 +78,6 @@ $(document).ready(function() {
     //Control seguridad vigencia tokens
     control_token_vigency();
     setInterval(function() { control_token_vigency() }, 59000); // 59000=59sec
-    //Refresh login user
+    //Refresh cookies login user
     setInterval(function() { refresh_cookie() }, 600000);
 });

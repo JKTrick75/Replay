@@ -951,14 +951,18 @@
     color: #8d8c8c;
     cursor: pointer;
     transition: 0.3s;
-    position: absolute;
-    top: 0;
-    right: 0;
     margin: 5px;
+    display: inline-block;
   }
   .details__heart:hover {
     transform: scale(1.1);
     color: #E96B56;
+  }
+  .count_likes {
+    position: absolute;
+    top: 5px;
+    right: 0;
+    padding: 5px;
   }
   
   

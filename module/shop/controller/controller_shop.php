@@ -364,10 +364,12 @@ switch ($_GET['op']) {
                 $dao = new DAOShop();
                 $rdo = $dao->like($id_producto, $json['username']);
                 echo json_encode("0");
-            } else { //Si ya tenía puesto like en ese producto, lo borramos de la tabla likes
+            } else { //Si ya tenía puesto like en ese producto, lo borramos de la tabla likes (SOLO si no venía del redirect, ya que el usuario quería añadirlo, no borrarlo)
                 if (!$redirect){
                     $dao = new DAOShop();
                     $rdo = $dao->dislike($id_producto, $json['username']);
+                    echo json_encode("1");
+                }else{
                     echo json_encode("1");
                 }
             }

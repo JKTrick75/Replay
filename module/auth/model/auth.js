@@ -41,12 +41,13 @@ function login() {
                 } else if (result == "error_passwd") {
                     document.getElementById('error_passwd_log').innerHTML = "La contraseña es incorrecta"
                 } else {
-                    //Guardamos el token en localStorage
-                    localStorage.setItem("token", result);
+                    //Guardamos el access_token en localStorage
+                    localStorage.setItem("access_token", result);
                     
                     //Registro completado
                     Swal.fire("Has iniciado sesión!").then((result) => {
                         if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop) {
+                            //Comprobamos si veníamos de redirect o login normal
                             if (localStorage.getItem('redirect_like')) { //Si ha hecho login por like
                                 window.location.href = 'index.php?page=controller_shop&op=list';
                             } else { //Si ha hecho login normal
@@ -165,7 +166,7 @@ function register() {
                 } else if (result == "error_registro") {
                     Swal.fire("Ha ocurrido un error en el registro, inténtelo de nuevo", "", "info");
                 } else {
-                    //Registro completado
+                    //Registro completado, redirigimos al login
                     Swal.fire("Se ha registrado correctamente!").then((result) => {
                         if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop) {
                             window.location.href = 'index.php?page=controller_auth&op=list';
@@ -175,7 +176,7 @@ function register() {
                 }
             }).catch(function(textStatus) {
                 if (console && console.log) {
-                    console.log("La solicitud ha fallado: " + textStatus);
+                    console.log("El registro ha fallado: " + textStatus);
                 }
             });
     }

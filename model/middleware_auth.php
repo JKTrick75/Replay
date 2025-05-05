@@ -3,7 +3,7 @@ include($_SERVER['DOCUMENT_ROOT'] . "/REPLAY/9_REPLAY V3 (LOGIN)/model/JWT.php")
 
 function decode_token($token){
     $jwt = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/REPLAY/9_REPLAY V3 (LOGIN)/model/jwt.ini');
-    $secret = $jwt['secret'];
+    $secret = $jwt['JWT_SECRET'];
 
     $JWT = new JWT;
     $token_dec = $JWT->decode($token, $secret);

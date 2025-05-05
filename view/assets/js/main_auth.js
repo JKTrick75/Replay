@@ -1,6 +1,6 @@
 function load_auth_button() {
     // var sesion = JSON.parse(localStorage.getItem('sesion'));
-    var token = localStorage.getItem('token');
+    var token = localStorage.getItem('access_token');
     // console.log(token);
 
     //Vaciamos elementos
@@ -19,7 +19,7 @@ function load_auth_button() {
                     $('<span></span>').text(data.username),
                     $('<span class="caret">◂</span>')
                 );
-            }).catch(function() {
+            }).catch(function() {   
                 console.log("Error al cargar los datos del user");
             });
         //Creamos el dropdown menu
@@ -43,7 +43,7 @@ function load_auth_button() {
 function logout(){
     ajaxPromise('module/auth/controller/controller_auth.php?op=logout', 'POST', 'JSON')
         .then(function(data) {
-            localStorage.removeItem('token');
+            localStorage.removeItem('access_token');
             Swal.fire("Has cerrado sesión!").then(() => {
                 window.location.href = 'index.php?page=controller_home&op=list';
             });
